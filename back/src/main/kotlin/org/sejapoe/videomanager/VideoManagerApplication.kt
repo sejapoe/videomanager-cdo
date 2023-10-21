@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class VideoManagerApplication
 
 fun main(args: Array<String>) {
-	runApplication<VideoManagerApplication>(*args)
+    runApplication<VideoManagerApplication>(*args)
 }
