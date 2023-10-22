@@ -33,7 +33,7 @@ export interface TokenUserResDto {
     id: number;
     email: string;
     fullName: string;
-    role: "USER" | "ADMIN";
+    role: "ROLE_USER" | "ROLE_ADMIN";
     token: string;
 }
 

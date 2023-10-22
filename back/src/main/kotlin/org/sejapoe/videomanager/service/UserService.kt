@@ -1,7 +1,7 @@
 package org.sejapoe.videomanager.service
 
-import org.sejapoe.videomanager.exception.EmailAlreadyExitsRegistrationException
-import org.sejapoe.videomanager.exception.EmailDoesntExistsLoginException
+import org.sejapoe.videomanager.exception.auth.EmailAlreadyExitsRegistrationException
+import org.sejapoe.videomanager.exception.auth.EmailDoesntExistsLoginException
 import org.sejapoe.videomanager.model.Role
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.repo.UserRepo

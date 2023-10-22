@@ -1,5 +1,6 @@
 package org.sejapoe.videomanager.service
 
+import org.sejapoe.videomanager.exception.InstituteNotFoundException
 import org.sejapoe.videomanager.model.Institute
 import org.sejapoe.videomanager.repo.InstituteRepo
 import org.springframework.stereotype.Service
@@ -11,4 +12,5 @@ class InstituteService(
     fun getAll(): List<Institute> = instituteRepo.findAll()
 
     fun create(name: String) = instituteRepo.save(Institute(name))
+    fun get(id: Long): Institute = instituteRepo.findById(id).orElseThrow { InstituteNotFoundException(id) }
 }

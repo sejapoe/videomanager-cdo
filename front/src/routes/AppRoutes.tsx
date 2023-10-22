@@ -16,8 +16,8 @@ export const AppRoutes = () => {
     ]
 
     const routes = user ?
-        user.role == "USER" ? userRoutes :
-            user.role == "ADMIN" ? adminRoutes :
+        user.role == "ROLE_USER" ? userRoutes :
+            user.role == "ROLE_ADMIN" ? adminRoutes :
                 publicRoutes
         : publicRoutes
 

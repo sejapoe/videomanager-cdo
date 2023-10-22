@@ -50,7 +50,7 @@ export const sessionStore = createStore<SessionState>()(
     )
 )
 
-export type Role = "USER" | "ADMIN"
+export type Role = "ROLE_USER" | "ROLE_ADMIN"
 
 export const useAuth = () => useStore(sessionStore, (state) => !!state.user?.token);
 
