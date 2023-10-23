@@ -2,7 +2,7 @@ import React from "react";
 import {useCurrentUser} from "../../features/auth/authModel.ts";
 import clsx from "clsx";
 import {Menu, Transition} from "@headlessui/react";
-import {Link, NavLink, useNavigate} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import {logout} from "../../features/auth/api/logoutUser.ts";
 import {PATH_PAGE} from "../../lib/react-router";
 import {useQueryClient} from "@tanstack/react-query";
@@ -38,11 +38,9 @@ const UserNavigationItem = ({name, to, onClick}: UserNavigationItemProps) => {
 const UserNavigation = () => {
     const user = useCurrentUser();
     const queryClient = useQueryClient();
-    const navigate = useNavigate();
 
     const useLogout = () => {
         logout(queryClient)
-        navigate(PATH_PAGE.login);
     }
 
     if (!user) return <></>
@@ -51,7 +49,7 @@ const UserNavigation = () => {
         // {name: 'Your Profile', to: './profile'},
         {
             name: 'Выйти',
-            to: '',
+            to: PATH_PAGE.login,
             onClick: () => {
                 useLogout();
             },
