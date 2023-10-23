@@ -1,6 +1,8 @@
 import Spinner from "../spinner";
 import clsx from "clsx";
 import React from "react";
+import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const variants = {
     primary: 'bg-blue-600 text-white',
@@ -15,8 +17,8 @@ const sizes = {
 };
 
 type IconProps =
-    | { startIcon: React.ReactElement; endIcon?: never }
-    | { endIcon: React.ReactElement; startIcon?: never }
+    | { startIcon: IconDefinition; endIcon?: never }
+    | { endIcon: IconDefinition; startIcon?: never }
     | { endIcon?: undefined; startIcon?: undefined };
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -52,8 +54,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 {...props}
             >
                 {isLoading && <Spinner/> /* size="sm" className="text-current" */}
-                {!isLoading && startIcon}
-                <span className="mx-2">{props.children}</span> {!isLoading && endIcon}
+                {!isLoading && startIcon && <FontAwesomeIcon icon={startIcon}/>}
+                <span className="mx-2">{props.children}</span> {!isLoading && endIcon &&
+                <FontAwesomeIcon icon={endIcon}/>}
             </button>
         );
     }

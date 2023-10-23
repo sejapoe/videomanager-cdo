@@ -60,9 +60,10 @@ const UserNavigation = () => {
         {({open}) => (
             <>
                 <div>
-                    <Menu.Button className={clsx("max-w-xs bg-gray-200 p-2 flex items-center text-sm rounded-full",
-                        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")}>
-                        <span className="text-gray-500">{user.fullName}</span>
+                    <Menu.Button
+                        className={clsx("max-w-xs bg-gray-200 py-2 px-4 flex items-center text-sm rounded-full",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")}>
+                        <span className="text-gray-500 text-lg">{user.fullName}</span>
                     </Menu.Button>
                 </div>
                 <Transition
@@ -97,10 +98,14 @@ type AppNavigationProps = {
 const AppNavigationItem = (nav: NavigationItem) => {
     return <NavLink
         to={nav.to}
+        //clsx("max-w-xs bg-gray-200 py-2 px-4 flex items-center text-sm rounded-full",
+        //                         "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")
         className={({isActive}) => clsx(
-            isActive ? "bg-gray-100 rounded-3xl" : "",
-            isActive ? "text-red-600 hover:text-red-800" : "text-indigo-600 hover:text-indigo-800",
-            "space-x-2 px-3 py-1 text-lg"
+            "max-w-xs bg-gray-200 py-2 px-4 flex items-center rounded-full border transition-colors",
+            "hover:border-indigo-500 hover:text-indigo-500",
+            "active:bg-gray-300",
+            isActive ? "border-indigo-500 text-indigo-500" : "border-transparent",
+            "space-x-2 px-3 py-1 text-lg text-gray-500"
         )}
     >
         <FontAwesomeIcon icon={nav.icon}/>
@@ -123,10 +128,10 @@ export const MainLayout = ({children, navigation}: MainLayoutProps) => {
     return <div className="h-screen flex overflow-hidden bg-gray-100">
         <div className="flex flex-col w-screen flex-1 overflow-hidden">
             <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
-                <div className="flex ml-4 items-center">
+                <Link className="flex ml-4 items-center" to=".">
                     <img src={logo} alt="logo"/>
                     {/*<span className="text-gray-600 ml-4">Name</span>*/}
-                </div>
+                </Link>
 
                 <div className="flex ml-6 items-center text-gray-900 justify-start w-full">
                     <AppNavigation navigation={navigation}/>

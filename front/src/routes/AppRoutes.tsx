@@ -12,7 +12,7 @@ export const AppRoutes = () => {
     const user = useCurrentUser()
 
     const commonRoutes: RouteObject[] = [
-        {path: '*', element: <Page404/>}, // todo: fix page 404 behaviour
+        {path: '*', element: <Page404/>},
     ]
 
     const routes = user ?
@@ -20,8 +20,6 @@ export const AppRoutes = () => {
             user.role == "ROLE_ADMIN" ? adminRoutes :
                 publicRoutes
         : publicRoutes
-
-    console.log(routes)
 
     return useRoutes([...routes, ...commonRoutes]);
 }
