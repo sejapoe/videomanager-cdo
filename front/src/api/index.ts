@@ -24,7 +24,10 @@ const api = new Api<string>({
         },
         format: "json"
     },
-    securityWorker: (token) => token ? {headers: {Authorization: `Token ${token}`}} : {}
+    securityWorker: (token) => {
+        console.log(token)
+        return token ? {headers: {Authorization: `Bearer ${token}`}} : {};
+    }
 })
 
 export default api.api

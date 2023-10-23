@@ -3,6 +3,7 @@ package org.sejapoe.videomanager.security
 import org.sejapoe.videomanager.repo.UserRepo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
@@ -38,6 +39,7 @@ class SecurityConfig {
         .authorizeHttpRequests {
             it
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()
         }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
@@ -55,7 +57,7 @@ class SecurityConfig {
     fun corsConfigurer(): WebMvcConfigurer {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:5173")
+                registry.addMapping("/api/**").allowedOrigins("http://localhost:5173").allowedMethods("*")
             }
         }
     }
