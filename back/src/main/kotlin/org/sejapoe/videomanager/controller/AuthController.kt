@@ -17,6 +17,12 @@ class AuthController(
     private val userMapper: UserMapper
 ) {
     @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/admin")
+    fun createTestUser() {
+        userService.register("admin@admin.com", "admin1234", "Администратор")
+    }
+
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
     fun login(@Valid @RequestBody loginReq: LoginReq): TokenUserRes {
         return userService.login(loginReq.email, loginReq.password).let {
