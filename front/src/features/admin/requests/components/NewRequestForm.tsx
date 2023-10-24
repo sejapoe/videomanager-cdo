@@ -4,6 +4,11 @@ import {useInstitutes} from "../api/institutesApi.ts";
 import Spinner from "../../../../ui/spinner";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {SelectField} from "../../../../ui/form/SelectField.tsx";
+import {Button} from "../../../../ui/button/Button.tsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
+import {useState} from "react";
+import {NewLecturerDialog} from "./NewLecturerDialog.tsx";
 
 const schema = z.object({
     name: z.string({required_error: "Required"}),
@@ -15,7 +20,7 @@ const schema = z.object({
 
 type NewRequestValues = {
     name: string;
-    lecturer: string;
+    lecturer_id: number;
     institute_id: number;
     department_id: number;
     linkToMoodle: string;
@@ -29,45 +34,73 @@ export const NewRequestForm = () => {
         // error
     } = useInstitutes()
 
+    const [isNewLecturerDialogOpen, setIsNewLecturerDialogOpen] = useState(false)
+
     if (isLoading) return <div className="flex justify-center items-center">
         <Spinner/>
     </div>
 
-    return <Form<NewRequestValues, typeof schema>
-        onSubmit={data => {
-            console.log(data)
-        }}
-    >
-        {({register, formState, watch}) => (
-            <>
-                <InputField type="text"
-                            label="Наименование"
-                            error={formState.errors["name"]}
-                            registration={register("name")}/>
+    return (
+        <>
+            <NewLecturerDialog isOpen={isNewLecturerDialogOpen} setOpen={setIsNewLecturerDialogOpen}/>
+            <Form<NewRequestValues, typeof schema>
+                onSubmit={data => {
+                    console.log(data)
+                }}
+            >
+                {({register, formState, watch}) => (
+                    <>
+                        <InputField type="text"
+                                    label="Наименование"
+                                    error={formState.errors["name"]}
+                                    registration={register("name")}/>
 
-                <SelectField
-                    options={institutes?.map(value => ({
-                        value: value.id,
-                        label: value.name
-                    })) || []}
-                    label={"Институт"}
-                    error={formState.errors["institute_id"]}
-                    registration={register("institute_id")}/>
+                        <div className="flex w-full space-x-3">
+                            <SelectField
+                                // className=
+                                options={[
+                                    {
+                                        value: 1,
+                                        label: "Дзержинский Р.И."
+                                    },
+                                    {
+                                        value: 2,
+                                        label: "Гуличева А.А."
+                                    }
+                                ]}
+                                error={formState.errors["lecturer_id"]}
+                                registration={register("lecturer_id")}
+                            />
 
-                <SelectField
-                    options={institutes?.find(v => v.id == watch("institute_id"))?.departments?.map(value => ({
-                        value: value.id,
-                        label: value.name
-                    })) || []}
-                    label={"Кафедра"}
-                    error={formState.errors["department_id"]}
-                    registration={register("department_id")}/>
+                            <Button onClick={() => setIsNewLecturerDialogOpen(true)}><FontAwesomeIcon
+                                icon={solid("plus")}/></Button>
+                        </div>
 
-                <InputField type="text"
-                            label="Ссылка СДО"
-                            error={formState.errors["linkToMoodle"]}
-                            registration={register("linkToMoodle")}/>
-            </>
-        )}
-    </Form>;
+                        <SelectField
+                            options={institutes?.map(value => ({
+                                value: value.id,
+                                label: value.name
+                            })) || []}
+                            label={"Институт"}
+                            error={formState.errors["institute_id"]}
+                            registration={register("institute_id")}/>
+
+                        <SelectField
+                            options={institutes?.find(v => v.id == watch("institute_id"))?.departments?.map(value => ({
+                                value: value.id,
+                                label: value.name
+                            })) || []}
+                            label={"Кафедра"}
+                            error={formState.errors["department_id"]}
+                            registration={register("department_id")}/>
+
+                        <InputField type="text"
+                                    label="Ссылка СДО"
+                                    error={formState.errors["linkToMoodle"]}
+                                    registration={register("linkToMoodle")}/>
+                    </>
+                )}
+            </Form>
+        </>
+    );
 };
