@@ -59,7 +59,7 @@ class UserService(
     fun getUserByActivationUuid(uuid: UUID) = getUserActivation(uuid).user
     fun activateLecturer(uuid: UUID, password: String): Pair<User, String> {
         val activator = getUserActivation(uuid)
-        activator.user.pass = passwordEncoder.encode(password)
+        activator.user.password = passwordEncoder.encode(password)
         activator.user.enabled = true
         val user = userRepo.save(activator.user)
         userActivatorRepo.delete(activator)

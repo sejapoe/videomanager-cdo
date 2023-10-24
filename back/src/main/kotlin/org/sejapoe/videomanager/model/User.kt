@@ -13,7 +13,7 @@ class User(
     var email: String,
 
     @Column(name = "password")
-    var pass: String,
+    private var password: String,
 
     @Column(name = "full_name")
     var fullName: String,
@@ -32,7 +32,11 @@ class User(
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> =
         mutableListOf(SimpleGrantedAuthority(role.name))
 
-    override fun getPassword() = pass
+    override fun getPassword() = password
+
+    fun setPassword(password: String) {
+        this.password = password
+    }
 
     override fun getUsername() = email
 
