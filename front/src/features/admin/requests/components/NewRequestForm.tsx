@@ -4,30 +4,30 @@ import {useInstitutes} from "../api/institutesApi.ts";
 import Spinner from "../../../../ui/spinner";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {SelectField} from "../../../../ui/form/SelectField.tsx";
-import {Button} from "../../../../ui/button/Button.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {useState} from "react";
 import {NewLecturerDialog} from "./NewLecturerDialog.tsx";
 import {useLecturers} from "../api/lecturerApi.ts";
+import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
+import {Button} from "../../../../ui/button/Button.tsx";
 
 const schema = z.object({
-    name: z.string({required_error: "Required"}),
-    lecturer: z.string(),
-    institute_id: z.number({required_error: "Required"}).int("Should be integer").gt(0, "Should be positive"),
-    department_id: z.number({required_error: "Required"}).int("Should be integer").gt(0, "Should be positive"),
-    linkToMoodle: z.string({required_error: "Required"}).url("Should be valid url")
+    name: z.string().min(1, "Required"),
+    lecturer_id: z.number().positive("Required"),
+    institute_id: z.string().min(1, "Required"),
+    department_id: z.string().min(1, "Required"),
+    linkToMoodle: z.string().url("Should be valid url")
 })
 
 type NewRequestValues = {
     name: string;
-    lecturer_id: number;
-    institute_id: number;
-    department_id: number;
+    lecturer_id: string;
+    institute_id: string;
+    department_id: string;
     linkToMoodle: string;
 }
 
 export const NewRequestForm = () => {
+    const [newLecturerName, setNewLecturerName] = useState("")
     const {
         data: institutes,
         isLoading: isLoadingInstitutes,
@@ -48,33 +48,44 @@ export const NewRequestForm = () => {
 
     return (
         <>
-            <NewLecturerDialog isOpen={isNewLecturerDialogOpen} setOpen={setIsNewLecturerDialogOpen}/>
+            <NewLecturerDialog isOpen={isNewLecturerDialogOpen} setOpen={setIsNewLecturerDialogOpen}
+                               defaultName={newLecturerName}/>
             <Form<NewRequestValues, typeof schema>
                 onSubmit={data => {
                     console.log(data)
                 }}
+                schema={schema}
+                className="w-1/3"
             >
-                {({register, formState, watch}) => (
+                {({register, formState, watch, control}) => (
                     <>
                         <InputField type="text"
                                     label="Наименование"
                                     error={formState.errors["name"]}
                                     registration={register("name")}/>
 
-                        <div className="flex w-full space-x-3">
-                            <SelectField
-                                // className=
-                                options={lecturers?.map(value => ({
-                                    value: value.id,
-                                    label: value.fullName,
-                                })) || []}
-                                error={formState.errors["lecturer_id"]}
-                                registration={register("lecturer_id")}
-                            />
-
-                            <Button onClick={() => setIsNewLecturerDialogOpen(true)}><FontAwesomeIcon
-                                icon={solid("plus")}/></Button>
-                        </div>
+                        <ComboboxField
+                            name="lecturer_id"
+                            defaultValue={-1}
+                            label="Преподаватель"
+                            options={lecturers?.map(value => ({
+                                value: value.id,
+                                label: value.fullName,
+                            })) || []}
+                            error={formState.errors["lecturer_id"]}
+                            control={control}
+                            notFoundComponent={(query) => (
+                                <span
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                        setNewLecturerName(query)
+                                        setIsNewLecturerDialogOpen(true)
+                                    }}
+                                >
+                                    Создать преподавателя "{query}"
+                                </span>
+                            )}
+                        />
 
                         <SelectField
                             options={institutes?.map(value => ({
@@ -86,7 +97,7 @@ export const NewRequestForm = () => {
                             registration={register("institute_id")}/>
 
                         <SelectField
-                            options={institutes?.find(v => v.id == watch("institute_id"))?.departments?.map(value => ({
+                            options={institutes?.find(v => v.id.toString() == watch("institute_id"))?.departments?.map(value => ({
                                 value: value.id,
                                 label: value.name
                             })) || []}
@@ -98,6 +109,8 @@ export const NewRequestForm = () => {
                                     label="Ссылка СДО"
                                     error={formState.errors["linkToMoodle"]}
                                     registration={register("linkToMoodle")}/>
+
+                        <Button type="submit">Создать</Button>
                     </>
                 )}
             </Form>

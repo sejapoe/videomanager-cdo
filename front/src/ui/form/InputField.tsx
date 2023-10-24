@@ -5,10 +5,11 @@ import clsx from "clsx";
 type InputFieldProps = FieldWrapperPassThroughProps & {
     type?: 'text' | 'email' | 'password';
     className?: string;
+    defaultValue?: string;
     registration: Partial<UseFormRegisterReturn>;
 };
 
-export const InputField = ({type = "text", label, className, registration, error}: InputFieldProps) => {
+export const InputField = ({type = "text", label, className, defaultValue, registration, error}: InputFieldProps) => {
     return (
         <FieldWrapper label={label} error={error}>
             <input
@@ -18,6 +19,7 @@ export const InputField = ({type = "text", label, className, registration, error
                     "shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm",
                     className
                 )}
+                defaultValue={defaultValue}
                 {...registration}
             />
         </FieldWrapper>

@@ -19,9 +19,10 @@ type NewLecturerValues = {
 type NewLecturerDialogProps = {
     isOpen: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    defaultName: string;
 }
 
-export const NewLecturerDialog = ({isOpen, setOpen}: NewLecturerDialogProps) => {
+export const NewLecturerDialog = ({isOpen, setOpen, defaultName}: NewLecturerDialogProps) => {
     const {mutate, isLoading} = useCreateLecturer()
 
     return <Dialog open={isOpen} onClose={() => setOpen(false)} className="relative z-50">
@@ -47,6 +48,7 @@ export const NewLecturerDialog = ({isOpen, setOpen}: NewLecturerDialogProps) => 
                             <InputField
                                 type="text"
                                 label="Полное имя"
+                                defaultValue={defaultName}
                                 error={formState.errors["name"]}
                                 registration={register("name")}
                             />

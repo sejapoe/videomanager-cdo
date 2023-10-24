@@ -64,6 +64,6 @@ class UserService(
     }
 
     fun getLecturers(): List<User> {
-        return userRepo.findByRoleAndEnabled(Role.ROLE_USER, true)
+        return userRepo.findByRole(Role.ROLE_USER)
     }
 }
