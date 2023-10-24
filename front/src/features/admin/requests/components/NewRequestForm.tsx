@@ -9,6 +9,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {useState} from "react";
 import {NewLecturerDialog} from "./NewLecturerDialog.tsx";
+import {useLecturers} from "../api/lecturerApi.ts";
 
 const schema = z.object({
     name: z.string({required_error: "Required"}),
@@ -29,14 +30,19 @@ type NewRequestValues = {
 export const NewRequestForm = () => {
     const {
         data: institutes,
-        isLoading,
+        isLoading: isLoadingInstitutes,
         // isError,
         // error
     } = useInstitutes()
 
+    const {
+        data: lecturers,
+        isLoading: isLoadingLecturers
+    } = useLecturers()
+
     const [isNewLecturerDialogOpen, setIsNewLecturerDialogOpen] = useState(false)
 
-    if (isLoading) return <div className="flex justify-center items-center">
+    if (isLoadingInstitutes || isLoadingLecturers) return <div className="flex justify-center items-center">
         <Spinner/>
     </div>
 
@@ -58,16 +64,10 @@ export const NewRequestForm = () => {
                         <div className="flex w-full space-x-3">
                             <SelectField
                                 // className=
-                                options={[
-                                    {
-                                        value: 1,
-                                        label: "Дзержинский Р.И."
-                                    },
-                                    {
-                                        value: 2,
-                                        label: "Гуличева А.А."
-                                    }
-                                ]}
+                                options={lecturers?.map(value => ({
+                                    value: value.id,
+                                    label: value.fullName,
+                                })) || []}
                                 error={formState.errors["lecturer_id"]}
                                 registration={register("lecturer_id")}
                             />

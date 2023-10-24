@@ -11,19 +11,22 @@
     }
   ],
   "paths": {
-    "/api/user": {
+    "/api/users": {
       "get": {
         "tags": [
           "user-controller"
         ],
-        "operationId": "getUser",
+        "operationId": "getAllLecturers",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserRes"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRes"
+                  }
                 }
               }
             }
@@ -293,6 +296,31 @@
             }
           }
         }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
       }
     }
   },

@@ -65,4 +65,8 @@ class UserService(
         userActivatorRepo.delete(activator)
         return user to jwtService.generateToken(user)
     }
+
+    fun getLecturers(): List<User> {
+        return userRepo.findByRoleAndEnabled(Role.ROLE_USER, true)
+    }
 }

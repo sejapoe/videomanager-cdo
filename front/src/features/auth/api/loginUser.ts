@@ -16,8 +16,7 @@ export const useLoginUser = (options?: UseLoginUserOptions) =>
     useMutation({
         mutationKey: sessionKeys.mutation.login(),
         mutationFn: (user: LoginReqDto) => {
-            console.log(user)
             return api.login(user);
         },
         ...options,
-    } as UseLoginUserOptions)
+    })

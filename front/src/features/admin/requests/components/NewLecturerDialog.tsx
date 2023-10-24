@@ -4,6 +4,7 @@ import {Form} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
+import {useCreateLecturer} from "../api/lecturerApi.ts";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),
@@ -21,6 +22,8 @@ type NewLecturerDialogProps = {
 }
 
 export const NewLecturerDialog = ({isOpen, setOpen}: NewLecturerDialogProps) => {
+    const {mutate, isLoading} = useCreateLecturer()
+
     return <Dialog open={isOpen} onClose={() => setOpen(false)} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true"/>
 
@@ -31,7 +34,11 @@ export const NewLecturerDialog = ({isOpen, setOpen}: NewLecturerDialogProps) => 
                 <Form<NewLecturerValues, typeof schema>
                     onSubmit={(data) => {
                         // mutate data
-                        console.log(data)
+                        mutate(data, {
+                            onSuccess: () => {
+                                setOpen(false)
+                            }
+                        })
                     }}
                     schema={schema}
                 >
@@ -52,7 +59,7 @@ export const NewLecturerDialog = ({isOpen, setOpen}: NewLecturerDialogProps) => 
                             />
 
                             <div className="flex flex-row space-x-2">
-                                <Button className="w-full" type="submit">
+                                <Button className="w-full" type="submit" isLoading={isLoading}>
                                     Создать
                                 </Button>
                                 <Button className="w-full" variant="inverse" onClick={() => setOpen(false)}>
