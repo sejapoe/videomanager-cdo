@@ -1,6 +1,7 @@
 package org.sejapoe.videomanager.controller
 
 import jakarta.validation.Valid
+import jakarta.validation.constraints.Pattern
 import org.sejapoe.videomanager.dto.user.ActivateUserReq
 import org.sejapoe.videomanager.dto.user.LoginReq
 import org.sejapoe.videomanager.dto.user.TokenUserRes
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,6 +32,17 @@ class AuthController(
             userMapper.toTokenUserRes(it.first, it.second)
         }
     }
+
+    @GetMapping("/activation/{uuid}")
+    fun getActivation(
+        @PathVariable @Valid @Pattern(
+            regexp = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}\$",
+            flags = [Pattern.Flag.CASE_INSENSITIVE],
+            message = "Not a valid UUID"
+        ) uuid: UUID
+    ) =
+        userService.getUserByActivationUuid(uuid).let(userMapper::toUserRes)
+
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/activate")

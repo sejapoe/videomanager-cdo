@@ -13,15 +13,20 @@ function mapUser(userDto: UserDto): User {
     return userDto;
 }
 
-export const sessionKeys = {
+export const authKeys = {
     session: {
         root: ['session'],
-        currentUser: () => [...sessionKeys.session.root, 'currentUser'],
+        currentUser: () => [...authKeys.session.root, 'currentUser'],
+    },
+
+    activation: {
+        root: ['activation'],
     },
 
     mutation: {
-        login: () => [...sessionKeys.session.root, 'login'],
-        create: () => [...sessionKeys.session.root, 'create'],
+        login: () => [...authKeys.session.root, 'login'],
+        create: () => [...authKeys.session.root, 'create'],
+        activate: () => [...authKeys.activation.root, 'activate']
     }
 }
 
@@ -34,7 +39,7 @@ type UseCurrentUserQuery = UseQueryOptions<
 type UseCurrentUserOptions = Omit<UseCurrentUserQuery, 'queryKey' | 'queryFn'>;
 
 export const useCurrentUser = (options?: UseCurrentUserOptions) => useQuery({
-    queryKey: sessionKeys.session.currentUser(),
+    queryKey: authKeys.session.currentUser(),
     queryFn: async () => {
         const response = await api.getUser();
 

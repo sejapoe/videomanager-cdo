@@ -1,7 +1,7 @@
 import {useMutation, UseMutationOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel, HttpResponse} from "../../../api";
 import {LoginReqDto, TokenUserResDto} from "../../../api/Api.ts";
-import {sessionKeys} from "./authApi.ts";
+import {authKeys} from "./authApi.ts";
 
 type UseLoginUserMutation = UseMutationOptions<
     HttpResponse<TokenUserResDto, unknown>,
@@ -14,7 +14,7 @@ type UseLoginUserOptions = Omit<UseLoginUserMutation, 'mutationFn' | 'mutationKe
 
 export const useLoginUser = (options?: UseLoginUserOptions) =>
     useMutation({
-        mutationKey: sessionKeys.mutation.login(),
+        mutationKey: authKeys.mutation.login(),
         mutationFn: (user: LoginReqDto) => {
             return api.login(user);
         },

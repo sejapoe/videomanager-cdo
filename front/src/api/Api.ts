@@ -136,6 +136,15 @@ export class HttpClient<SecurityDataType = unknown> {
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
   private abortControllers = new Map<CancelToken, AbortController>();
+    public abortRequest = (cancelToken: CancelToken) => {
+        const abortController = this.abortControllers.get(cancelToken);
+
+        if (abortController) {
+            abortController.abort();
+            this.abortControllers.delete(cancelToken);
+        }
+    };
+
     private baseApiParams: RequestParams = {
         credentials: "same-origin",
         headers: {},
@@ -149,15 +158,6 @@ export class HttpClient<SecurityDataType = unknown> {
 
     public setSecurityData = (data: SecurityDataType | null) => {
         this.securityData = data;
-    };
-
-    public abortRequest = (cancelToken: CancelToken) => {
-        const abortController = this.abortControllers.get(cancelToken);
-
-        if (abortController) {
-            abortController.abort();
-            this.abortControllers.delete(cancelToken);
-        }
     };
 
     protected encodeQueryParam(key: string, value: any) {
@@ -464,6 +464,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
               path: `/api/user`,
               method: "GET",
               secure: true,
+              ...params,
+          }),
+
+      /**
+       * No description
+       *
+       * @tags auth-controller
+       * @name GetActivation
+       * @request GET:/api/auth/activation/{uuid}
+       */
+      getActivation: (uuid: string, params: RequestParams = {}) =>
+          this.request<UserResDto, ProblemDetailDto>({
+              path: `/api/auth/activation/${uuid}`,
+              method: "GET",
               ...params,
           }),
   };
