@@ -1,6 +1,7 @@
 package org.sejapoe.videomanager.controller
 
 import jakarta.validation.Valid
+import org.sejapoe.videomanager.dto.user.ActivateUserReq
 import org.sejapoe.videomanager.dto.user.LoginReq
 import org.sejapoe.videomanager.dto.user.TokenUserRes
 import org.sejapoe.videomanager.mapper.UserMapper
@@ -26,9 +27,17 @@ class AuthController(
     @PostMapping("/login")
     fun login(@Valid @RequestBody loginReq: LoginReq): TokenUserRes {
         return userService.login(loginReq.email, loginReq.password).let {
-            userMapper.toTokenUserRes(it.second, it.first)
+            userMapper.toTokenUserRes(it.first, it.second)
         }
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/activate")
+    fun activate(@Valid @RequestBody activateUserReq: ActivateUserReq): TokenUserRes =
+        userService.activateLecturer(activateUserReq.uuid, activateUserReq.password).let {
+            userMapper.toTokenUserRes(it.first, it.second)
+        }
+
 
     @ExceptionHandler(BadCredentialsException::class)
     @ResponseStatus(HttpStatus.FORBIDDEN)

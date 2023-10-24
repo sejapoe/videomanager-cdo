@@ -11,6 +11,65 @@
     }
   ],
   "paths": {
+    "/api/user": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "createLecturer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLecturerReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/institutes": {
       "get": {
         "tags": [
@@ -196,29 +255,44 @@
         }
       }
     },
-    "/api/user": {
-      "get": {
+    "/api/auth/activate": {
+      "post": {
         "tags": [
-          "user-controller"
+          "auth-controller"
         ],
-        "operationId": "getUser",
+        "operationId": "activate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateUserReq"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserRes"
+                  "$ref": "#/components/schemas/TokenUserRes"
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ]
+        }
       }
     }
   },
@@ -250,6 +324,21 @@
             "additionalProperties": {
               "type": "object"
             }
+          }
+        }
+      },
+      "CreateLecturerReq": {
+        "required": [
+          "email",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
           }
         }
       },
@@ -367,6 +456,22 @@
             ]
           },
           "token": {
+            "type": "string"
+          }
+        }
+      },
+      "ActivateUserReq": {
+        "required": [
+          "password",
+          "uuid"
+        ],
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "password": {
             "type": "string"
           }
         }
