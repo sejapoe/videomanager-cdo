@@ -6,7 +6,7 @@ import org.sejapoe.videomanager.exception.auth.EmailDoesntExistsLoginException
 import org.sejapoe.videomanager.model.Role
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.model.UserActivation
-import org.sejapoe.videomanager.repo.UserActivatorRepo
+import org.sejapoe.videomanager.repo.UserActivationRepo
 import org.sejapoe.videomanager.repo.UserRepo
 import org.sejapoe.videomanager.security.JwtService
 import org.springframework.security.authentication.AuthenticationManager
@@ -21,7 +21,7 @@ class UserService(
     private val jwtService: JwtService,
     private val authenticationManager: AuthenticationManager,
     private val passwordEncoder: PasswordEncoder,
-    private val userActivatorRepo: UserActivatorRepo
+    private val userActivationRepo: UserActivationRepo
 ) {
 
     fun register(email: String, password: String, fullName: String): Pair<String, User> {
@@ -47,14 +47,11 @@ class UserService(
     fun createLecturer(name: String, email: String): UUID {
         val user = User(email, "", name, Role.ROLE_USER, false)
         val activator = UserActivation(UUID.randomUUID(), user)
-
-        // todo: send activation link to email
-
-        userActivatorRepo.save(activator)
+        userActivationRepo.save(activator)
         return activator.uuid
     }
 
-    fun getUserActivation(uuid: UUID) = userActivatorRepo.findByUuid(uuid) ?: throw UserActivationNotFoundException()
+    fun getUserActivation(uuid: UUID) = userActivationRepo.findByUuid(uuid) ?: throw UserActivationNotFoundException()
 
     fun getUserByActivationUuid(uuid: UUID) = getUserActivation(uuid).user
     fun activateLecturer(uuid: UUID, password: String): Pair<User, String> {
@@ -62,7 +59,7 @@ class UserService(
         activator.user.password = passwordEncoder.encode(password)
         activator.user.enabled = true
         val user = userRepo.save(activator.user)
-        userActivatorRepo.delete(activator)
+        userActivationRepo.delete(activator)
         return user to jwtService.generateToken(user)
     }
 
