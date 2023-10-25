@@ -104,15 +104,16 @@ export const NewRequestForm = () => {
                             })) || []}
                             label={"Институт"}
                             error={formState.errors["institute_id"]}
-                            registration={register("institute_id")}/>
+                            registration={register("institute_id", {
+                                onChange: () => {
+                                    setValue("department_id", "")
+                                }
+                            })}/>
 
                         <SelectField
                             defaultBlank
                             options={
-                                institutes?.find(v => {
-                                    console.log(watch("institute_id"))
-                                    return v.id.toString() == watch("institute_id");
-                                })?.departments?.map(value => ({
+                                institutes?.find(v => v.id.toString() == watch("institute_id"))?.departments?.map(value => ({
                                     value: value.id,
                                     label: value.name
                                 })) || []
@@ -127,9 +128,7 @@ export const NewRequestForm = () => {
                                     error={formState.errors["linkToMoodle"]}
                                     registration={register("linkToMoodle")}/>
 
-                        <Button type="submit" onClick={() => {
-                            console.log(control._formValues)
-                        }}>Создать</Button>
+                        <Button type="submit">Создать</Button>
                     </>
                 )}
             </Form>
