@@ -21,24 +21,41 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
-    implementation("javax.xml.bind:jaxb-api:2.3.1")
+    // kotlin
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("org.mapstruct:mapstruct:1.5.5.Final")
-    kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
-
+    // spring boot
     ext["spring-security.version"] = "6.1.5"
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // db
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("com.h2database:h2")
     implementation("org.hibernate.validator:hibernate-validator:8.0.0.Final")
+
+    // jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // jwt
     implementation("io.jsonwebtoken:jjwt:0.9.1")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // openapi docs
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
+
+
+    // mapstruct
+    implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
+
+    // query dsl
+    implementation("com.querydsl:querydsl-jpa:4.2.2")
+    kapt("com.querydsl:querydsl-apt:4.2.2:jpa")
+
 }
 
 
