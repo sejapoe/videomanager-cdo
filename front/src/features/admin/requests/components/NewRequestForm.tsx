@@ -33,8 +33,6 @@ export const NewRequestForm = () => {
     const {
         data: institutes,
         isLoading: isLoadingInstitutes,
-        // isError,
-        // error
     } = useInstitutes()
 
     const {
@@ -42,7 +40,6 @@ export const NewRequestForm = () => {
         isLoading: isLoadingLecturers
     } = useLecturers()
 
-    // const [isNewLecturerDialogOpen, setIsNewLecturerDialogOpen] = useState(false)
     const {Dialog, open} = useDialog<string, number>({
         title: "Создание преподавателя",
     })
@@ -58,8 +55,6 @@ export const NewRequestForm = () => {
                     <NewLecturerDialog onSubmit={ok} defaultName={name} close={close}/>
                 )}
             </Dialog>
-            {/*<NewLecturerDialog isOpen={isNewLecturerDialogOpen} setOpen={setIsNewLecturerDialogOpen}*/}
-            {/*                   defaultName={newLecturerName}/>*/}
             <Form<NewRequestValues, typeof schema>
                 onSubmit={data => {
                     console.log(data)

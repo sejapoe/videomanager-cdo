@@ -29,8 +29,6 @@ export const Form = <
         resolver: schema && zodResolver(schema)
     })
 
-    console.log(methods.getValues())
-
     return (
         <form
             className={clsx("space-y-6", className)}
