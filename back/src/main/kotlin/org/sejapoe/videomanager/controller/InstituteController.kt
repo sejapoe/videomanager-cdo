@@ -17,11 +17,11 @@ class InstituteController(
     @GetMapping
     @IsUser
     fun getAllInstitutes() =
-        instituteService.getAll().map(instituteMapper::toInstituteRes)
+        instituteService.getAll().map(instituteMapper::toInstituteWithDepartmentsRes)
 
 
     @PostMapping
     @IsAdmin
     fun createInstitute(@RequestBody @Valid createInstituteReq: CreateInstituteReq) =
-        instituteService.create(createInstituteReq.name).let(instituteMapper::toInstituteRes)
+        instituteService.create(createInstituteReq.name).let(instituteMapper::toInstituteWithDepartmentsRes)
 }

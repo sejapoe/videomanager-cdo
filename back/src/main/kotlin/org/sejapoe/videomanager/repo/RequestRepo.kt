@@ -1,4 +1,4 @@
-package org.sejapoe.videomanager
+package org.sejapoe.videomanager.repo
 
 import org.sejapoe.videomanager.model.Request
 import org.springframework.data.jpa.repository.JpaRepository

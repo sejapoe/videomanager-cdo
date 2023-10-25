@@ -1,5 +1,6 @@
 package org.sejapoe.videomanager.service
 
+import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.exception.UserActivationNotFoundException
 import org.sejapoe.videomanager.exception.auth.EmailAlreadyExitsRegistrationException
 import org.sejapoe.videomanager.exception.auth.EmailDoesntExistsLoginException
@@ -66,4 +67,6 @@ class UserService(
     fun getLecturers(): List<User> {
         return userRepo.findByRole(Role.ROLE_USER)
     }
+
+    fun get(id: Long): User = userRepo.findById(id).orElseThrow { NotFoundException("User with $id is not found") }
 }
