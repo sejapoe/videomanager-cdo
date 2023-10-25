@@ -52,6 +52,7 @@ export const ComboboxField = ({options, className, defaultValue, name, control, 
                             )}>
                                 <Combobox.Button className="w-full inset-y-0 right-0 flex items-center pr-2">
                                     <Combobox.Input
+                                        autoComplete="off"
                                         className="bg-gray-200 w-full border-none pr-10 text-sm leading-5 text-gray-900 focus:ring-0 outline-none"
                                         onChange={event => setQuery(event.target.value)}
                                         displayValue={(value: string | number) => getNameFromValue(value)}

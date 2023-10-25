@@ -4,11 +4,12 @@ import {useInstitutes} from "../api/institutesApi.ts";
 import Spinner from "../../../../ui/spinner";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {SelectField} from "../../../../ui/form/SelectField.tsx";
-import {useState} from "react";
 import {NewLecturerDialog} from "./NewLecturerDialog.tsx";
-import {useLecturers} from "../api/lecturerApi.ts";
+import {lecturerKeys, useLecturers} from "../api/lecturerApi.ts";
 import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
+import {useDialog} from "../../../../hooks/useDialog.tsx";
+import {useQueryClient} from "@tanstack/react-query";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),
@@ -27,7 +28,8 @@ type NewRequestValues = {
 }
 
 export const NewRequestForm = () => {
-    const [newLecturerName, setNewLecturerName] = useState("")
+    const queryClient = useQueryClient();
+
     const {
         data: institutes,
         isLoading: isLoadingInstitutes,
@@ -40,7 +42,10 @@ export const NewRequestForm = () => {
         isLoading: isLoadingLecturers
     } = useLecturers()
 
-    const [isNewLecturerDialogOpen, setIsNewLecturerDialogOpen] = useState(false)
+    // const [isNewLecturerDialogOpen, setIsNewLecturerDialogOpen] = useState(false)
+    const {Dialog, open} = useDialog<string, number>({
+        title: "Создание преподавателя",
+    })
 
     if (isLoadingInstitutes || isLoadingLecturers) return <div className="flex justify-center items-center">
         <Spinner/>
@@ -48,8 +53,13 @@ export const NewRequestForm = () => {
 
     return (
         <>
-            <NewLecturerDialog isOpen={isNewLecturerDialogOpen} setOpen={setIsNewLecturerDialogOpen}
-                               defaultName={newLecturerName}/>
+            <Dialog>
+                {({args: name, ok, close}) => (
+                    <NewLecturerDialog onSubmit={ok} defaultName={name} close={close}/>
+                )}
+            </Dialog>
+            {/*<NewLecturerDialog isOpen={isNewLecturerDialogOpen} setOpen={setIsNewLecturerDialogOpen}*/}
+            {/*                   defaultName={newLecturerName}/>*/}
             <Form<NewRequestValues, typeof schema>
                 onSubmit={data => {
                     console.log(data)
@@ -57,9 +67,10 @@ export const NewRequestForm = () => {
                 schema={schema}
                 className="w-1/3"
             >
-                {({register, formState, watch, control}) => (
+                {({register, formState, watch, control, setValue}) => (
                     <>
                         <InputField type="text"
+                                    noAutocomplete
                                     label="Наименование"
                                     error={formState.errors["name"]}
                                     registration={register("name")}/>
@@ -78,8 +89,11 @@ export const NewRequestForm = () => {
                                 <span
                                     className="cursor-pointer"
                                     onClick={() => {
-                                        setNewLecturerName(query)
-                                        setIsNewLecturerDialogOpen(true)
+                                        open(query, async (data) => {
+                                            await queryClient.invalidateQueries(lecturerKeys.lecturers.root)
+                                            // @ts-ignore
+                                            setValue("lecturer_id", data)
+                                        })
                                     }}
                                 >
                                     Создать преподавателя "{query}"
@@ -106,6 +120,7 @@ export const NewRequestForm = () => {
                             registration={register("department_id")}/>
 
                         <InputField type="text"
+                                    noAutocomplete
                                     label="Ссылка СДО"
                                     error={formState.errors["linkToMoodle"]}
                                     registration={register("linkToMoodle")}/>

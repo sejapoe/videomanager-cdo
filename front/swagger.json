@@ -59,8 +59,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "string",
-                  "format": "uuid"
+                  "$ref": "#/components/schemas/UserRes"
                 }
               }
             }
@@ -412,6 +411,34 @@
           }
         }
       },
+      "UserRes": {
+        "required": [
+          "email",
+          "fullName",
+          "id",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "ROLE_USER",
+              "ROLE_ADMIN"
+            ]
+          }
+        }
+      },
       "CreateInstituteReq": {
         "required": [
           "name"
@@ -543,34 +570,6 @@
           },
           "password": {
             "type": "string"
-          }
-        }
-      },
-      "UserRes": {
-        "required": [
-          "email",
-          "fullName",
-          "id",
-          "role"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "email": {
-            "type": "string"
-          },
-          "fullName": {
-            "type": "string"
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "ROLE_USER",
-              "ROLE_ADMIN"
-            ]
           }
         }
       }

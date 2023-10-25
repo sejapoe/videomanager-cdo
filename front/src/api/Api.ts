@@ -26,6 +26,14 @@ export interface CreateLecturerReqDto {
     email: string;
 }
 
+export interface UserResDto {
+    /** @format int64 */
+    id: number;
+    email: string;
+    fullName: string;
+    role: "ROLE_USER" | "ROLE_ADMIN";
+}
+
 export interface CreateInstituteReqDto {
   name: string;
 }
@@ -76,14 +84,6 @@ export interface ActivateUserReqDto {
     /** @format uuid */
     uuid: string;
     password: string;
-}
-
-export interface UserResDto {
-  /** @format int64 */
-  id: number;
-  email: string;
-  fullName: string;
-  role: "ROLE_USER" | "ROLE_ADMIN";
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -328,7 +328,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
        * @secure
        */
       createLecturer: (data: CreateLecturerReqDto, params: RequestParams = {}) =>
-          this.request<string, any>({
+          this.request<UserResDto, any>({
               path: `/api/users`,
               method: "POST",
               body: data,

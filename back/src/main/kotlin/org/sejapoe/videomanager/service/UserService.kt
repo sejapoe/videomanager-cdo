@@ -44,11 +44,11 @@ class UserService(
         return user to jwtService.generateToken(user)
     }
 
-    fun createLecturer(name: String, email: String): UUID {
+    fun createLecturer(name: String, email: String): User {
         val user = User(email, "", name, Role.ROLE_USER, false)
         val activator = UserActivation(UUID.randomUUID(), user)
         userActivationRepo.save(activator)
-        return activator.uuid
+        return user
     }
 
     fun getUserActivation(uuid: UUID) = userActivationRepo.findByUuid(uuid) ?: throw UserActivationNotFoundException()

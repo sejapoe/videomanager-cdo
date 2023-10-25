@@ -24,7 +24,7 @@ class UserController(
     @PostMapping("/api/users")
     @IsAdmin
     fun createLecturer(@RequestBody createLecturerReq: CreateLecturerReq) =
-        userService.createLecturer(createLecturerReq.name, createLecturerReq.email)
+        userService.createLecturer(createLecturerReq.name, createLecturerReq.email).let(userMapper::toUserRes)
 
     @GetMapping("/api/users")
     @IsAdmin

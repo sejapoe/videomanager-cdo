@@ -1,5 +1,3 @@
-import React from "react";
-import {Dialog} from "@headlessui/react";
 import {Form} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
 import {InputField} from "../../../../ui/form/InputField.tsx";
@@ -17,64 +15,53 @@ type NewLecturerValues = {
 }
 
 type NewLecturerDialogProps = {
-    isOpen: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
     defaultName: string;
+    onSubmit: (id: number) => void;
+    close: () => void;
 }
 
-export const NewLecturerDialog = ({isOpen, setOpen, defaultName}: NewLecturerDialogProps) => {
+export const NewLecturerDialog = ({defaultName, onSubmit, close}: NewLecturerDialogProps) => {
     const {mutate, isLoading} = useCreateLecturer()
 
-    return <Dialog open={isOpen} onClose={() => setOpen(false)} className="relative z-50">
-        <div className="fixed inset-0 bg-black/30" aria-hidden="true"/>
+    return <Form<NewLecturerValues, typeof schema>
+        onSubmit={(data) => {
+            // mutate data
+            mutate(data, {
+                onSuccess: ({data}) => {
+                    onSubmit(data.id)
+                    close()
+                }
+            })
+        }}
+        schema={schema}
+    >
+        {({register, formState}) => (
+            <>
+                <InputField
+                    type="text"
+                    label="Полное имя"
+                    defaultValue={defaultName}
+                    error={formState.errors["name"]}
+                    registration={register("name")}
+                />
 
-        <div className="fixed inset-0 flex w-screen h-screen items-center justify-center p-4">
-            <Dialog.Panel className="mx-auto min-w-fit max-w-sm rounded bg-white p-4">
-                <Dialog.Title className="text-gray-500 text-xl font-bold mb-4">Создание преподавателя</Dialog.Title>
+                <InputField
+                    type="email"
+                    label="Эллектронная почта"
+                    error={formState.errors["email"]}
+                    registration={register("email")}
+                />
 
-                <Form<NewLecturerValues, typeof schema>
-                    onSubmit={(data) => {
-                        // mutate data
-                        mutate(data, {
-                            onSuccess: () => {
-                                setOpen(false)
-                            }
-                        })
-                    }}
-                    schema={schema}
-                >
-                    {({register, formState}) => (
-                        <>
-                            <InputField
-                                type="text"
-                                label="Полное имя"
-                                defaultValue={defaultName}
-                                error={formState.errors["name"]}
-                                registration={register("name")}
-                            />
+                <div className="flex flex-row space-x-2">
+                    <Button className="w-full" type="submit" isLoading={isLoading}>
+                        Создать
+                    </Button>
+                    <Button className="w-full" variant="inverse" onClick={() => close()}>
+                        Закрыть
+                    </Button>
+                </div>
 
-                            <InputField
-                                type="email"
-                                label="Эллектронная почта"
-                                error={formState.errors["email"]}
-                                registration={register("email")}
-                            />
-
-                            <div className="flex flex-row space-x-2">
-                                <Button className="w-full" type="submit" isLoading={isLoading}>
-                                    Создать
-                                </Button>
-                                <Button className="w-full" variant="inverse" onClick={() => setOpen(false)}>
-                                    Закрыть
-                                </Button>
-                            </div>
-
-                        </>
-                    )}
-                </Form>
-
-
-            </Dialog.Panel>
-        </div>
-    </Dialog>
+            </>
+        )}
+    </Form>
 }

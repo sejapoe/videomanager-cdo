@@ -17,7 +17,7 @@ export const lecturerKeys = {
 }
 
 type UseCreateLecturerMutation = UseMutationOptions<
-    HttpResponse<void, unknown>,
+    HttpResponse<UserResDto, unknown>,
     GenericErrorModel,
     CreateLecturerReqDto,
     unknown
