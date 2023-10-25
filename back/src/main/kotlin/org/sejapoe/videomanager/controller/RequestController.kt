@@ -26,7 +26,6 @@ class RequestController(
         ).let(requestMapper::toRequestRes)
 
     @IsAdmin
-    @GetMapping
-    @PostMapping("/api/requests")
+    @GetMapping("/api/requests")
     fun getRequests() = requestService.getAll().map(requestMapper::toRequestRes)
 }

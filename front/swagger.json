@@ -72,6 +72,67 @@
         ]
       }
     },
+    "/api/requests": {
+      "get": {
+        "tags": [
+          "request-controller"
+        ],
+        "operationId": "getRequests",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RequestRes"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "request-controller"
+        ],
+        "operationId": "createRequest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequestReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/institutes": {
       "get": {
         "tags": [
@@ -86,7 +147,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/InstituteRes"
+                    "$ref": "#/components/schemas/InstituteWithDepartmentsRes"
                   }
                 }
               }
@@ -120,7 +181,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/InstituteRes"
+                  "$ref": "#/components/schemas/InstituteWithDepartmentsRes"
                 }
               }
             }
@@ -439,13 +500,32 @@
           }
         }
       },
-      "CreateInstituteReq": {
+      "CreateRequestReq": {
         "required": [
+          "department_id",
+          "institute_id",
+          "lecturer_id",
+          "linkToMoodle",
           "name"
         ],
         "type": "object",
         "properties": {
           "name": {
+            "type": "string"
+          },
+          "lecturer_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "institute_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "department_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "linkToMoodle": {
             "type": "string"
           }
         }
@@ -467,6 +547,75 @@
         }
       },
       "InstituteRes": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "RequestRes": {
+        "required": [
+          "department",
+          "id",
+          "institute",
+          "lecturer",
+          "linkToMoodle",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lecturer": {
+            "$ref": "#/components/schemas/UserRes"
+          },
+          "institute": {
+            "$ref": "#/components/schemas/InstituteRes"
+          },
+          "department": {
+            "$ref": "#/components/schemas/DepartmentRes"
+          },
+          "linkToMoodle": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DENIED",
+              "CREATED",
+              "WIP",
+              "COMPLETE"
+            ]
+          }
+        }
+      },
+      "CreateInstituteReq": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "InstituteWithDepartmentsRes": {
         "required": [
           "departments",
           "id",

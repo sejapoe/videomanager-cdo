@@ -10,6 +10,7 @@ import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
 import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {useQueryClient} from "@tanstack/react-query";
+import {useCreateRequest} from "../api/requestsApi.ts";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),
@@ -21,13 +22,19 @@ const schema = z.object({
 
 type NewRequestValues = {
     name: string;
-    lecturer_id: string;
+    lecturer_id: number;
     institute_id: string;
     department_id: string;
     linkToMoodle: string;
 }
 
-export const NewRequestForm = () => {
+type NewRequestFormProps = {
+    onSuccess: () => void;
+}
+
+export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
+    const {mutate, isLoading} = useCreateRequest();
+
     const queryClient = useQueryClient();
 
     const {
@@ -58,6 +65,15 @@ export const NewRequestForm = () => {
             <Form<NewRequestValues, typeof schema>
                 onSubmit={data => {
                     console.log(data)
+                    mutate({
+                        name: data.name,
+                        lecturer_id: data.lecturer_id,
+                        institute_id: parseInt(data.institute_id),
+                        department_id: parseInt(data.department_id),
+                        linkToMoodle: data.linkToMoodle
+                    }, {
+                        onSuccess
+                    })
                 }}
                 schema={schema}
                 className="w-1/3"
@@ -128,7 +144,7 @@ export const NewRequestForm = () => {
                                     error={formState.errors["linkToMoodle"]}
                                     registration={register("linkToMoodle")}/>
 
-                        <Button type="submit">Создать</Button>
+                        <Button type="submit" isLoading={isLoading}>Создать</Button>
                     </>
                 )}
             </Form>

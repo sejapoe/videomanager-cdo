@@ -34,8 +34,15 @@ export interface UserResDto {
     role: "ROLE_USER" | "ROLE_ADMIN";
 }
 
-export interface CreateInstituteReqDto {
+export interface CreateRequestReqDto {
   name: string;
+    /** @format int64 */
+    lecturer_id: number;
+    /** @format int64 */
+    institute_id: number;
+    /** @format int64 */
+    department_id: number;
+    linkToMoodle: string;
 }
 
 export interface DepartmentResDto {
@@ -48,6 +55,27 @@ export interface InstituteResDto {
   /** @format int64 */
   id: number;
   name: string;
+}
+
+export interface RequestResDto {
+    /** @format int64 */
+    id: number;
+    name: string;
+    lecturer: UserResDto;
+    institute: InstituteResDto;
+    department: DepartmentResDto;
+    linkToMoodle: string;
+    status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+}
+
+export interface CreateInstituteReqDto {
+    name: string;
+}
+
+export interface InstituteWithDepartmentsResDto {
+    /** @format int64 */
+    id: number;
+    name: string;
   departments: DepartmentResDto[];
 }
 
@@ -337,6 +365,40 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
               ...params,
           }),
 
+      /**
+       * No description
+       *
+       * @tags request-controller
+       * @name GetRequests
+       * @request GET:/api/requests
+       * @secure
+       */
+      getRequests: (params: RequestParams = {}) =>
+          this.request<RequestResDto[], any>({
+              path: `/api/requests`,
+              method: "GET",
+              secure: true,
+              ...params,
+          }),
+
+      /**
+       * No description
+       *
+       * @tags request-controller
+       * @name CreateRequest
+       * @request POST:/api/requests
+       * @secure
+       */
+      createRequest: (data: CreateRequestReqDto, params: RequestParams = {}) =>
+          this.request<RequestResDto, any>({
+              path: `/api/requests`,
+              method: "POST",
+              body: data,
+              secure: true,
+              type: ContentType.Json,
+              ...params,
+          }),
+
     /**
      * No description
      *
@@ -346,7 +408,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     getAllInstitutes: (params: RequestParams = {}) =>
-        this.request<InstituteResDto[], any>({
+        this.request<InstituteWithDepartmentsResDto[], any>({
             path: `/api/institutes`,
             method: "GET",
             secure: true,
@@ -362,7 +424,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     createInstitute: (data: CreateInstituteReqDto, params: RequestParams = {}) =>
-        this.request<InstituteResDto, any>({
+        this.request<InstituteWithDepartmentsResDto, any>({
             path: `/api/institutes`,
             method: "POST",
             body: data,

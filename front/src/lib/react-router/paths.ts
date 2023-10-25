@@ -1,5 +1,8 @@
 export const PATH_PAGE = {
     root: '/',
     login: '/auth/login',
-    app: '/app'
+    app: {
+        root: "/app",
+        requests: "/app/requests"
+    }
 }

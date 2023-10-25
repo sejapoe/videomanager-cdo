@@ -47,6 +47,6 @@ export const adminRoutes: RouteObject[] = [
         ]
     },
     {
-        path: "/", element: <Navigate to={PATH_PAGE.app} replace/>
+        path: "/", element: <Navigate to={PATH_PAGE.app.root} replace/>
     }
 ]

@@ -2,9 +2,22 @@ import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {useNavigate} from "react-router-dom";
+import {Request, useRequests} from "../api/requestsApi.ts";
+import Spinner from "../../../../ui/spinner";
+
+
+type RequestTableProps = {
+    requests: Request[];
+}
+
+const RequestsTable = ({requests}: RequestTableProps) => {
+    return <span className="text-gray-900 text-xl">{requests.length} запрос</span>
+}
 
 export const Requests = () => {
+    const {data: requests} = useRequests();
     const nav = useNavigate()
+
 
     return <ContentLayout title="Запросы">
         <div>
@@ -17,7 +30,7 @@ export const Requests = () => {
                     Создать
                 </Button>
             </div>
-            {/*<table></table>*/}
+            {requests ? <RequestsTable requests={requests}/> : <Spinner/>}
         </div>
     </ContentLayout>
 }

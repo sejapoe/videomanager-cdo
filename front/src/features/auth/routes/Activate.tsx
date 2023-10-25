@@ -22,6 +22,6 @@ export const Activate = () => {
     }
 
     return <Layout title={"Активация аккаунта"}>
-        <ActivateForm uuid={uuid!} user={user!} onSuccess={() => nav(PATH_PAGE.app)}/>
+        <ActivateForm uuid={uuid!} user={user!} onSuccess={() => nav(PATH_PAGE.app.root)}/>
     </Layout>
 }

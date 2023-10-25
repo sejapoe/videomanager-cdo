@@ -8,6 +8,6 @@ export const Login = () => {
     const navigate = useNavigate()
 
     return <Layout title={"Войдите в ваш аккаунт"}>
-        <LoginForm onSuccess={() => navigate(PATH_PAGE.app)}/>
+        <LoginForm onSuccess={() => navigate(PATH_PAGE.app.root)}/>
     </Layout>
 }
