@@ -97,6 +97,7 @@ export const NewRequestForm = () => {
                         />
 
                         <SelectField
+                            defaultBlank
                             options={institutes?.map(value => ({
                                 value: value.id,
                                 label: value.name
@@ -106,10 +107,16 @@ export const NewRequestForm = () => {
                             registration={register("institute_id")}/>
 
                         <SelectField
-                            options={institutes?.find(v => v.id.toString() == watch("institute_id"))?.departments?.map(value => ({
-                                value: value.id,
-                                label: value.name
-                            })) || []}
+                            defaultBlank
+                            options={
+                                institutes?.find(v => {
+                                    console.log(watch("institute_id"))
+                                    return v.id.toString() == watch("institute_id");
+                                })?.departments?.map(value => ({
+                                    value: value.id,
+                                    label: value.name
+                                })) || []
+                            }
                             label={"Кафедра"}
                             error={formState.errors["department_id"]}
                             registration={register("department_id")}/>
@@ -120,7 +127,9 @@ export const NewRequestForm = () => {
                                     error={formState.errors["linkToMoodle"]}
                                     registration={register("linkToMoodle")}/>
 
-                        <Button type="submit">Создать</Button>
+                        <Button type="submit" onClick={() => {
+                            console.log(control._formValues)
+                        }}>Создать</Button>
                     </>
                 )}
             </Form>

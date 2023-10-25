@@ -25,7 +25,6 @@ const api = new Api<string>({
         format: "json"
     },
     securityWorker: (token) => {
-        console.log(token)
         return token ? {headers: {Authorization: `Bearer ${token}`}} : {};
     }
 })

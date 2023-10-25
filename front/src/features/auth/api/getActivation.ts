@@ -17,14 +17,10 @@ export const useActivation = (uuid: string, params?: RequestParams) =>
     useQuery<User, GenericErrorModel, User, string[]>({
         queryKey: authKeys.activation.root,
         queryFn: async ({signal}) => {
-            console.log(uuid)
-
             const response = await api.getActivation(uuid, {
                 signal,
                 ...params
             })
-
-            console.log(response)
 
             return mapUser(response.data)
         }
