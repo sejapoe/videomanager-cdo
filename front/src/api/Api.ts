@@ -587,38 +587,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       /**
        * No description
        *
-       * @tags request-controller
-       * @name GetUserRequests
-       * @request GET:/api/user/requests
-       * @secure
-       */
-      getUserRequests: (
-          query?: {
-              /** @format int32 */
-              page?: number;
-              /** @format int32 */
-              size?: number;
-              /** @format int64 */
-              institute?: number;
-              /** @format int64 */
-              department?: number;
-              status?: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
-              sorting?: string;
-              direction?: "ASC" | "DESC";
-          },
-          params: RequestParams = {},
-      ) =>
-          this.request<PageRequestResDto, any>({
-              path: `/api/user/requests`,
-              method: "GET",
-              query: query,
-              secure: true,
-              ...params,
-          }),
-
-      /**
-       * No description
-       *
        * @tags auth-controller
        * @name GetActivation
        * @request GET:/api/auth/activation/{uuid}

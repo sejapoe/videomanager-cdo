@@ -3,6 +3,7 @@ import {devtools, persist} from "zustand/middleware";
 import {apiProvider} from "../../api";
 
 type User = {
+    id: number;
     email: string;
     token: string;
     fullName: string;
