@@ -4,11 +4,15 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.request.CreateRequestReq
 import org.sejapoe.videomanager.dto.request.FilterRequestReq
+import org.sejapoe.videomanager.dto.request.FilterUserRequestReq
 import org.sejapoe.videomanager.mapper.RequestMapper
+import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsAdmin
+import org.sejapoe.videomanager.security.annotations.IsUser
 import org.sejapoe.videomanager.service.RequestService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -32,5 +36,14 @@ class RequestController(
     @GetMapping("/api/requests")
     fun getRequests(@ParameterObject @Schema filterRequestReq: FilterRequestReq) =
         requestService.getAll(filterRequestReq.toPredicate(), filterRequestReq.toPageable())
+            .map(requestMapper::toRequestRes)
+
+    @IsUser
+    @GetMapping("/api/user/requests")
+    fun getUserRequests(
+        @ParameterObject @Schema filterRequestReq: FilterUserRequestReq,
+        @AuthenticationPrincipal user: User
+    ) =
+        requestService.getAll(filterRequestReq.toPredicateWithUser(user.id), filterRequestReq.toPageable())
             .map(requestMapper::toRequestRes)
 }

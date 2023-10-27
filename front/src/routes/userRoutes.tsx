@@ -1,28 +1,34 @@
-import {RouteObject, useNavigate} from "react-router-dom";
-import {Layout} from "../ui/layout/Layout.tsx";
-import {Button} from "../ui/button/Button.tsx";
-import {logout} from "../features/auth/api/logoutUser.ts";
-import {useQueryClient} from "@tanstack/react-query";
-import {PATH_PAGE} from "../lib/react-router";
+import {Outlet, RouteObject} from "react-router-dom";
+import {MainLayout} from "../ui/layout/MainLayout.tsx";
+import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
+import {Suspense} from "react";
+import Spinner from "../ui/spinner";
+import {UserRequestsRoutes} from "../features/user/requests/routes";
 
-const Test = () => {
-    const queryClient = useQueryClient();
-    const navigate = useNavigate();
-
-    return <Layout title="Success">
-        <div className="flex space-y-5 justify-center flex-col items-center py-10">
-            <h1 className="text-gray-500">Authorized</h1>
-            <Button className="w-full" onClick={() => {
-                logout(queryClient)
-                navigate(PATH_PAGE.login);
-            }}>Выйти</Button>
-        </div>
-    </Layout>
+const App = () => {
+    return (
+        <MainLayout navigation={
+            [
+                {name: "Запросы", to: "./requests", icon: solid("list-check")},
+            ]
+        }>
+            <Suspense fallback={
+                <div className="h-full w-full flex items-center justify-center">
+                    <Spinner/>
+                </div>
+            }>
+                <Outlet/>
+            </Suspense>
+        </MainLayout>
+    )
 }
 
 export const userRoutes: RouteObject[] = [
     {
-        path: "/",
-        element: <Test/>
+        path: "/app",
+        element: <App/>,
+        children: [
+            {path: "requests", element: <UserRequestsRoutes/>}
+        ]
     }
 ]

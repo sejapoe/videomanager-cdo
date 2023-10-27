@@ -61,9 +61,10 @@ const UserNavigation = () => {
             <>
                 <div>
                     <Menu.Button
-                        className={clsx("max-w-xs bg-gray-200 py-2 px-4 flex items-center text-sm rounded-full",
+                        className={clsx("whitespace-nowrap bg-gray-200 py-2 px-4 flex items-center rounded-full",
+                            "text-gray-500 text-lg",
                             "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")}>
-                        <span className="text-gray-500 text-lg">{user.fullName}</span>
+                        {user.fullName}
                     </Menu.Button>
                 </div>
                 <Transition

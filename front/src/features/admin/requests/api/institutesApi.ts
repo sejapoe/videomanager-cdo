@@ -1,20 +1,8 @@
 import {InstituteResDto, InstituteWithDepartmentsResDto, RequestParams} from "../../../../api/Api.ts";
 import {useQuery} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
+import {Institute, InstituteWithDepartments} from "../../../common/institutes/model";
 
-export type Department = {
-    id: number;
-    name: string;
-}
-
-export type Institute = {
-    id: number;
-    name: string;
-}
-
-export type InstituteWithDepartments = Institute & {
-    departments: Department[];
-}
 
 export function mapInstitute(instituteDto: InstituteResDto): Institute {
     return instituteDto;
