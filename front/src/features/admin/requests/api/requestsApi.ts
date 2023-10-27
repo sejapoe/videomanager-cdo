@@ -48,15 +48,15 @@ export const useCreateRequest = (options?: UseCreateRequestOptions) =>
         ...options
     })
 
-export const useRequests = (params?: RequestParams) =>
+export const useRequests = (filter?: {}, params?: RequestParams) =>
     useQuery<Request[], GenericErrorModel, Request[], string[]>({
         queryKey: requestsKeys.requests.root,
         queryFn: async ({signal}) => {
-            const response = await api.getRequests({
+            const response = await api.getRequests(filter || {}, {
                 signal,
                 ...params
             })
 
-            return response.data.map(mapRequest)
+            return response.data.content?.map(mapRequest) || []
         }
     })

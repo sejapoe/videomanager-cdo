@@ -114,6 +114,43 @@ export interface ActivateUserReqDto {
     password: string;
 }
 
+export interface PageRequestResDto {
+    /** @format int32 */
+    totalPages?: number;
+    /** @format int64 */
+    totalElements?: number;
+    pageable?: PageableObjectDto;
+    first?: boolean;
+    last?: boolean;
+    /** @format int32 */
+    size?: number;
+    content?: RequestResDto[];
+    /** @format int32 */
+    number?: number;
+    sort?: SortObjectDto;
+    /** @format int32 */
+    numberOfElements?: number;
+    empty?: boolean;
+}
+
+export interface PageableObjectDto {
+    /** @format int32 */
+    pageNumber?: number;
+    /** @format int32 */
+    pageSize?: number;
+    /** @format int64 */
+    offset?: number;
+    sort?: SortObjectDto;
+    paged?: boolean;
+    unpaged?: boolean;
+}
+
+export interface SortObjectDto {
+    sorted?: boolean;
+    empty?: boolean;
+    unsorted?: boolean;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -373,10 +410,28 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
        * @request GET:/api/requests
        * @secure
        */
-      getRequests: (params: RequestParams = {}) =>
-          this.request<RequestResDto[], any>({
+      getRequests: (
+          query?: {
+              /** @format int32 */
+              page?: number;
+              /** @format int32 */
+              size?: number;
+              /** @format int64 */
+              user?: number;
+              /** @format int64 */
+              institute?: number;
+              /** @format int64 */
+              department?: number;
+              status?: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+              sorting?: string;
+              direction?: "ASC" | "DESC";
+          },
+          params: RequestParams = {},
+      ) =>
+          this.request<PageRequestResDto, any>({
               path: `/api/requests`,
               method: "GET",
+              query: query,
               secure: true,
               ...params,
           }),

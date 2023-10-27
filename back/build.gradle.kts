@@ -53,11 +53,21 @@ dependencies {
     kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
     // query dsl
-    implementation("com.querydsl:querydsl-jpa:4.2.2")
-    kapt("com.querydsl:querydsl-apt:4.2.2:jpa")
-
+//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+//    implementation("com.querydsl:querydsl-core:5.0.0")
+//    implementation("com.querydsl:querydsl-jpa:5.0.0")
 }
 
+kapt {
+    javacOptions {
+        option("querydsl.entityAccessors", true)
+    }
+    arguments {
+        arg("plugin", "com.querydsl.apt.jpa.JPAAnnotationProcessor")
+    }
+}
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {

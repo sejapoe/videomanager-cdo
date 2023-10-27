@@ -1,9 +1,12 @@
 package org.sejapoe.videomanager.service
 
+import com.querydsl.core.types.Predicate
 import org.sejapoe.videomanager.exception.ConflictException
 import org.sejapoe.videomanager.model.Request
 import org.sejapoe.videomanager.model.RequestStatus
 import org.sejapoe.videomanager.repo.RequestRepo
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -26,6 +29,6 @@ class RequestService(
         return request
     }
 
-    fun getAll(): List<Request> = requestRepo.findAll()
+    fun getAll(predicate: Predicate, pageable: Pageable): Page<Request> = requestRepo.findAll(predicate, pageable)
 
 }
