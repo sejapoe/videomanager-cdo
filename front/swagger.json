@@ -461,6 +461,42 @@
         ]
       }
     },
+    "/api/requests/{id}": {
+      "get": {
+        "tags": [
+          "request-controller"
+        ],
+        "operationId": "getRequest",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/auth/activation/{uuid}": {
       "get": {
         "tags": [
@@ -814,12 +850,6 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
-          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -836,6 +866,12 @@
           },
           "sort": {
             "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",

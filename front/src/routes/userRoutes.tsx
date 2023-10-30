@@ -28,7 +28,7 @@ export const userRoutes: RouteObject[] = [
         path: "/app",
         element: <App/>,
         children: [
-            {path: "requests", element: <UserRequestsRoutes/>}
+            {path: "requests/*", element: <UserRequestsRoutes/>}
         ]
     }
 ]

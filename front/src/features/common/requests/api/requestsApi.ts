@@ -10,7 +10,8 @@ export function mapRequest(requestDto: RequestResDto): Request {
 
 export const requestsKeys = {
     requests: {
-        root: ['common', 'requests']
+        root: ['common', 'requests'],
+        byId: (id: number) => [...requestsKeys.requests.root, id.toString()]
     },
 }
 
@@ -24,5 +25,18 @@ export const useRequests = (filter?: {}, params?: RequestParams) =>
             })
 
             return response.data.content?.map(mapRequest) || []
+        }
+    })
+
+export const useRequest = (id: number, params?: RequestParams) =>
+    useQuery<Request, GenericErrorModel, Request, string[]>({
+        queryKey: requestsKeys.requests.byId(id),
+        queryFn: async ({signal}) => {
+            const response = await api.getRequest(id, {
+                signal,
+                ...params
+            })
+
+            return mapRequest(response.data)
         }
     })

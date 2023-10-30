@@ -44,4 +44,10 @@ class RequestController(
             filterRequestReq.toPageable()
         )
             .map(requestMapper::toRequestRes)
+
+
+    @Secure
+    @GetMapping("/api/requests/{id}")
+    fun getRequest(@PathVariable("id") @Valid id: Long, @AuthenticationPrincipal user: User) =
+        requestService.get(user, id).let(requestMapper::toRequestRes)
 }

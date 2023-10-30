@@ -120,14 +120,14 @@ export interface PageRequestResDto {
     /** @format int64 */
     totalElements?: number;
     pageable?: PageableObjectDto;
-    first?: boolean;
-    last?: boolean;
     /** @format int32 */
     size?: number;
     content?: RequestResDto[];
     /** @format int32 */
     number?: number;
     sort?: SortObjectDto;
+    first?: boolean;
+    last?: boolean;
     /** @format int32 */
     numberOfElements?: number;
     empty?: boolean;
@@ -579,6 +579,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       getUser: (params: RequestParams = {}) =>
           this.request<UserResDto, any>({
               path: `/api/user`,
+              method: "GET",
+              secure: true,
+              ...params,
+          }),
+
+      /**
+       * No description
+       *
+       * @tags request-controller
+       * @name GetRequest
+       * @request GET:/api/requests/{id}
+       * @secure
+       */
+      getRequest: (id: number, params: RequestParams = {}) =>
+          this.request<RequestResDto, any>({
+              path: `/api/requests/${id}`,
               method: "GET",
               secure: true,
               ...params,
