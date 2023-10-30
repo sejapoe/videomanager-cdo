@@ -1,5 +1,6 @@
 package org.sejapoe.videomanager.dto.request
 
+import com.querydsl.core.types.ExpressionUtils
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.Expressions
 import org.sejapoe.videomanager.model.QRequest
@@ -20,7 +21,6 @@ data class FilterRequestReq(
 ) {
 
     fun toPredicate(): Predicate {
-        println(this)
         val list = listOfNotNull(
             user?.let {
                 QRequest.request.lecturer.id.eq(it)
@@ -34,9 +34,8 @@ data class FilterRequestReq(
             status?.let {
                 QRequest.request.status.eq(it)
             }
-        ).toTypedArray()
-        println(list.toList())
-        return if (list.isEmpty()) Expressions.TRUE else Expressions.allOf(*list)
+        )
+        return ExpressionUtils.allOf(list) ?: Expressions.TRUE
     }
 
     fun toPageable(): Pageable =

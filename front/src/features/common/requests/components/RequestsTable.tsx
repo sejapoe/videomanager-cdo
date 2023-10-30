@@ -1,5 +1,6 @@
 import {Request, RequestStatus} from "../model";
 import clsx, {ClassValue} from "clsx";
+import {useNavigate} from "react-router-dom";
 
 type RequestTableProps = {
     requests: Request[];
@@ -21,6 +22,8 @@ const statusColor: Record<RequestStatus, [ClassValue, ClassValue]> = {
 }
 
 export const RequestsTable = ({requests}: RequestTableProps) => {
+    const nav = useNavigate();
+
     return <table className="text-gray-900 table-auto w-full">
         <thead className="text-left text-white">
         <tr className="bg-gray-700">
@@ -36,8 +39,8 @@ export const RequestsTable = ({requests}: RequestTableProps) => {
         {requests.map((value, index) => (
             <tr className={clsx(
                 index % 2 == 0 ? "bg-gray-200" : "bg-gray-300",
-                "space-x-2"
-            )}>
+                "space-x-2 cursor-pointer"
+            )} onClick={() => nav(`./${value.id}`)}>
                 <td className="px-4 py-2 border-2 border-gray-100">{value.id}</td>
                 <td className="px-4 py-2 border-2 border-gray-100">{value.name}</td>
                 <td className="px-4 py-2 border-2 border-gray-100">{value.lecturer.fullName}</td>
