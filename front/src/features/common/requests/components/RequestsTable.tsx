@@ -18,7 +18,7 @@ const statusColor: Record<RequestStatus, [ClassValue, ClassValue]> = {
     "DENIED": ["bg-red-200", "bg-red-300"],
     "CREATED": ["bg-cyan-200", "bg-cyan-300"],
     "WIP": ["bg-yellow-200", "bg-yellow-300"],
-    "COMPLETE": ["bg-green-20", "bg-green-300"],
+    "COMPLETE": ["bg-green-200", "bg-green-300"],
 }
 
 export const RequestsTable = ({requests}: RequestTableProps) => {
