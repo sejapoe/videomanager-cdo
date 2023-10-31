@@ -40,7 +40,7 @@ export const RequestsTable = ({requests}: RequestTableProps) => {
             <tr className={clsx(
                 index % 2 == 0 ? "bg-gray-200" : "bg-gray-300",
                 "space-x-2 cursor-pointer"
-            )} onClick={() => nav(`./${value.id}`)}>
+            )} onClick={() => nav(`./${value.id}`)} key={value.id}>
                 <td className="px-4 py-2 border-2 border-gray-100">{value.id}</td>
                 <td className="px-4 py-2 border-2 border-gray-100">{value.name}</td>
                 <td className="px-4 py-2 border-2 border-gray-100">{value.lecturer.fullName}</td>

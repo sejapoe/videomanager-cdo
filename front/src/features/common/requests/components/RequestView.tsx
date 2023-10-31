@@ -1,15 +1,16 @@
 import React from "react";
 import {Link, useParams} from "react-router-dom";
 import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
-import {Request} from "../model";
+import {FullRequest} from "../model";
 import {useRequest} from "../api/requestsApi.ts";
 import Spinner from "../../../../ui/spinner";
+import {CorrectionsProps} from "../../corrections/components/CorrectionProps.ts";
 
 type RequestContentProps = RequestProps & {
-    request: Request
+    request: FullRequest
 }
 
-const RequestContent = ({request, commentSection}: RequestContentProps) => {
+const RequestContent = ({request, correctionsSection}: RequestContentProps) => {
     return <ContentLayout title={`Пу-пу-пу ${request.name}`}>
         <div className="text-gray-700">
             <h2 className="mt-4 mb-2 text-2xl">Основная информация: </h2>
@@ -20,19 +21,22 @@ const RequestContent = ({request, commentSection}: RequestContentProps) => {
                 <li><Link to={request.linkToMoodle}>Ссылка на СДО</Link></li>
             </ul>
         </div>
-        {commentSection}
+        {correctionsSection({
+            parentRequestId: request.id,
+            corrections: request.corrections
+        })}
     </ContentLayout>
 }
 
 type RequestProps = {
-    commentSection: React.ReactNode;
+    correctionsSection: (props: CorrectionsProps) => React.ReactNode;
 }
 
 
-export const RequestView = ({commentSection}: RequestProps) => {
+export const RequestView = ({correctionsSection}: RequestProps) => {
     const {id} = useParams();
 
     const {data: request} = useRequest(parseInt(id || ""))
 
-    return request ? <RequestContent commentSection={commentSection} request={request}/> : <Spinner/>
+    return request ? <RequestContent correctionsSection={correctionsSection} request={request}/> : <Spinner/>
 }

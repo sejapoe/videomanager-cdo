@@ -1,5 +1,5 @@
-import {Request} from "../model";
-import {RequestParams, RequestResDto} from "../../../../api/Api.ts";
+import {FullRequest, Request} from "../model";
+import {FullRequestResDto, RequestParams, RequestResDto} from "../../../../api/Api.ts";
 import {useQuery} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
 
@@ -7,6 +7,11 @@ import api, {GenericErrorModel} from "../../../../api";
 export function mapRequest(requestDto: RequestResDto): Request {
     return requestDto
 }
+
+export function mapFullRequest(requestDto: FullRequestResDto): FullRequest {
+    return requestDto
+}
+
 
 export const requestsKeys = {
     requests: {
@@ -29,7 +34,7 @@ export const useRequests = (filter?: {}, params?: RequestParams) =>
     })
 
 export const useRequest = (id: number, params?: RequestParams) =>
-    useQuery<Request, GenericErrorModel, Request, string[]>({
+    useQuery<FullRequest, GenericErrorModel, FullRequest, string[]>({
         queryKey: requestsKeys.requests.byId(id),
         queryFn: async ({signal}) => {
             const response = await api.getRequest(id, {
@@ -37,6 +42,6 @@ export const useRequest = (id: number, params?: RequestParams) =>
                 ...params
             })
 
-            return mapRequest(response.data)
+            return mapFullRequest(response.data)
         }
     })

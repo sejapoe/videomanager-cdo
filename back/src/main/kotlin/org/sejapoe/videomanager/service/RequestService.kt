@@ -28,7 +28,9 @@ class RequestService(
         if (department.institute != institute) throw ConflictException("Department ${department.name} does not belong to institute ${institute.name}")
 
         val request =
-            Request(name, lecturer, institute, department, RequestStatus.CREATED, linkToMoodle).let(requestRepo::save)
+            Request(name, lecturer, institute, department, RequestStatus.CREATED, linkToMoodle, emptyList()).let(
+                requestRepo::save
+            )
 
         // todo: notify lecturer
         return request

@@ -436,6 +436,84 @@
         }
       }
     },
+    "/api/corrections/{id}/user": {
+      "patch": {
+        "tags": [
+          "correction-controller"
+        ],
+        "operationId": "editUserComment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditCorrectionReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
+    "/api/corrections/{id}/admin": {
+      "patch": {
+        "tags": [
+          "correction-controller"
+        ],
+        "operationId": "editAdminComment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditCorrectionReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/user": {
       "get": {
         "tags": [
@@ -484,7 +562,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/RequestRes"
+                  "$ref": "#/components/schemas/FullRequestRes"
                 }
               }
             }
@@ -836,6 +914,17 @@
           }
         }
       },
+      "EditCorrectionReq": {
+        "required": [
+          "comment"
+        ],
+        "type": "object",
+        "properties": {
+          "comment": {
+            "type": "string"
+          }
+        }
+      },
       "PageRequestRes": {
         "type": "object",
         "properties": {
@@ -919,6 +1008,89 @@
           },
           "unsorted": {
             "type": "boolean"
+          }
+        }
+      },
+      "CorrectionRes": {
+        "required": [
+          "adminComment",
+          "comment",
+          "endTimeCode",
+          "id",
+          "imgUrl",
+          "startTimeCode"
+        ],
+        "type": "object",
+        "properties": {
+          "startTimeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "endTimeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "adminComment": {
+            "type": "string"
+          },
+          "imgUrl": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "FullRequestRes": {
+        "required": [
+          "corrections",
+          "department",
+          "id",
+          "institute",
+          "lecturer",
+          "linkToMoodle",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lecturer": {
+            "$ref": "#/components/schemas/UserRes"
+          },
+          "institute": {
+            "$ref": "#/components/schemas/InstituteRes"
+          },
+          "department": {
+            "$ref": "#/components/schemas/DepartmentRes"
+          },
+          "linkToMoodle": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DENIED",
+              "CREATED",
+              "WIP",
+              "COMPLETE"
+            ]
+          },
+          "corrections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CorrectionRes"
+            }
           }
         }
       }

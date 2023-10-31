@@ -49,5 +49,5 @@ class RequestController(
     @Secure
     @GetMapping("/api/requests/{id}")
     fun getRequest(@PathVariable("id") @Valid id: Long, @AuthenticationPrincipal user: User) =
-        requestService.get(user, id).let(requestMapper::toRequestRes)
+        requestService.get(user, id).let(requestMapper::toFullRequestRes)
 }

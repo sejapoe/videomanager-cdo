@@ -27,6 +27,13 @@ class Request(
     @Column(name = "link_to_moodle")
     var linkToMoodle: String,
 
+    @OneToMany(
+        mappedBy = "request", cascade = [CascadeType.PERSIST, CascadeType.MERGE],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    val corrections: List<Correction>,
+
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "requests_seq")
     @SequenceGenerator(name = "requests_seq", sequenceName = "requests_seq", allocationSize = 1)
     var id: Long = -1,
