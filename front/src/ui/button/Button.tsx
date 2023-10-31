@@ -6,7 +6,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const variants = {
     primary: 'bg-blue-600 text-white',
-    inverse: 'bg-white text-blue-600',
+    inverse: 'bg-gray-100 text-blue-600',
     danger: 'bg-red-600 text-white',
 };
 

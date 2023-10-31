@@ -1,6 +1,6 @@
 import {useMutation, UseMutationOptions} from "@tanstack/react-query";
-import api, {GenericErrorModel} from "../../../../api";
-import {EditCorrectionReqDto} from "../../../../api/Api.ts";
+import api, {GenericErrorModel, HttpResponse} from "../../../../api";
+import {CorrectionResDto, CreateCorrectionReqDto, EditCorrectionReqDto} from "../../../../api/Api.ts";
 
 export const correctionsKeys = {
     corrections: {
@@ -8,7 +8,8 @@ export const correctionsKeys = {
     },
 
     mutation: {
-        updateUserComment: () => [...correctionsKeys.corrections.root, 'updateUserComment']
+        updateUserComment: () => [...correctionsKeys.corrections.root, 'updateUserComment'],
+        create: () => [...correctionsKeys.corrections.root, 'create']
     }
 }
 
@@ -26,6 +27,27 @@ export const useUpdateUserComment = (id: number, options?: UseUpdateUserCommentO
         GenericErrorModel,
         EditCorrectionReqDto,
         unknown
-    >(correctionsKeys.mutation.updateUserComment(), async (dto: EditCorrectionReqDto) => {
-        await api.editUserComment(id, dto)
-    }, options)
+    >(
+        correctionsKeys.mutation.updateUserComment(),
+        async (dto: EditCorrectionReqDto) => {
+            await api.editUserComment(id, dto)
+        },
+        options
+    )
+
+export type UseCreateCorrectionMutation = UseMutationOptions<
+    HttpResponse<CorrectionResDto, void>,
+    GenericErrorModel,
+    CreateCorrectionReqDto
+>
+
+type UseCreateCorrectionOptions = Omit<UseCreateCorrectionMutation, 'mutationFn' | 'mutationKey'>
+
+export const useCreateCorrection = (options?: UseCreateCorrectionOptions) =>
+    useMutation<HttpResponse<CorrectionResDto, void>,
+        GenericErrorModel,
+        CreateCorrectionReqDto>(
+        correctionsKeys.mutation.create(),
+        api.createCorrection,
+        options
+    )

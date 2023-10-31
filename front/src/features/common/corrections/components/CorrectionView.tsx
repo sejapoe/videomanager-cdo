@@ -9,7 +9,7 @@ const pad = (num: number, size: number) => {
     return s.slice(s.length - size);
 };
 
-const formatTimeCode = (seconds: number) => {
+export const formatTimeCode = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     seconds %= 3600;
     const minutes = Math.floor(seconds / 60);
@@ -24,7 +24,7 @@ type LabeledTimeCodeProps = {
 }
 
 
-function LabeledTimeCode({label, timeCode, className}: LabeledTimeCodeProps) {
+export function LabeledTimeCode({label, timeCode, className}: LabeledTimeCodeProps) {
     return <div className="flex flex-col justify-center items-center">
         <span className="text-xs">{label}</span>
         <div className={clsx(

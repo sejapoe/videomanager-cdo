@@ -3,7 +3,7 @@ import {UseFormRegisterReturn} from "react-hook-form";
 import clsx from "clsx";
 
 type InputFieldProps = FieldWrapperPassThroughProps & {
-    type?: 'text' | 'email' | 'password';
+    type?: 'text' | 'email' | 'password' | 'time';
     noAutocomplete?: boolean;
     className?: string;
     defaultValue?: string;

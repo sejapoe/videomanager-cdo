@@ -1,11 +1,9 @@
-import {Button} from "../../../../ui/button/Button.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {CorrectionsProps} from "../../../common/corrections/components/CorrectionProps.ts";
 import {Correction} from "../../../common/corrections/model";
 import {Comment, CommentForm} from "../../../common/corrections/components/CommentForm.tsx";
 import {useUpdateUserComment} from "../api/correcitonsApi.ts";
 import {CorrectionView} from "../../../common/corrections/components/CorrectionView.tsx";
+import {NewCorrection} from "./NewCorrection.tsx";
 
 type CorrectionProps = {
     correction: Correction
@@ -24,10 +22,6 @@ export const UserCorrections = ({parentRequestId, corrections}: CorrectionsProps
         {corrections.map(value => (
             <UserCorrection correction={value} key={value.id}/>
         ))}
-        <div>
-            <Button>
-                <FontAwesomeIcon icon={solid("plus")}/>
-            </Button>
-        </div>
+        <NewCorrection requestId={parentRequestId}/>
     </div>
 }

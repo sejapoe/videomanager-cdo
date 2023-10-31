@@ -333,6 +333,41 @@
         ]
       }
     },
+    "/api/corrections": {
+      "post": {
+        "tags": [
+          "correction-controller"
+        ],
+        "operationId": "createCorrection",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCorrectionReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/auth/login": {
       "post": {
         "tags": [
@@ -846,6 +881,66 @@
           }
         }
       },
+      "CreateCorrectionReq": {
+        "required": [
+          "comment",
+          "endTimeCode",
+          "requestId",
+          "startTimeCode"
+        ],
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "startTimeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "endTimeCode": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CorrectionRes": {
+        "required": [
+          "adminComment",
+          "comment",
+          "endTimeCode",
+          "id",
+          "imgUrl",
+          "startTimeCode"
+        ],
+        "type": "object",
+        "properties": {
+          "startTimeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "endTimeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "adminComment": {
+            "type": "string"
+          },
+          "imgUrl": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "LoginReq": {
         "required": [
           "email",
@@ -939,6 +1034,12 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -955,12 +1056,6 @@
           },
           "sort": {
             "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
@@ -1008,40 +1103,6 @@
           },
           "unsorted": {
             "type": "boolean"
-          }
-        }
-      },
-      "CorrectionRes": {
-        "required": [
-          "adminComment",
-          "comment",
-          "endTimeCode",
-          "id",
-          "imgUrl",
-          "startTimeCode"
-        ],
-        "type": "object",
-        "properties": {
-          "startTimeCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endTimeCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
-            "type": "string"
-          },
-          "adminComment": {
-            "type": "string"
-          },
-          "imgUrl": {
-            "type": "string"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
           }
         }
       },

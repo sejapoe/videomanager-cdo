@@ -14,8 +14,8 @@ export type FieldWrapperPassThroughProps = Omit<FieldWrapperProps, 'className' |
 
 export const FieldWrapper = ({label, className, error, children}: FieldWrapperProps) => {
     return (
-        <div>
-            <label className={clsx("block text-sm font-medium text-gray-700", className)}>
+        <div className={className}>
+            <label className={clsx("block text-sm font-medium text-gray-700")}>
                 {label}
                 <div className="mt-1">{children}</div>
             </label>
