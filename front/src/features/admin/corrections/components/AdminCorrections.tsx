@@ -2,7 +2,6 @@ import {CorrectionView} from "../../../common/corrections/components/CorrectionV
 import {Comment, CommentForm} from "../../../common/corrections/components/CommentForm.tsx";
 import {Correction} from "../../../common/corrections/model";
 import {CorrectionsProps} from "../../../common/corrections/components/CorrectionProps.ts";
-import {useUpdateAdminComment} from "../api/correctionsApi.ts";
 
 type CorrectionProps = {
     correction: Correction
@@ -11,8 +10,7 @@ type CorrectionProps = {
 const AdminCorrection = ({correction}: CorrectionProps) => {
     return <CorrectionView correction={correction} commentSection={<>
         <Comment label="Комментарий преподавателя" comment={correction.comment}/>
-        <CommentForm label="Комментарий администратора" comment={correction.adminComment} correctionId={correction.id}
-                     useMutation={useUpdateAdminComment}/>
+        <CommentForm label="Комментарий администратора" comment={correction.adminComment} correctionId={correction.id}/>
     </>}/>
 }
 

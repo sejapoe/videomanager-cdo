@@ -14,12 +14,12 @@ class DepartmentController(
     private val departmentService: DepartmentService,
     private val departmentMapper: DepartmentMapper
 ) {
-    @GetMapping
     @IsUser
+    @GetMapping
     fun getAll() = departmentService.getAll().map(departmentMapper::toDepartmentRes)
 
-    @PostMapping
     @IsAdmin
+    @PostMapping
     fun create(@RequestBody @Valid createDepartmentReq: CreateDepartmentReq) = departmentService
         .create(createDepartmentReq.name, createDepartmentReq.instituteId).let(departmentMapper::toDepartmentRes)
 }

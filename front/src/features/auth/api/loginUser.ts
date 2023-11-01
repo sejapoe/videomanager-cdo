@@ -6,17 +6,16 @@ import {authKeys} from "./authApi.ts";
 type UseLoginUserMutation = UseMutationOptions<
     HttpResponse<TokenUserResDto, unknown>,
     GenericErrorModel,
-    LoginReqDto,
-    unknown
+    LoginReqDto
 >
 
 type UseLoginUserOptions = Omit<UseLoginUserMutation, 'mutationFn' | 'mutationKey'>
 
 export const useLoginUser = (options?: UseLoginUserOptions) =>
-    useMutation({
-        mutationKey: authKeys.mutation.login(),
-        mutationFn: (user: LoginReqDto) => {
+    useMutation(
+        authKeys.mutation.login(),
+        (user: LoginReqDto) => {
             return api.login(user);
         },
-        ...options,
-    })
+        options,
+    )

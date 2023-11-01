@@ -408,29 +408,6 @@
         }
       }
     },
-    "/api/auth/admin": {
-      "post": {
-        "tags": [
-          "auth-controller"
-        ],
-        "operationId": "createTestUser",
-        "responses": {
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetail"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/auth/activate": {
       "post": {
         "tags": [
@@ -471,12 +448,12 @@
         }
       }
     },
-    "/api/corrections/{id}/user": {
+    "/api/corrections/{id}": {
       "patch": {
         "tags": [
           "correction-controller"
         ],
-        "operationId": "editUserComment",
+        "operationId": "updateComment",
         "parameters": [
           {
             "name": "id",
@@ -492,7 +469,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditCorrectionReq"
+                "$ref": "#/components/schemas/UpdateCorrectionReq"
               }
             }
           },
@@ -500,46 +477,14 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        },
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ]
-      }
-    },
-    "/api/corrections/{id}/admin": {
-      "patch": {
-        "tags": [
-          "correction-controller"
-        ],
-        "operationId": "editAdminComment",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EditCorrectionReq"
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionRes"
+                }
               }
             }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         },
         "security": [
@@ -1009,7 +954,7 @@
           }
         }
       },
-      "EditCorrectionReq": {
+      "UpdateCorrectionReq": {
         "required": [
           "comment"
         ],

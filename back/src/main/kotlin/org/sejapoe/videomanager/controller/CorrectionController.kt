@@ -2,10 +2,9 @@ package org.sejapoe.videomanager.controller
 
 import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.correction.CreateCorrectionReq
-import org.sejapoe.videomanager.dto.correction.EditCorrectionReq
+import org.sejapoe.videomanager.dto.correction.UpdateCorrectionReq
 import org.sejapoe.videomanager.mapper.CorrectionMapper
 import org.sejapoe.videomanager.model.User
-import org.sejapoe.videomanager.security.annotations.IsAdmin
 import org.sejapoe.videomanager.security.annotations.IsUser
 import org.sejapoe.videomanager.service.CorrectionService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -18,23 +17,13 @@ class CorrectionController(
     private val correctionMapper: CorrectionMapper
 ) {
     @IsUser
-    @PatchMapping("/{id}/user")
-    fun editUserComment(
+    @PatchMapping("/{id}")
+    fun updateComment(
         @PathVariable("id") id: Long,
-        @RequestBody editCorrectionReq: EditCorrectionReq,
+        @RequestBody updateCorrectionReq: UpdateCorrectionReq,
         @AuthenticationPrincipal user: User
     ) =
-        correctionService.updateUserComment(user, id, editCorrectionReq.comment)
-
-    @IsAdmin
-    @PatchMapping("/{id}/admin")
-    fun editAdminComment(
-        @PathVariable("id") id: Long,
-        @RequestBody editCorrectionReq: EditCorrectionReq,
-        @AuthenticationPrincipal user: User
-    ) =
-        correctionService.updateAdminComment(user, id, editCorrectionReq.comment)
-
+        correctionService.updateComment(user, id, updateCorrectionReq.comment).let(correctionMapper::toCorrectionRes)
 
     @IsUser
     @PostMapping

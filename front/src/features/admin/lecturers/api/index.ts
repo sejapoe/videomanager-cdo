@@ -1,14 +1,15 @@
 import {useMutation, UseMutationOptions, useQuery} from "@tanstack/react-query";
 import api, {GenericErrorModel, HttpResponse, RequestParams} from "../../../../api";
 import {CreateLecturerReqDto, UserResDto} from "../../../../api/Api.ts";
+import {adminKey} from "../../api";
 
 export const lecturerKeys = {
     lecturers: {
-        root: ['lecturers']
+        root: [...adminKey, 'lecturers']
     },
 
     lecturer: {
-        root: ['lecturer']
+        root: [...adminKey, 'lecturer']
     },
 
     mutation: {
@@ -19,20 +20,19 @@ export const lecturerKeys = {
 type UseCreateLecturerMutation = UseMutationOptions<
     HttpResponse<UserResDto, unknown>,
     GenericErrorModel,
-    CreateLecturerReqDto,
-    unknown
+    CreateLecturerReqDto
 >
 
 type UseCreateLecturerOptions = Omit<UseCreateLecturerMutation, 'mutationFn' | 'mutationKey'>
 
 export const useCreateLecturer = (options?: UseCreateLecturerOptions) =>
-    useMutation({
-        mutationKey: lecturerKeys.mutation.create(),
-        mutationFn: (createLecturer: CreateLecturerReqDto) => {
+    useMutation(
+        lecturerKeys.mutation.create(),
+        (createLecturer: CreateLecturerReqDto) => {
             return api.createLecturer(createLecturer)
         },
-        ...options
-    } as UseCreateLecturerOptions)
+        options
+    )
 
 
 export interface Lecturer {
@@ -47,9 +47,9 @@ export function mapLecturer(userDto: UserResDto): Lecturer {
 
 
 export const useLecturers = (params?: RequestParams) =>
-    useQuery<Lecturer[], GenericErrorModel, Lecturer[], string[]>({
-        queryKey: lecturerKeys.lecturers.root,
-        queryFn: async ({signal}) => {
+    useQuery<Lecturer[], GenericErrorModel, Lecturer[], unknown[]>(
+        lecturerKeys.lecturers.root,
+        async ({signal}) => {
             const response = await api.getAllLecturers({
                 signal,
                 ...params
@@ -57,4 +57,4 @@ export const useLecturers = (params?: RequestParams) =>
 
             return response.data.map(mapLecturer)
         }
-    })
+    )

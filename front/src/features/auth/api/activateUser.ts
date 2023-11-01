@@ -6,17 +6,16 @@ import {authKeys} from "./authApi.ts";
 type UseActivateUserMutation = UseMutationOptions<
     HttpResponse<TokenUserResDto, unknown>,
     GenericErrorModel,
-    ActivateUserReqDto,
-    unknown
+    ActivateUserReqDto
 >
 
 type UseActivateUserOptions = Omit<UseActivateUserMutation, 'mutationFn' | 'mutationKey'>
 
 export const useActivateUser = (options?: UseActivateUserOptions) =>
-    useMutation({
-        mutationKey: authKeys.mutation.activate(),
-        mutationFn: (activation: ActivateUserReqDto) => {
+    useMutation(
+        authKeys.mutation.activate(),
+        (activation: ActivateUserReqDto) => {
             return api.activate(activation)
         },
-        ...options
-    })
+        options
+    )

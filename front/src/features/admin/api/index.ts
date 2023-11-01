@@ -1,0 +1,1 @@
+export const adminKey = [{scope: 'admin'}] as unknown[]

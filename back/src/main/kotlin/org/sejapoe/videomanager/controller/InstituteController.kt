@@ -14,14 +14,14 @@ class InstituteController(
     private val instituteService: InstituteService,
     private val instituteMapper: InstituteMapper,
 ) {
-    @GetMapping
     @IsUser
+    @GetMapping
     fun getAllInstitutes() =
         instituteService.getAll().map(instituteMapper::toInstituteWithDepartmentsRes)
 
 
-    @PostMapping
     @IsAdmin
+    @PostMapping
     fun createInstitute(@RequestBody @Valid createInstituteReq: CreateInstituteReq) =
         instituteService.create(createInstituteReq.name).let(instituteMapper::toInstituteWithDepartmentsRes)
 }

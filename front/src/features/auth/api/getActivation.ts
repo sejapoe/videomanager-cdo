@@ -14,9 +14,9 @@ export function mapUser(userDto: UserResDto): User {
 }
 
 export const useActivation = (uuid: string, params?: RequestParams) =>
-    useQuery<User, GenericErrorModel, User, string[]>({
-        queryKey: authKeys.activation.root,
-        queryFn: async ({signal}) => {
+    useQuery<User, GenericErrorModel, User, unknown[]>(
+        authKeys.activation.root,
+        async ({signal}) => {
             const response = await api.getActivation(uuid, {
                 signal,
                 ...params
@@ -24,4 +24,4 @@ export const useActivation = (uuid: string, params?: RequestParams) =>
 
             return mapUser(response.data)
         }
-    })
+    )

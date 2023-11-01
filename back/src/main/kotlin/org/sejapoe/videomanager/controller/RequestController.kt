@@ -7,7 +7,7 @@ import org.sejapoe.videomanager.dto.request.FilterRequestReq
 import org.sejapoe.videomanager.mapper.RequestMapper
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsAdmin
-import org.sejapoe.videomanager.security.annotations.Secure
+import org.sejapoe.videomanager.security.annotations.IsUser
 import org.sejapoe.videomanager.service.RequestService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.HttpStatus
@@ -15,13 +15,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@RequestMapping("/api/requests")
 class RequestController(
     private val requestService: RequestService,
     private val requestMapper: RequestMapper
 ) {
     @IsAdmin
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/api/requests")
+    @PostMapping
     fun createRequest(@RequestBody @Valid createRequestReq: CreateRequestReq) =
         requestService.create(
             createRequestReq.name,
@@ -31,8 +32,8 @@ class RequestController(
             createRequestReq.linkToMoodle
         ).let(requestMapper::toRequestRes)
 
-    @Secure
-    @GetMapping("/api/requests")
+    @IsUser
+    @GetMapping
     fun getRequests(
         @ParameterObject @Schema filterRequestReq: FilterRequestReq,
         @AuthenticationPrincipal user: User
@@ -46,8 +47,10 @@ class RequestController(
             .map(requestMapper::toRequestRes)
 
 
-    @Secure
-    @GetMapping("/api/requests/{id}")
+    @IsUser
+    @GetMapping("/{id}")
     fun getRequest(@PathVariable("id") @Valid id: Long, @AuthenticationPrincipal user: User) =
-        requestService.get(user, id).let(requestMapper::toFullRequestRes)
+        requestService.get(user, id).let(requestMapper::toFullRequestRes).run {
+            copy(corrections = corrections.sortedBy { it.id })
+        }
 }

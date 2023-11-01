@@ -136,7 +136,7 @@ export interface ActivateUserReqDto {
   password: string;
 }
 
-export interface EditCorrectionReqDto {
+export interface UpdateCorrectionReqDto {
   comment: string;
 }
 
@@ -250,6 +250,19 @@ export class HttpClient<SecurityDataType = unknown> {
     referrerPolicy: "no-referrer",
   };
 
+  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
+    return {
+      ...this.baseApiParams,
+      ...params1,
+      ...(params2 || {}),
+      headers: {
+        ...(this.baseApiParams.headers || {}),
+        ...(params1.headers || {}),
+        ...((params2 && params2.headers) || {}),
+      },
+    };
+  }
+
   public setSecurityData = (data: SecurityDataType | null) => {
     this.securityData = data;
   };
@@ -281,19 +294,6 @@ export class HttpClient<SecurityDataType = unknown> {
     return queryString ? `?${queryString}` : "";
   }
 
-  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
-    return {
-      ...this.baseApiParams,
-      ...params1,
-      ...(params2 || {}),
-      headers: {
-        ...(this.baseApiParams.headers || {}),
-        ...(params1.headers || {}),
-        ...((params2 && params2.headers) || {}),
-      },
-    };
-  }
-
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
         input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
@@ -314,6 +314,8 @@ export class HttpClient<SecurityDataType = unknown> {
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
   };
 
+  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
+
   protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
     if (this.abortControllers.has(cancelToken)) {
       const abortController = this.abortControllers.get(cancelToken);
@@ -327,8 +329,6 @@ export class HttpClient<SecurityDataType = unknown> {
     this.abortControllers.set(cancelToken, abortController);
     return abortController.signal;
   };
-
-  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
   public abortRequest = (cancelToken: CancelToken) => {
     const abortController = this.abortControllers.get(cancelToken);
@@ -598,20 +598,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags auth-controller
-     * @name CreateTestUser
-     * @request POST:/api/auth/admin
-     */
-    createTestUser: (params: RequestParams = {}) =>
-        this.request<void, ProblemDetailDto>({
-          path: `/api/auth/admin`,
-          method: "POST",
-          ...params,
-        }),
-
-    /**
-     * No description
-     *
-     * @tags auth-controller
      * @name Activate
      * @request POST:/api/auth/activate
      */
@@ -628,31 +614,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags correction-controller
-     * @name EditUserComment
-     * @request PATCH:/api/corrections/{id}/user
+     * @name UpdateComment
+     * @request PATCH:/api/corrections/{id}
      * @secure
      */
-    editUserComment: (id: number, data: EditCorrectionReqDto, params: RequestParams = {}) =>
-        this.request<void, any>({
-          path: `/api/corrections/${id}/user`,
-          method: "PATCH",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
-        }),
-
-    /**
-     * No description
-     *
-     * @tags correction-controller
-     * @name EditAdminComment
-     * @request PATCH:/api/corrections/{id}/admin
-     * @secure
-     */
-    editAdminComment: (id: number, data: EditCorrectionReqDto, params: RequestParams = {}) =>
-        this.request<void, any>({
-          path: `/api/corrections/${id}/admin`,
+    updateComment: (id: number, data: UpdateCorrectionReqDto, params: RequestParams = {}) =>
+        this.request<CorrectionResDto, any>({
+          path: `/api/corrections/${id}`,
           method: "PATCH",
           body: data,
           secure: true,

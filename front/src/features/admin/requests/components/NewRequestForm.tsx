@@ -1,16 +1,16 @@
 import {z} from "zod";
 import {Form} from "../../../../ui/form/Form.tsx";
-import {useInstitutes} from "../api/institutesApi.ts";
+import {useInstitutes} from "../../../common/institutes/api";
 import Spinner from "../../../../ui/spinner";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {SelectField} from "../../../../ui/form/SelectField.tsx";
 import {NewLecturerDialog} from "./NewLecturerDialog.tsx";
-import {lecturerKeys, useLecturers} from "../api/lecturerApi.ts";
+import {lecturerKeys, useLecturers} from "../../lecturers/api";
 import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
 import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {useQueryClient} from "@tanstack/react-query";
-import {useCreateRequest} from "../api/requestsApi.ts";
+import {useCreateRequest} from "../api";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),

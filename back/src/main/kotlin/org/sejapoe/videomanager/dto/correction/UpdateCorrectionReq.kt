@@ -1,5 +1,5 @@
 package org.sejapoe.videomanager.dto.correction
 
-data class EditCorrectionReq(
+data class UpdateCorrectionReq(
     val comment: String
 )

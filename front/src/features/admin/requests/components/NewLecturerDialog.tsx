@@ -2,7 +2,7 @@ import {Form} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
-import {useCreateLecturer} from "../api/lecturerApi.ts";
+import {useCreateLecturer} from "../../lecturers/api";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),

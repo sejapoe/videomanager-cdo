@@ -5,7 +5,7 @@ import {useRef, useState} from "react";
 import {TextAreaField} from "../../../../ui/form/TextareaField.tsx";
 import {Form} from "../../../../ui/form/Form.tsx";
 import Spinner from "../../../../ui/spinner";
-import {UseUpdateCommentMutation} from "../api/correctionsApi.ts";
+import {useUpdateComment} from "../api";
 import clsx from "clsx";
 import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
@@ -19,13 +19,12 @@ type CorrectionValues = {
 
 type CommentFormProps = CommentProps & {
     correctionId: number;
-    useMutation: UseUpdateCommentMutation
 }
 
 // TODO: разобраться с overflow по y, когда большой текст
 
-export const CommentForm = ({correctionId, label, comment, useMutation}: CommentFormProps) => {
-    const {mutate, isLoading} = useMutation(correctionId)
+export const CommentForm = ({correctionId, label, comment}: CommentFormProps) => {
+    const {mutate, isLoading} = useUpdateComment(correctionId)
     const [disabled, setDisabled] = useState(true)
     const hiddenSubmitButton = useRef<HTMLButtonElement>(null);
 

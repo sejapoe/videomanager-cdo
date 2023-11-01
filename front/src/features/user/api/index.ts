@@ -1,0 +1,1 @@
+export const userKey = [{scope: 'user'}] as unknown[]

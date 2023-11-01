@@ -2,7 +2,7 @@ import React from "react";
 import {Link, useParams} from "react-router-dom";
 import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
 import {FullRequest} from "../model";
-import {useRequest} from "../api/requestsApi.ts";
+import {useRequest} from "../api";
 import Spinner from "../../../../ui/spinner";
 import {CorrectionsProps} from "../../corrections/components/CorrectionProps.ts";
 

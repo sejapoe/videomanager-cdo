@@ -1,7 +1,8 @@
 import {InstituteResDto, InstituteWithDepartmentsResDto, RequestParams} from "../../../../api/Api.ts";
 import {useQuery} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
-import {Institute, InstituteWithDepartments} from "../../../common/institutes/model";
+import {Institute, InstituteWithDepartments} from "../model";
+import {commonKey} from "../../api";
 
 
 export function mapInstitute(instituteDto: InstituteResDto): Institute {
@@ -14,11 +15,11 @@ export function mapInstituteWithDepartments(instituteDto: InstituteWithDepartmen
 
 export const instituteKeys = {
     institutes: {
-        root: ['institutes'],
+        root: [...commonKey, 'institutes'],
     },
 
     institute: {
-        root: ['institute']
+        root: [...commonKey, 'institute']
     },
 
     mutation: {
@@ -29,9 +30,9 @@ export const instituteKeys = {
 }
 
 export const useInstitutes = (params?: RequestParams) =>
-    useQuery<InstituteWithDepartments[], GenericErrorModel, InstituteWithDepartments[], string[]>({
-        queryKey: instituteKeys.institute.root,
-        queryFn: async ({signal}) => {
+    useQuery<InstituteWithDepartments[], GenericErrorModel, InstituteWithDepartments[], unknown[]>(
+        instituteKeys.institutes.root,
+        async ({signal}) => {
             const response = await api.getAllInstitutes({
                 signal,
                 ...params
@@ -39,4 +40,4 @@ export const useInstitutes = (params?: RequestParams) =>
 
             return response.data.map(mapInstituteWithDepartments)
         }
-    })
+    )

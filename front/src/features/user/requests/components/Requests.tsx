@@ -1,7 +1,7 @@
 import {RequestsTable} from "../../../common/requests/components/RequestsTable.tsx";
 import Spinner from "../../../../ui/spinner";
 import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
-import {useRequests} from "../../../common/requests/api/requestsApi.ts";
+import {useRequests} from "../../../common/requests/api";
 import {useCurrentUser} from "../../../auth/authModel.ts";
 
 export const Requests = () => {

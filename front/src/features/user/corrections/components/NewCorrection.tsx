@@ -10,9 +10,9 @@ import clsx, {ClassValue} from "clsx";
 import {Control, Controller} from "react-hook-form";
 import InputMask from "react-input-mask";
 import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
-import {useCreateCorrection} from "../api/correcitonsApi.ts";
+import {useCreateCorrection} from "../api";
 import {useQueryClient} from "@tanstack/react-query";
-import {requestsKeys} from "../../../common/requests/api/requestsApi.ts";
+import {requestsKeys} from "../../../common/requests/api";
 
 type LabeledTimeCodeProps = {
     label: string;
