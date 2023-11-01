@@ -20,7 +20,16 @@ type ComboboxFieldProps = FieldWrapperPassThroughProps & {
     control: Control<any, any>
 }
 
-export const ComboboxField = ({options, className, defaultValue, name, control, label, error, notFoundComponent}: ComboboxFieldProps) => {
+export const ComboboxField = ({
+                                  options,
+                                  className,
+                                  defaultValue,
+                                  name,
+                                  control,
+                                  label,
+                                  error,
+                                  notFoundComponent
+                              }: ComboboxFieldProps) => {
     const [query, setQuery] = useState("")
 
     const filteredOptions =

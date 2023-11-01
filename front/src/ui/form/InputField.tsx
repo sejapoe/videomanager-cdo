@@ -10,7 +10,15 @@ type InputFieldProps = FieldWrapperPassThroughProps & {
     registration: Partial<UseFormRegisterReturn>;
 };
 
-export const InputField = ({type = "text", label, className, defaultValue, registration, noAutocomplete, error}: InputFieldProps) => {
+export const InputField = ({
+                               type = "text",
+                               label,
+                               className,
+                               defaultValue,
+                               registration,
+                               noAutocomplete,
+                               error
+                           }: InputFieldProps) => {
     return (
         <FieldWrapper label={label} error={error}>
             <input
