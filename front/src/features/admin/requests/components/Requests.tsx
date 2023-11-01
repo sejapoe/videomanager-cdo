@@ -3,17 +3,17 @@ import {Button} from "../../../../ui/button/Button.tsx";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {useNavigate} from "react-router-dom";
 import {useRequests} from "../api";
-import Spinner from "../../../../ui/spinner";
 import {RequestsTable} from "../../../common/requests/components/RequestsTable.tsx";
+import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
 
 
 export const Requests = () => {
-    const {data: requests} = useRequests();
+    const {data: requests, error, isLoading} = useRequests();
     const nav = useNavigate()
 
 
-    return <ContentLayout title="Запросы">
-        <div>
+    return <ErrorLoadLayout error={error} isLoading={isLoading}>
+        <ContentLayout title="Запросы">
             <div className="w-full flex flex-1 justify-center">
                 <Button
                     size="sm"
@@ -23,7 +23,7 @@ export const Requests = () => {
                     Создать
                 </Button>
             </div>
-            {requests ? <RequestsTable requests={requests}/> : <Spinner/>}
-        </div>
-    </ContentLayout>
+            <RequestsTable requests={requests!}/>
+        </ContentLayout>
+    </ErrorLoadLayout>
 }

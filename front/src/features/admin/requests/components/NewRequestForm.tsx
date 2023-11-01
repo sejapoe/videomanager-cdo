@@ -1,7 +1,6 @@
 import {z} from "zod";
 import {Form} from "../../../../ui/form/Form.tsx";
 import {useInstitutes} from "../../../common/institutes/api";
-import Spinner from "../../../../ui/spinner";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {SelectField} from "../../../../ui/form/SelectField.tsx";
 import {NewLecturerDialog} from "./NewLecturerDialog.tsx";
@@ -11,6 +10,7 @@ import {Button} from "../../../../ui/button/Button.tsx";
 import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {useQueryClient} from "@tanstack/react-query";
 import {useCreateRequest} from "../api";
+import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),
@@ -51,12 +51,8 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
         title: "Создание преподавателя",
     })
 
-    if (isLoadingInstitutes || isLoadingLecturers) return <div className="flex justify-center items-center">
-        <Spinner/>
-    </div>
-
     return (
-        <>
+        <ErrorLoadLayout isLoading={isLoadingLecturers || isLoadingInstitutes}>
             <Dialog>
                 {({args: name, ok, close}) => (
                     <NewLecturerDialog onSubmit={ok} defaultName={name} close={close}/>
@@ -148,6 +144,6 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
                     </>
                 )}
             </Form>
-        </>
+        </ErrorLoadLayout>
     );
 };

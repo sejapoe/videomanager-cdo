@@ -1,4 +1,4 @@
-import {Lecturer} from "../../../admin/requests/api/lecturerApi.ts";
+import {Lecturer} from "../../../admin/lecturers/api";
 import {Department, Institute} from "../../institutes/model";
 import {Correction} from "../../corrections/model";
 

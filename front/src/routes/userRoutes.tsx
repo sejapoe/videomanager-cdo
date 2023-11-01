@@ -2,8 +2,8 @@ import {Outlet, RouteObject} from "react-router-dom";
 import {MainLayout} from "../ui/layout/MainLayout.tsx";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {Suspense} from "react";
-import Spinner from "../ui/spinner";
 import {UserRequestsRoutes} from "../features/user/requests/routes";
+import {CenterSpinner} from "../ui/layout/CenterSpinner.tsx";
 
 const App = () => {
     return (
@@ -12,11 +12,7 @@ const App = () => {
                 {name: "Запросы", to: "./requests", icon: solid("list-check")},
             ]
         }>
-            <Suspense fallback={
-                <div className="h-full w-full flex items-center justify-center">
-                    <Spinner/>
-                </div>
-            }>
+            <Suspense fallback={<CenterSpinner/>}>
                 <Outlet/>
             </Suspense>
         </MainLayout>

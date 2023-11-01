@@ -1,12 +1,12 @@
 import {Navigate, Outlet, RouteObject} from "react-router-dom";
 import {MainLayout} from "../ui/layout/MainLayout.tsx";
 import {Suspense} from "react";
-import Spinner from "../ui/spinner";
 import {RequestsRoutes} from "../features/admin/requests/routes";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {ContentLayout} from "../ui/layout/ContentLayout.tsx";
 import shark from '../assets/shark.gif';
 import {PATH_PAGE} from "../lib/react-router";
+import {CenterSpinner} from "../ui/layout/CenterSpinner.tsx";
 
 const App = () => {
     return (
@@ -17,11 +17,7 @@ const App = () => {
                 {name: "Пользователи", to: "./users", icon: solid("users")},
             ]
         }>
-            <Suspense fallback={
-                <div className="h-full w-full flex items-center justify-center">
-                    <Spinner/>
-                </div>
-            }>
+            <Suspense fallback={<CenterSpinner/>}>
                 <Outlet/>
             </Suspense>
         </MainLayout>

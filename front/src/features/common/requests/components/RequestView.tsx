@@ -3,8 +3,8 @@ import {Link, useParams} from "react-router-dom";
 import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
 import {FullRequest} from "../model";
 import {useRequest} from "../api";
-import Spinner from "../../../../ui/spinner";
 import {CorrectionsProps} from "../../corrections/components/CorrectionProps.ts";
+import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
 
 type RequestContentProps = RequestProps & {
     request: FullRequest
@@ -36,7 +36,9 @@ type RequestProps = {
 export const RequestView = ({correctionsSection}: RequestProps) => {
     const {id} = useParams();
 
-    const {data: request} = useRequest(parseInt(id || ""))
+    const {data: request, error, isLoading} = useRequest(parseInt(id || ""))
 
-    return request ? <RequestContent correctionsSection={correctionsSection} request={request}/> : <Spinner/>
+    return <ErrorLoadLayout error={error} isLoading={isLoading}>
+        <RequestContent correctionsSection={correctionsSection} request={request!}/>
+    </ErrorLoadLayout>
 }

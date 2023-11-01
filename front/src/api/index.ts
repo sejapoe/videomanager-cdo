@@ -1,21 +1,7 @@
-import type {
-    ArticleDto,
-    CommentDto,
-    GenericErrorModelDto,
-    HttpResponse,
-    LoginUserDto,
-    NewArticleDto,
-    NewCommentDto,
-    NewUserDto,
-    ProfileDto,
-    RequestParams,
-    UpdateArticleDto,
-    UpdateUserDto,
-    UserDto,
-} from './Api.ts'
-import {Api, ContentType} from "./Api.ts";
+import type {HttpResponse, RequestParams,} from './Api.ts'
+import {Api, ContentType, ProblemDetailDto} from "./Api.ts";
 
-type GenericErrorModel = HttpResponse<unknown, GenericErrorModelDto>
+type GenericErrorModel = HttpResponse<unknown, ProblemDetailDto>
 
 const api = new Api<string>({
     baseApiParams: {
@@ -32,17 +18,6 @@ const api = new Api<string>({
 export default api.api
 export const apiProvider = api
 export type {
-    LoginUserDto,
-    NewUserDto,
-    UserDto,
-    UpdateUserDto,
-    ProfileDto,
-    ArticleDto,
-    NewArticleDto,
-    UpdateArticleDto,
-    CommentDto,
-    NewCommentDto,
-    GenericErrorModelDto,
     HttpResponse,
     RequestParams,
     GenericErrorModel
