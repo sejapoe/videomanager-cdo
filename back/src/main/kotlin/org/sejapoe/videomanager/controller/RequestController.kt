@@ -2,6 +2,7 @@ package org.sejapoe.videomanager.controller
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
+import org.sejapoe.videomanager.dto.correction.CorrectionRes
 import org.sejapoe.videomanager.dto.request.CreateRequestReq
 import org.sejapoe.videomanager.dto.request.FilterRequestReq
 import org.sejapoe.videomanager.mapper.RequestMapper
@@ -51,6 +52,10 @@ class RequestController(
     @GetMapping("/{id}")
     fun getRequest(@PathVariable("id") @Valid id: Long, @AuthenticationPrincipal user: User) =
         requestService.get(user, id).let(requestMapper::toFullRequestRes).run {
-            copy(corrections = corrections.sortedBy { it.id })
+            copy(
+                corrections = corrections.sortedWith(
+                    Comparator.comparing(CorrectionRes::startTimeCode).thenComparing(CorrectionRes::endTimeCode)
+                )
+            )
         }
 }
