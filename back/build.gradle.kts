@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
     kotlin("kapt") version "1.3.72"
+    id("org.liquibase.gradle") version "2.0.4"
 }
 
 group = "org.sejapoe"
@@ -53,11 +54,11 @@ dependencies {
     kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
     // query dsl
-//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
-//    implementation("com.querydsl:querydsl-core:5.0.0")
-//    implementation("com.querydsl:querydsl-jpa:5.0.0")
+
+    // liquibase
+    implementation("org.liquibase:liquibase-core:4.8.0")
 }
 
 kapt {
