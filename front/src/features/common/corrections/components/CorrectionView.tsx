@@ -42,20 +42,20 @@ type CorrectionProps = {
 }
 
 export const CorrectionView = ({correction, commentSection}: CorrectionProps) => {
-    return <div className="text-gray-700 border-2 border-orange-500 p-4">
+    return <div className="text-gray-700 rounded-xl border border-dashed border-gray-500 p-4">
         <div className="grid grid-cols-3">
             <div className="col-span-2">
                 <div className="flex flex-col">
                     <div className="relative grid grid-cols-2 gap-4 w-fit p-4 pb-0">
                         <LabeledTimeCode label="Начало отрезка" timeCode={correction.startTimeCode}
-                                         className="bg-orange-400 shadow-lg"/>
+                                         className="bg-orange-500 shadow-lg"/>
                         <div className="absolute w-full h-full flex justify-center items-center">
                             <div className="mt-8">
                                 <FontAwesomeIcon icon={solid("arrow-right")}/>
                             </div>
                         </div>
                         <LabeledTimeCode label="Конец отрезка" timeCode={correction.endTimeCode}
-                                         className="bg-green-600"/>
+                                         className="bg-green-600 shadow-lg"/>
                     </div>
                     <div className="grid grid-cols-2">
                         {commentSection}

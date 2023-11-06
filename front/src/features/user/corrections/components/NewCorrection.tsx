@@ -106,20 +106,20 @@ export const NewCorrectionForm = ({requestId, close}: NewCorrectionFormProps) =>
                                                name="endTimeCode"
                                                control={control}/>
 
-                                <div className="row-span-2 col-span-2">
+                                <div className="row-span-2 col-span-4">
                                     <TextAreaField
                                         label="Комментарий"
-                                        className="resize-none pr-5 bg-transparent border border-black w-full h-full row-auto"
+                                        className="resize-none pr-5 bg-transparent border border-gray-400 w-full h-full row-auto"
                                         rows={5}
                                         error={formState.errors["comment"]}
                                         registration={register("comment")}
                                     />
                                 </div>
 
-                                <div
-                                    className="row-span-2 col-span-2 flex justify-center items-center text-3xl font-serif italic">
-                                    Пустое место™
-                                </div>
+                                {/*<div*/}
+                                {/*    className="row-span-2 col-span-2 flex justify-center items-center text-3xl font-serif italic">*/}
+                                {/*    Пустое место™*/}
+                                {/*</div>*/}
 
                                 <Button isLoading={isLoading} variant="primary" className="row-span-1 col-span-1"
                                         type="submit">
@@ -178,10 +178,9 @@ export const NewCorrection = ({
             leaveFrom="opacity-100 scale-100 "
             leaveTo="opacity-0 scale-95 "
         >
-            <div className="absolute w-full border-2 text-gray-700 border-blue-600">
+            <div className="w-full absolute rounded-xl border border-dashed text-gray-700 border-blue-600">
                 <NewCorrectionForm requestId={requestId} close={() => setShow(false)}/>
             </div>
         </Transition>
-
     </div>;
 }

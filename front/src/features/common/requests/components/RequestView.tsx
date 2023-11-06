@@ -11,7 +11,7 @@ type RequestContentProps = RequestProps & {
 }
 
 const RequestContent = ({request, correctionsSection}: RequestContentProps) => {
-    return <ContentLayout title={`Пу-пу-пу ${request.name}`}>
+    return <ContentLayout title={request.name}>
         <div className="text-gray-700">
             <h2 className="mt-4 mb-2 text-2xl">Основная информация: </h2>
             <ul className="ml-2 space-y-2 text-xl">
