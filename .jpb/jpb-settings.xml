@@ -8,9 +8,16 @@
             </database-info>
         </database-infos>
     </component>
+    <component name="JpaPluginProjectSettings" repositoryClassNamePostfix="Repo">
+        <option name="entityNameTemplate"/>
+        <option name="useLazyOnToOneAssociations" value="true"/>
+        <option name="scaffoldingLanguage" value="Kotlin"/>
+        <option name="lastSelectedLanguage" value="Kotlin"/>
+    </component>
     <component name="PersistenceUnitSettings">
         <persistence-units>
-            <persistence-unit name="Default">
+            <persistence-unit name="Default"
+                              defaultIncludeChangeLogFile="back/src/main/resources/db/changelog/changelog-master.xml">
                 <packages>
                     <package value="org.sejapoe.videomanager"/>
                 </packages>

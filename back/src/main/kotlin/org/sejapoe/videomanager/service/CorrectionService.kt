@@ -3,33 +3,24 @@ package org.sejapoe.videomanager.service
 import org.sejapoe.videomanager.dto.correction.CreateCorrectionReq
 import org.sejapoe.videomanager.exception.ForbiddenException
 import org.sejapoe.videomanager.exception.NotFoundException
+import org.sejapoe.videomanager.model.Comment
 import org.sejapoe.videomanager.model.Correction
-import org.sejapoe.videomanager.model.Role
 import org.sejapoe.videomanager.model.User
+import org.sejapoe.videomanager.repo.CommentRepo
 import org.sejapoe.videomanager.repo.CorrectionRepo
 import org.sejapoe.videomanager.repo.RequestRepo
 import org.springframework.stereotype.Service
+import java.time.Instant
 import kotlin.jvm.optionals.getOrNull
 
 @Service
 class CorrectionService(
     private val correctionRepo: CorrectionRepo,
-    private val requestRepo: RequestRepo
+    private val requestRepo: RequestRepo,
+    private val commentRepo: CommentRepo
 ) {
-    fun updateUserComment(requester: User, id: Long, newComment: String): Correction {
-        val correction =
-            correctionRepo.findById(id).getOrNull() ?: throw NotFoundException("Correction with id $id is not found")
-        if (correction.request.lecturer.id != requester.id) throw ForbiddenException("You have no access!")
-        correction.comment = newComment
-        return correctionRepo.save(correction)
-    }
-
-    fun updateAdminComment(requester: User, id: Long, newComment: String): Correction {
-        val correction =
-            correctionRepo.findById(id).getOrNull() ?: throw NotFoundException("Correction with id $id is not found")
-        correction.adminComment = newComment
-        return correctionRepo.save(correction)
-    }
+    fun get(id: Long) =
+        correctionRepo.findById(id).getOrNull() ?: throw NotFoundException("Correction with id $id is not found")
 
     fun createCorrection(createCorrectionReq: CreateCorrectionReq, user: User): Correction {
         val request = requestRepo.findById(createCorrectionReq.requestId).getOrNull()
@@ -40,16 +31,20 @@ class CorrectionService(
         val correction = Correction(
             createCorrectionReq.startTimeCode,
             createCorrectionReq.endTimeCode,
-            createCorrectionReq.comment,
-            "",
-            "",
-            request
+            request,
+            emptyList()
         )
-        return correctionRepo.save(correction)
-    }
 
-    fun updateComment(requester: User, id: Long, comment: String) = when (requester.role) {
-        Role.ROLE_USER -> updateUserComment(requester, id, comment)
-        Role.ROLE_ADMIN -> updateAdminComment(requester, id, comment)
+        val comment = Comment(
+            Instant.now(),
+            user,
+            correction,
+            createCorrectionReq.comment,
+        )
+
+//        commentRepo.save(comment)
+        correction.comments = listOf(comment)
+
+        return correctionRepo.save(correction)
     }
 }

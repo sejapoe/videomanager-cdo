@@ -1,6 +1,7 @@
 import {createStore, StateCreator, useStore} from "zustand";
 import {devtools, persist} from "zustand/middleware";
 import {apiProvider} from "../../api";
+import {Role} from "../common/users/model";
 
 type User = {
     id: number;
@@ -50,8 +51,6 @@ export const sessionStore = createStore<SessionState>()(
         }
     )
 )
-
-export type Role = "ROLE_USER" | "ROLE_ADMIN"
 
 export const useAuth = () => useStore(sessionStore, (state) => !!state.user?.token);
 

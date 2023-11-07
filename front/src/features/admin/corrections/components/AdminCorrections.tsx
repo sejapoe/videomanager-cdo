@@ -1,5 +1,4 @@
 import {CorrectionView} from "../../../common/corrections/components/CorrectionView.tsx";
-import {Comment, CommentForm} from "../../../common/corrections/components/CommentForm.tsx";
 import {Correction} from "../../../common/corrections/model";
 import {CorrectionsProps} from "../../../common/corrections/components/CorrectionProps.ts";
 
@@ -9,8 +8,8 @@ type CorrectionProps = {
 
 const AdminCorrection = ({correction}: CorrectionProps) => {
     return <CorrectionView correction={correction} commentSection={<>
-        <Comment label="Комментарий преподавателя" comment={correction.comment}/>
-        <CommentForm label="Комментарий администратора" comment={correction.adminComment} correctionId={correction.id}/>
+        {/*<Comment label="Комментарий преподавателя" comment={correction.comment}/>*/}
+        {/*<CommentForm label="Комментарий администратора" comment={correction.adminComment} correctionId={correction.id}/>*/}
     </>}/>
 }
 

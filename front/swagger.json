@@ -368,6 +368,78 @@
         ]
       }
     },
+    "/api/comments": {
+      "get": {
+        "tags": [
+          "comment-controller"
+        ],
+        "operationId": "getComments",
+        "parameters": [
+          {
+            "name": "correctionId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentRes"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "comment-controller"
+        ],
+        "operationId": "createComment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/auth/login": {
       "post": {
         "tags": [
@@ -446,52 +518,6 @@
             }
           }
         }
-      }
-    },
-    "/api/corrections/{id}": {
-      "patch": {
-        "tags": [
-          "correction-controller"
-        ],
-        "operationId": "updateComment",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCorrectionReq"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CorrectionRes"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ]
       }
     },
     "/api/user": {
@@ -854,11 +880,8 @@
       },
       "CorrectionRes": {
         "required": [
-          "adminComment",
-          "comment",
           "endTimeCode",
           "id",
-          "imgUrl",
           "startTimeCode"
         ],
         "type": "object",
@@ -871,13 +894,45 @@
             "type": "integer",
             "format": "int32"
           },
-          "comment": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CreateCommentReq": {
+        "required": [
+          "correctionId",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
             "type": "string"
           },
-          "adminComment": {
-            "type": "string"
+          "correctionId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CommentRes": {
+        "required": [
+          "author",
+          "id",
+          "text",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
           },
-          "imgUrl": {
+          "author": {
+            "$ref": "#/components/schemas/UserRes"
+          },
+          "text": {
             "type": "string"
           },
           "id": {
@@ -950,17 +1005,6 @@
             "format": "uuid"
           },
           "password": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateCorrectionReq": {
-        "required": [
-          "comment"
-        ],
-        "type": "object",
-        "properties": {
-          "comment": {
             "type": "string"
           }
         }

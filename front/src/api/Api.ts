@@ -1,6 +1,5 @@
 /* eslint-disable */
 /* tslint:disable */
-
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -101,9 +100,21 @@ export interface CorrectionResDto {
     startTimeCode: number;
     /** @format int32 */
     endTimeCode: number;
-    comment: string;
-    adminComment: string;
-    imgUrl: string;
+    /** @format int64 */
+    id: number;
+}
+
+export interface CreateCommentReqDto {
+    text: string;
+    /** @format int64 */
+    correctionId: number;
+}
+
+export interface CommentResDto {
+    /** @format date-time */
+    timestamp: string;
+    author: UserResDto;
+    text: string;
     /** @format int64 */
     id: number;
 }
@@ -135,10 +146,6 @@ export interface ActivateUserReqDto {
     /** @format uuid */
     uuid: string;
     password: string;
-}
-
-export interface UpdateCorrectionReqDto {
-    comment: string;
 }
 
 export interface PageRequestResDto {
@@ -240,12 +247,61 @@ export class HttpClient<SecurityDataType = unknown> {
     private securityData: SecurityDataType | null = null;
     private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
     private abortControllers = new Map<CancelToken, AbortController>();
+    constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
+        Object.assign(this, apiConfig);
+    }
+
     private baseApiParams: RequestParams = {
         credentials: "same-origin",
         headers: {},
         redirect: "follow",
         referrerPolicy: "no-referrer",
     };
+
+    public setSecurityData = (data: SecurityDataType | null) => {
+        this.securityData = data;
+    };
+
+    protected encodeQueryParam(key: string, value: any) {
+        const encodedKey = encodeURIComponent(key);
+        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+    }
+
+    protected addQueryParam(query: QueryParamsType, key: string) {
+        return this.encodeQueryParam(key, query[key]);
+    }
+
+    protected addArrayQueryParam(query: QueryParamsType, key: string) {
+        const value = query[key];
+        return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
+    }
+
+    protected toQueryString(rawQuery?: QueryParamsType): string {
+        const query = rawQuery || {};
+        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+        return keys
+            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+            .join("&");
+    }
+
+    protected addQueryParams(rawQuery?: QueryParamsType): string {
+        const queryString = this.toQueryString(rawQuery);
+        return queryString ? `?${queryString}` : "";
+    }
+
+    protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
+        return {
+            ...this.baseApiParams,
+            ...params1,
+            ...(params2 || {}),
+            headers: {
+                ...(this.baseApiParams.headers || {}),
+                ...(params1.headers || {}),
+                ...((params2 && params2.headers) || {}),
+            },
+        };
+    }
+
     private contentFormatters: Record<ContentType, (input: any) => any> = {
         [ContentType.Json]: (input: any) =>
             input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
@@ -266,13 +322,21 @@ export class HttpClient<SecurityDataType = unknown> {
         [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
     };
 
-    constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
-        Object.assign(this, apiConfig);
-    }
+    protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
+        if (this.abortControllers.has(cancelToken)) {
+            const abortController = this.abortControllers.get(cancelToken);
+            if (abortController) {
+                return abortController.signal;
+            }
+            return void 0;
+        }
 
-    public setSecurityData = (data: SecurityDataType | null) => {
-        this.securityData = data;
+        const abortController = new AbortController();
+        this.abortControllers.set(cancelToken, abortController);
+        return abortController.signal;
     };
+
+    private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
     public abortRequest = (cancelToken: CancelToken) => {
         const abortController = this.abortControllers.get(cancelToken);
@@ -341,62 +405,6 @@ export class HttpClient<SecurityDataType = unknown> {
             return data;
         });
     };
-
-    protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
-        return {
-            ...this.baseApiParams,
-            ...params1,
-            ...(params2 || {}),
-            headers: {
-                ...(this.baseApiParams.headers || {}),
-                ...(params1.headers || {}),
-                ...((params2 && params2.headers) || {}),
-            },
-        };
-    }
-
-    protected encodeQueryParam(key: string, value: any) {
-        const encodedKey = encodeURIComponent(key);
-        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
-    }
-
-    protected addQueryParam(query: QueryParamsType, key: string) {
-        return this.encodeQueryParam(key, query[key]);
-    }
-
-    protected addArrayQueryParam(query: QueryParamsType, key: string) {
-        const value = query[key];
-        return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
-    }
-
-    protected toQueryString(rawQuery?: QueryParamsType): string {
-        const query = rawQuery || {};
-        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
-        return keys
-            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
-            .join("&");
-    }
-
-    protected addQueryParams(rawQuery?: QueryParamsType): string {
-        const queryString = this.toQueryString(rawQuery);
-        return queryString ? `?${queryString}` : "";
-    }
-
-    protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
-        if (this.abortControllers.has(cancelToken)) {
-            const abortController = this.abortControllers.get(cancelToken);
-            if (abortController) {
-                return abortController.signal;
-            }
-            return void 0;
-        }
-
-        const abortController = new AbortController();
-        this.abortControllers.set(cancelToken, abortController);
-        return abortController.signal;
-    };
-
-    private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 }
 
 /**
@@ -581,6 +589,47 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /**
          * No description
          *
+         * @tags comment-controller
+         * @name GetComments
+         * @request GET:/api/comments
+         * @secure
+         */
+        getComments: (
+            query: {
+                /** @format int64 */
+                correctionId: number;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<CommentResDto[], any>({
+                path: `/api/comments`,
+                method: "GET",
+                query: query,
+                secure: true,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags comment-controller
+         * @name CreateComment
+         * @request POST:/api/comments
+         * @secure
+         */
+        createComment: (data: CreateCommentReqDto, params: RequestParams = {}) =>
+            this.request<CommentResDto, any>({
+                path: `/api/comments`,
+                method: "POST",
+                body: data,
+                secure: true,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags auth-controller
          * @name Login
          * @request POST:/api/auth/login
@@ -606,24 +655,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
                 path: `/api/auth/activate`,
                 method: "POST",
                 body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags correction-controller
-         * @name UpdateComment
-         * @request PATCH:/api/corrections/{id}
-         * @secure
-         */
-        updateComment: (id: number, data: UpdateCorrectionReqDto, params: RequestParams = {}) =>
-            this.request<CorrectionResDto, any>({
-                path: `/api/corrections/${id}`,
-                method: "PATCH",
-                body: data,
-                secure: true,
                 type: ContentType.Json,
                 ...params,
             }),

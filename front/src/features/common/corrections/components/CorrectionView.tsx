@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import clsx, {ClassValue} from "clsx";
 import React from "react";
+import {Comments} from "../../comments/components/Comments.tsx";
 
 const pad = (num: number, size: number) => {
     const s = "000000000" + num;
@@ -58,7 +59,8 @@ export const CorrectionView = ({correction, commentSection}: CorrectionProps) =>
                                          className="bg-green-600 shadow-lg"/>
                     </div>
                     <div className="grid grid-cols-2">
-                        {commentSection}
+                        <Comments correctionId={correction.id}/>
+                        {/*{commentSection}*/}
                     </div>
                 </div>
             </div>

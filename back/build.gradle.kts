@@ -58,7 +58,7 @@ dependencies {
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
 
     // liquibase
-    implementation("org.liquibase:liquibase-core:4.8.0")
+    implementation("org.liquibase:liquibase-core:4.24.0")
 }
 
 kapt {

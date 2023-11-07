@@ -1,10 +1,10 @@
-import {User} from "../api/getActivation.ts";
 import {z} from "zod";
 import {Form} from "../../../ui/form/Form.tsx";
 import {InputField} from "../../../ui/form/InputField.tsx";
 import {useActivateUser} from "../api/activateUser.ts";
 import {addUser} from "../authModel.ts";
 import {Button} from "../../../ui/button/Button.tsx";
+import {User} from "../../common/users/model";
 
 const schema = z.object({
     password: z.string().min(8, "Пароль должен содержать как минимум 8 символов"),

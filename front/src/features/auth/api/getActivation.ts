@@ -2,12 +2,7 @@ import {RequestParams, UserResDto} from "../../../api/Api.ts";
 import {useQuery} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../api";
 import {authKeys} from "./authApi.ts";
-
-export interface User {
-    id: number;
-    fullName: string;
-    email: string;
-}
+import {User} from "../../common/users/model";
 
 export function mapUser(userDto: UserResDto): User {
     return userDto;
