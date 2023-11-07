@@ -2,6 +2,7 @@ import {useComments} from "../api";
 import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import {useCurrentUser} from "../../../auth/authModel.ts";
 import clsx from "clsx";
+import {NewCommentForm} from "./NewCommentForm.tsx";
 
 type CommentSide = "MINE" | "YOURS"
 
@@ -45,5 +46,6 @@ export const Comments = ({correctionId}: CommentsProps) => {
             <SingleComment timestamp={value.timestamp} text={value.text}
                            side={value.author.role === user.role ? "MINE" : "YOURS"}/>
         ))}
+        <NewCommentForm correctionId={correctionId}/>
     </div>;
 }

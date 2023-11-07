@@ -34,6 +34,6 @@ class CommentService(
         if (requester.role == Role.ROLE_USER && correction.request.lecturer.id != requester.id)
             throw ForbiddenException("You have no access!")
 
-        return correction.comments
+        return correction.comments.sortedBy { it.timestamp }
     }
 }
