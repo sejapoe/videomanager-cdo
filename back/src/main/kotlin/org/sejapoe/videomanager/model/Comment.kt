@@ -9,7 +9,7 @@ class Comment(
     @Column(name = "timestamp", nullable = false)
     var timestamp: Instant,
 
-    @JoinColumn(name = "request_id", nullable = false)
+    @JoinColumn(name = "author_id", nullable = false)
     @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.EAGER)
     var author: User,
 
@@ -23,5 +23,6 @@ class Comment(
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
+    @SequenceGenerator(name = "comments_seq", sequenceName = "comments_seq", allocationSize = 1)
     var id: Long = -1L
 )
