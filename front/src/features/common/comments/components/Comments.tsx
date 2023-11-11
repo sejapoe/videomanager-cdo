@@ -14,14 +14,16 @@ type SingleCommentProps = {
 
 const SingleComment = ({timestamp, text, side}: SingleCommentProps) => {
     return <div className={clsx(
-        "flex w-full",
-        side === "MINE" ? "justify-end" : "justify-start"
-    )}>
+        "flex w-full relative",
+        side === "MINE" ? "justify-end" : "justify-start",
+    )}
+                title={timestamp.toLocaleString()}
+    >
         <div className={clsx(
             side === "MINE" ? "bg-purple-600 text-white" : "bg-gray-600 text-white",
             "py-1 px-3 rounded w-fit max-w-[70%] break-all",
         )}>
-            <p>{text}</p>
+            {text}
         </div>
     </div>
 }
