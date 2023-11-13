@@ -40,7 +40,7 @@ export const Comments = ({correctionId}: CommentsProps) => {
 
     if (isError || !user) return <div className="text-gray-700">Произошла непредвиденная ошибка</div>
 
-    return <div className="p-4 mt-4 rounded border-gray-400 space-y-2">
+    return <div className="space-y-2">
         {comments?.map(value => (
             <SingleComment timestamp={value.timestamp} text={value.text}
                            side={value.author.role === user.role ? "MINE" : "YOURS"}/>

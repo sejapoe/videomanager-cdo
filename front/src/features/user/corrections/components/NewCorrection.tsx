@@ -95,48 +95,42 @@ export const NewCorrectionForm = ({requestId, close}: NewCorrectionFormProps) =>
     >
         {({register, formState, control}) => (
             <>
-                <div className="p-4 grid grid-cols-3">
-                    <div className="col-span-2">
-                        <div className="flex flex-col">
-                            <div className="relative grid grid-cols-4 grid-rows-4 gap-4 p-4 w-full pb-0">
-                                <TimeCodeField className="row-span-1 col-span-2" label={"Начало отрезка"}
-                                               name="startTimeCode"
-                                               control={control}/>
-                                <TimeCodeField className="row-span-1 col-span-2" label={"Конец отрезка"}
-                                               name="endTimeCode"
-                                               control={control}/>
+                <div className="flex justify-center">
+                    <div className="w-2/3 p-4 rounded-xl border border-dashed text-gray-700 border-blue-600">
+                        <div className="col-span-2">
+                            <div className="flex flex-col">
+                                <div className="relative grid grid-cols-4 gap-4 w-full pb-0">
+                                    <TimeCodeField className="col-span-2" label={"Начало отрезка"}
+                                                   name="startTimeCode"
+                                                   control={control}/>
+                                    <TimeCodeField className="col-span-2" label={"Конец отрезка"}
+                                                   name="endTimeCode"
+                                                   control={control}/>
 
-                                <div className="row-span-2 col-span-4">
-                                    <TextAreaField
-                                        label="Комментарий"
-                                        className="resize-none pr-5 bg-transparent border border-gray-400 w-full h-full row-auto"
-                                        rows={5}
-                                        error={formState.errors["comment"]}
-                                        registration={register("comment")}
-                                    />
+                                    <div className="col-span-4">
+                                        <TextAreaField
+                                            label="Комментарий"
+                                            className="resize-none pr-5 bg-transparent border border-gray-400 w-full h-full row-auto"
+                                            rows={5}
+                                            error={formState.errors["comment"]}
+                                            registration={register("comment")}
+                                        />
+                                    </div>
+
+                                    <div/>
+
+                                    <Button isLoading={isLoading} variant="primary" className="col-span-1"
+                                            type="submit">
+                                        <FontAwesomeIcon size="2x" icon={solid("plus")}/>
+                                    </Button>
+                                    <Button disabled={isLoading} variant="danger" className="col-span-1"
+                                            type="reset">
+                                        <FontAwesomeIcon size="2x" icon={solid("close")}/>
+                                    </Button>
                                 </div>
 
-                                {/*<div*/}
-                                {/*    className="row-span-2 col-span-2 flex justify-center items-center text-3xl font-serif italic">*/}
-                                {/*    Пустое место™*/}
-                                {/*</div>*/}
-
-                                <Button isLoading={isLoading} variant="primary" className="row-span-1 col-span-1"
-                                        type="submit">
-                                    <FontAwesomeIcon size="2x" icon={solid("plus")}/>
-                                </Button>
-                                <Button disabled={isLoading} variant="danger" className="row-span-1 col-span-1"
-                                        type="reset">
-                                    <FontAwesomeIcon size="2x" icon={solid("close")}/>
-                                </Button>
                             </div>
-                            {/*<div className="px-4 pt-2 grid grid-cols-4 gap-4">*/}
-                            {/*</div>*/}
-
                         </div>
-                    </div>
-                    <div className="bg-gray-600 p-2 col-span-1 text-white">
-
                     </div>
                 </div>
             </>
@@ -178,7 +172,7 @@ export const NewCorrection = ({
             leaveFrom="opacity-100 scale-100 "
             leaveTo="opacity-0 scale-95 "
         >
-            <div className="w-full absolute rounded-xl border border-dashed text-gray-700 border-blue-600">
+            <div className="w-full absolute">
                 <NewCorrectionForm requestId={requestId} close={() => setShow(false)}/>
             </div>
         </Transition>

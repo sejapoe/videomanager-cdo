@@ -30,7 +30,7 @@ export function LabeledTimeCode({label, timeCode, className}: LabeledTimeCodePro
     return <div className="flex flex-col justify-center items-center">
         <span className="text-xs">{label}</span>
         <div className={clsx(
-            "flex text-xl font-['Open_Sans'] py-1 px-4 rounded-md justify-center text-white",
+            "flex text-xl font-['Open_Sans'] py-1 px-4 rounded-md justify-center",
             className
         )}>
             {formatTimeCode(timeCode)}
@@ -47,11 +47,11 @@ export const CorrectionView = ({correction}: CorrectionProps) => {
 
     return <div className="flex justify-center">
         <div className={clsx(
-            "text-gray-700 w-2/3 rounded-xl border border-dashed border-gray-500 p-4",
+            "text-gray-700 w-2/3 rounded-xl border border-dashed border-gray-500",
             correction.closed ? "bg-gray-300" : ""
         )}>
             <div className="w-full flex flex-col">
-                <div className="flex justify-between">
+                <div className="flex justify-between p-4 cursor-pointer" onClick={toggle}>
                     <div className="relative grid grid-cols-2 gap-4 w-fit">
                         <LabeledTimeCode label="Начало отрезка" timeCode={correction.startTimeCode}
                                          className="text-orange-700 bg-gray-200 shadow shadow-orange-700"/>
@@ -63,9 +63,9 @@ export const CorrectionView = ({correction}: CorrectionProps) => {
                         <LabeledTimeCode label="Конец отрезка" timeCode={correction.endTimeCode}
                                          className="text-green-800 bg-gray-200 shadow shadow-green-800"/>
                     </div>
-                    <div className="flex items-center">
-                        <FontAwesomeIcon onClick={toggle} className={clsx(
-                            "cursor-pointer text-3xl",
+                    <div className="w-2/3 cursor-pointer justify-end flex items-center">
+                        <FontAwesomeIcon className={clsx(
+                            "text-3xl",
                             "transition-transform duration-[600ms]",
                            isOpen ? "rotate-0" : "rotate-90"
                         )}
@@ -81,7 +81,7 @@ export const CorrectionView = ({correction}: CorrectionProps) => {
                     leaveFrom="max-h-[1000px]"
                     leaveTo="max-h-0 opacity-0"
                 >
-                    <div className="w-full select-none">
+                    <div className="w-full select-none p-8 pt-4">
                         <Comments correctionId={correction.id}/>
                     </div>
                 </Transition>
