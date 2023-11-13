@@ -7,5 +7,6 @@ data class CommentRes(
     val timestamp: Instant,
     val author: UserRes,
     val text: String,
+    val isClosed: Boolean,
     val id: Long
 )

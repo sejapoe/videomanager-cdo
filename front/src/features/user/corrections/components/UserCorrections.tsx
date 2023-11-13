@@ -8,9 +8,7 @@ type CorrectionProps = {
 }
 
 const UserCorrection = ({correction}: CorrectionProps) => {
-    return <CorrectionView correction={correction} commentSection={<>
-        <div/>
-    </>}/>
+    return <CorrectionView correction={correction}/>
 }
 
 export const UserCorrections = ({parentRequestId, corrections}: CorrectionsProps) => {

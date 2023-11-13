@@ -880,6 +880,7 @@
       },
       "CorrectionRes": {
         "required": [
+          "closed",
           "endTimeCode",
           "id",
           "startTimeCode"
@@ -893,6 +894,9 @@
           "endTimeCode": {
             "type": "integer",
             "format": "int32"
+          },
+          "closed": {
+            "type": "boolean"
           },
           "id": {
             "type": "integer",
@@ -920,6 +924,7 @@
         "required": [
           "author",
           "id",
+          "isClosed",
           "text",
           "timestamp"
         ],
@@ -934,6 +939,9 @@
           },
           "text": {
             "type": "string"
+          },
+          "isClosed": {
+            "type": "boolean"
           },
           "id": {
             "type": "integer",
@@ -1073,10 +1081,10 @@
           "sort": {
             "$ref": "#/components/schemas/SortObject"
           },
-          "paged": {
+          "unpaged": {
             "type": "boolean"
           },
-          "unpaged": {
+          "paged": {
             "type": "boolean"
           }
         }

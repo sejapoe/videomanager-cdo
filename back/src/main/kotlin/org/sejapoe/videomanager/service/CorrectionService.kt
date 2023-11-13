@@ -32,7 +32,6 @@ class CorrectionService(
             createCorrectionReq.startTimeCode,
             createCorrectionReq.endTimeCode,
             request,
-            emptyList()
         )
 
         val comment = Comment(

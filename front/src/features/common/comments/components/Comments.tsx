@@ -20,8 +20,8 @@ const SingleComment = ({timestamp, text, side}: SingleCommentProps) => {
                 title={timestamp.toLocaleString()}
     >
         <div className={clsx(
-            side === "MINE" ? "bg-purple-600 text-white" : "bg-gray-600 text-white",
-            "py-1 px-3 rounded w-fit max-w-[70%] break-all",
+            side === "MINE" ? "bg-purple-800 text-white" : "bg-gray-700 text-white",
+            "py-1 px-3 rounded w-fit max-w-[70%] break-words",
         )}>
             {text}
         </div>
@@ -33,7 +33,6 @@ type CommentsProps = {
 }
 
 export const Comments = ({correctionId}: CommentsProps) => {
-    console.log(correctionId)
     const user = useCurrentUser()
     const {data: comments, isLoading, isError} = useComments(correctionId)
 
@@ -41,9 +40,7 @@ export const Comments = ({correctionId}: CommentsProps) => {
 
     if (isError || !user) return <div className="text-gray-700">Произошла непредвиденная ошибка</div>
 
-    console.log(comments)
-
-    return <div className="pace-y-2 p-4 mt-4 border-2 rounded border-gray-400 space-y-2">
+    return <div className="p-4 mt-4 rounded border-gray-400 space-y-2">
         {comments?.map(value => (
             <SingleComment timestamp={value.timestamp} text={value.text}
                            side={value.author.role === user.role ? "MINE" : "YOURS"}/>

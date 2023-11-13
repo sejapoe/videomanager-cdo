@@ -7,10 +7,7 @@ type CorrectionProps = {
 }
 
 const AdminCorrection = ({correction}: CorrectionProps) => {
-    return <CorrectionView correction={correction} commentSection={<>
-        {/*<Comment label="Комментарий преподавателя" comment={correction.comment}/>*/}
-        {/*<CommentForm label="Комментарий администратора" comment={correction.adminComment} correctionId={correction.id}/>*/}
-    </>}/>
+    return <CorrectionView correction={correction}/>
 }
 
 export const AdminCorrections = ({corrections}: CorrectionsProps) => {

@@ -2,8 +2,9 @@ import {Correction} from "../model";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import clsx, {ClassValue} from "clsx";
-import React from "react";
 import {Comments} from "../../comments/components/Comments.tsx";
+import {useDisclosure} from "../../../../hooks/useDicslosure.ts";
+import {Transition} from "@headlessui/react";
 
 const pad = (num: number, size: number) => {
     const s = "000000000" + num;
@@ -39,32 +40,51 @@ export function LabeledTimeCode({label, timeCode, className}: LabeledTimeCodePro
 
 type CorrectionProps = {
     correction: Correction
-    commentSection: React.ReactNode;
 }
 
-export const CorrectionView = ({correction, commentSection}: CorrectionProps) => {
-    return <div className="text-gray-700 rounded-xl border border-dashed border-gray-500 p-4">
-        <div className="grid grid-cols-3">
-            <div className="col-span-2">
-                <div className="flex flex-col">
-                    <div className="relative grid grid-cols-2 gap-4 w-fit p-4 pb-0">
+export const CorrectionView = ({correction}: CorrectionProps) => {
+    const {isOpen, toggle} = useDisclosure(false)
+
+    return <div className="flex justify-center">
+        <div className={clsx(
+            "text-gray-700 w-2/3 rounded-xl border border-dashed border-gray-500 p-4",
+            correction.closed ? "bg-gray-300" : ""
+        )}>
+            <div className="w-full flex flex-col">
+                <div className="flex justify-between">
+                    <div className="relative grid grid-cols-2 gap-4 w-fit">
                         <LabeledTimeCode label="Начало отрезка" timeCode={correction.startTimeCode}
-                                         className="bg-orange-500 shadow-lg"/>
+                                         className="text-orange-700 bg-gray-200 shadow shadow-orange-700"/>
                         <div className="absolute w-full h-full flex justify-center items-center">
-                            <div className="mt-8">
+                            <div className="mt-4">
                                 <FontAwesomeIcon icon={solid("arrow-right")}/>
                             </div>
                         </div>
                         <LabeledTimeCode label="Конец отрезка" timeCode={correction.endTimeCode}
-                                         className="bg-green-600 shadow-lg"/>
+                                         className="text-green-800 bg-gray-200 shadow shadow-green-800"/>
                     </div>
-                    <div className="grid grid-cols-2">
-                        <Comments correctionId={correction.id}/>
-                        {/*{commentSection}*/}
+                    <div className="flex items-center">
+                        <FontAwesomeIcon onClick={toggle} className={clsx(
+                            "cursor-pointer text-3xl",
+                            "transition-transform duration-[600ms]",
+                           isOpen ? "rotate-0" : "rotate-90"
+                        )}
+                                         icon={solid("chevron-down")}/>
                     </div>
                 </div>
-            </div>
-            <div className="bg-gray-600 p-2 col-span-1 text-white">
+                <Transition
+                    show={isOpen}
+                    enter="overflow-hidden transition-all duration-[600ms]"
+                    enterFrom="max-h-0"
+                    enterTo="max-h-[1000px]"
+                    leave="overflow-hidden transition-all duration-[600ms] ease-in-out"
+                    leaveFrom="max-h-[1000px]"
+                    leaveTo="max-h-0 opacity-0"
+                >
+                    <div className="w-full select-none">
+                        <Comments correctionId={correction.id}/>
+                    </div>
+                </Transition>
             </div>
         </div>
     </div>
