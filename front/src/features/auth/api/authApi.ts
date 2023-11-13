@@ -8,6 +8,7 @@ export const authKeys = {
 
     activation: {
         root: [...authKey, 'activation'],
+        byUUID: (uuid: string) => [...authKeys.activation.root, uuid]
     },
 
     mutation: {

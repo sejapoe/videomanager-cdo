@@ -1,6 +1,7 @@
 package org.sejapoe.videomanager.security
 
 import org.sejapoe.videomanager.repo.UserRepo
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -28,7 +29,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class SecurityConfig {
+class SecurityConfig(
+    @Value("\${spring.security.cors.url}")
+    private val corsUrl: String
+) {
+
     @Bean
     fun filterChain(
         http: HttpSecurity,
@@ -57,7 +62,7 @@ class SecurityConfig {
     fun corsConfigurer(): WebMvcConfigurer {
         return object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/api/**").allowedOrigins("http://localhost:5173").allowedMethods("*")
+                registry.addMapping("/api/**").allowedOrigins(corsUrl).allowedMethods("*")
             }
         }
     }

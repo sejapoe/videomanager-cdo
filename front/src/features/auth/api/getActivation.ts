@@ -10,7 +10,7 @@ export function mapUser(userDto: UserResDto): User {
 
 export const useActivation = (uuid: string, params?: RequestParams) =>
     useQuery<User, GenericErrorModel, User, unknown[]>(
-        authKeys.activation.root,
+        authKeys.activation.byUUID(uuid),
         async ({signal}) => {
             const response = await api.getActivation(uuid, {
                 signal,
