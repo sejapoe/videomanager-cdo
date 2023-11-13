@@ -24,7 +24,7 @@ class Request(
     @Column(name = "status")
     var status: RequestStatus,
 
-    @Column(name = "link_to_moodle")
+    @Column(name = "link_to_moodle", length = 1023)
     var linkToMoodle: String,
 
     @OneToMany(

@@ -17,7 +17,7 @@ class Comment(
     @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.EAGER)
     var correction: Correction,
 
-    @Column(name = "text", nullable = false)
+    @Column(name = "text", nullable = false, length = 1023)
     var text: String,
 
     @Id
