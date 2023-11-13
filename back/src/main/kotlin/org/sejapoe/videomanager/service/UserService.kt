@@ -4,6 +4,7 @@ import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.exception.UserActivationNotFoundException
 import org.sejapoe.videomanager.exception.auth.EmailAlreadyExitsRegistrationException
 import org.sejapoe.videomanager.exception.auth.EmailDoesntExistsLoginException
+import org.sejapoe.videomanager.model.QUser
 import org.sejapoe.videomanager.model.Role
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.model.UserActivation
@@ -50,6 +51,13 @@ class UserService(
         val activator = UserActivation(UUID.randomUUID(), user)
         userActivationRepo.save(activator)
         return user
+    }
+
+    fun createAdmin(name: String, email: String) {
+        if (userRepo.exists(QUser.user.role.eq(Role.ROLE_ADMIN))) return // Admin already exists
+        val user = User(email, "", name, Role.ROLE_ADMIN, false)
+        val activator = UserActivation(UUID.randomUUID(), user)
+        userActivationRepo.save(activator)
     }
 
     fun getUserActivation(uuid: UUID) = userActivationRepo.findByUuid(uuid) ?: throw UserActivationNotFoundException()
