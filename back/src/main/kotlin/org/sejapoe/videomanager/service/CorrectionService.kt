@@ -5,6 +5,7 @@ import org.sejapoe.videomanager.exception.ForbiddenException
 import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.model.Comment
 import org.sejapoe.videomanager.model.Correction
+import org.sejapoe.videomanager.model.Role
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.repo.CommentRepo
 import org.sejapoe.videomanager.repo.CorrectionRepo
@@ -25,7 +26,7 @@ class CorrectionService(
     fun get(id: Long, requester: User): Correction {
         val correction = get(id)
 
-        if (correction.request.lecturer.id != requester.id)
+        if (requester.role === Role.ROLE_USER && correction.request.lecturer.id != requester.id)
             throw ForbiddenException("You can't access other user's requests!")
 
         return correction
