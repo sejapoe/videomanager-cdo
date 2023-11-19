@@ -1,6 +1,5 @@
-import {Correction} from "../model";
+import {FullRequest} from "../../requests/model";
 
 export type CorrectionsProps = {
-    parentRequestId: number;
-    corrections: Correction[]
+    request: FullRequest
 }

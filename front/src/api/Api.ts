@@ -21,9 +21,44 @@ export interface ProblemDetailDto {
   properties?: Record<string, object>;
 }
 
-export interface CreateLecturerReqDto {
+export interface UpdateRequestStatusReqDto {
+  /** @format int64 */
+  id: number;
+  newStatus: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+}
+
+export interface CorrectionResDto {
+  /** @format int32 */
+  startTimeCode: number;
+  /** @format int32 */
+  endTimeCode: number;
+  closed: boolean;
+  /** @format int64 */
+  id: number;
+}
+
+export interface DepartmentResDto {
+  /** @format int64 */
+  id: number;
   name: string;
-  email: string;
+}
+
+export interface FullRequestResDto {
+  /** @format int64 */
+  id: number;
+  name: string;
+  lecturer: UserResDto;
+  institute: InstituteResDto;
+  department: DepartmentResDto;
+  linkToMoodle: string;
+  status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+  corrections: CorrectionResDto[];
+}
+
+export interface InstituteResDto {
+  /** @format int64 */
+  id: number;
+  name: string;
 }
 
 export interface UserResDto {
@@ -32,6 +67,11 @@ export interface UserResDto {
   email: string;
   fullName: string;
   role: "ROLE_USER" | "ROLE_ADMIN";
+}
+
+export interface CreateLecturerReqDto {
+  name: string;
+  email: string;
 }
 
 export interface CreateRequestReqDto {
@@ -43,18 +83,6 @@ export interface CreateRequestReqDto {
   /** @format int64 */
   department_id: number;
   linkToMoodle: string;
-}
-
-export interface DepartmentResDto {
-  /** @format int64 */
-  id: number;
-  name: string;
-}
-
-export interface InstituteResDto {
-  /** @format int64 */
-  id: number;
-  name: string;
 }
 
 export interface RequestResDto {
@@ -93,16 +121,6 @@ export interface CreateCorrectionReqDto {
   startTimeCode: number;
   /** @format int32 */
   endTimeCode: number;
-}
-
-export interface CorrectionResDto {
-  /** @format int32 */
-  startTimeCode: number;
-  /** @format int32 */
-  endTimeCode: number;
-  closed: boolean;
-  /** @format int64 */
-  id: number;
 }
 
 export interface CreateCommentReqDto {
@@ -150,6 +168,12 @@ export interface ActivateUserReqDto {
   password: string;
 }
 
+export interface UpdateCorrectionStatusReqDto {
+  /** @format int64 */
+  id: number;
+  isClosed: boolean;
+}
+
 export interface PageRequestResDto {
   /** @format int32 */
   totalPages?: number;
@@ -177,26 +201,14 @@ export interface PageableObjectDto {
   /** @format int64 */
   offset?: number;
   sort?: SortObjectDto;
-  unpaged?: boolean;
   paged?: boolean;
+  unpaged?: boolean;
 }
 
 export interface SortObjectDto {
   sorted?: boolean;
   empty?: boolean;
   unsorted?: boolean;
-}
-
-export interface FullRequestResDto {
-  /** @format int64 */
-  id: number;
-  name: string;
-  lecturer: UserResDto;
-  institute: InstituteResDto;
-  department: DepartmentResDto;
-  linkToMoodle: string;
-  status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
-  corrections: CorrectionResDto[];
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -419,40 +431,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags user-controller
-     * @name GetAllLecturers
-     * @request GET:/api/users
-     * @secure
-     */
-    getAllLecturers: (params: RequestParams = {}) =>
-      this.request<UserResDto[], any>({
-        path: `/api/users`,
-        method: "GET",
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags user-controller
-     * @name CreateLecturer
-     * @request POST:/api/users
-     * @secure
-     */
-    createLecturer: (data: CreateLecturerReqDto, params: RequestParams = {}) =>
-      this.request<UserResDto, any>({
-        path: `/api/users`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @tags request-controller
      * @name GetRequests
      * @request GET:/api/requests
@@ -488,6 +466,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags request-controller
+     * @name UpdateRequestStatus
+     * @request PUT:/api/requests
+     * @secure
+     */
+    updateRequestStatus: (data: UpdateRequestStatusReqDto, params: RequestParams = {}) =>
+        this.request<FullRequestResDto, any>({
+          path: `/api/requests`,
+          method: "PUT",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
+        }),
+
+    /**
+     * No description
+     *
+     * @tags request-controller
      * @name CreateRequest
      * @request POST:/api/requests
      * @secure
@@ -501,6 +497,40 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         type: ContentType.Json,
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags user-controller
+     * @name GetAllLecturers
+     * @request GET:/api/users
+     * @secure
+     */
+    getAllLecturers: (params: RequestParams = {}) =>
+        this.request<UserResDto[], any>({
+          path: `/api/users`,
+          method: "GET",
+          secure: true,
+          ...params,
+        }),
+
+    /**
+     * No description
+     *
+     * @tags user-controller
+     * @name CreateLecturer
+     * @request POST:/api/users
+     * @secure
+     */
+    createLecturer: (data: CreateLecturerReqDto, params: RequestParams = {}) =>
+        this.request<UserResDto, any>({
+          path: `/api/users`,
+          method: "POST",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
+        }),
 
     /**
      * No description
@@ -587,6 +617,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         type: ContentType.Json,
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags correction-controller
+     * @name UpdateCorrectionStatus
+     * @request PATCH:/api/corrections
+     * @secure
+     */
+    updateCorrectionStatus: (data: UpdateCorrectionStatusReqDto, params: RequestParams = {}) =>
+        this.request<CorrectionResDto, any>({
+          path: `/api/corrections`,
+          method: "PATCH",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
+        }),
 
     /**
      * No description
@@ -692,6 +740,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         secure: true,
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags correction-controller
+     * @name GetCorrection
+     * @request GET:/api/corrections/{id}
+     * @secure
+     */
+    getCorrection: (id: number, params: RequestParams = {}) =>
+        this.request<CorrectionResDto, any>({
+          path: `/api/corrections/${id}`,
+          method: "GET",
+          secure: true,
+          ...params,
+        }),
 
     /**
      * No description

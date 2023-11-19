@@ -7,12 +7,12 @@ type CorrectionProps = {
 }
 
 const AdminCorrection = ({correction}: CorrectionProps) => {
-    return <CorrectionView correction={correction}/>
+    return <CorrectionView correctionId={correction.id}/>
 }
 
-export const AdminCorrections = ({corrections}: CorrectionsProps) => {
+export const AdminCorrections = ({request}: CorrectionsProps) => {
     return <div className="space-y-2">
-        {corrections.map(value => (
+        {request.corrections.map(value => (
             <AdminCorrection correction={value} key={value.id}/>
         ))}
     </div>

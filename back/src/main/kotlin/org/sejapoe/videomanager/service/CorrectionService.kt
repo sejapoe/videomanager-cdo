@@ -22,6 +22,15 @@ class CorrectionService(
     fun get(id: Long) =
         correctionRepo.findById(id).getOrNull() ?: throw NotFoundException("Correction with id $id is not found")
 
+    fun get(id: Long, requester: User): Correction {
+        val correction = get(id)
+
+        if (correction.request.lecturer.id != requester.id)
+            throw ForbiddenException("You can't access other user's requests!")
+
+        return correction
+    }
+
     fun createCorrection(createCorrectionReq: CreateCorrectionReq, user: User): Correction {
         val request = requestRepo.findById(createCorrectionReq.requestId).getOrNull()
             ?: throw NotFoundException("Request with id ${createCorrectionReq.requestId} is not found")
@@ -44,6 +53,12 @@ class CorrectionService(
 //        commentRepo.save(comment)
         correction.comments = listOf(comment)
 
+        return correctionRepo.save(correction)
+    }
+
+    fun updateStatus(id: Long, closed: Boolean, requester: User): Correction {
+        val correction = get(id, requester)
+        correction.closed = closed
         return correctionRepo.save(correction)
     }
 }

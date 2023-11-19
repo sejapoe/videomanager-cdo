@@ -8,14 +8,14 @@ type CorrectionProps = {
 }
 
 const UserCorrection = ({correction}: CorrectionProps) => {
-    return <CorrectionView correction={correction}/>
+    return <CorrectionView correctionId={correction.id}/>
 }
 
-export const UserCorrections = ({parentRequestId, corrections}: CorrectionsProps) => {
+export const UserCorrections = ({request}: CorrectionsProps) => {
     return <div className="space-y-2">
-        {corrections.map(value => (
+        {request.corrections.map(value => (
             <UserCorrection correction={value} key={value.id}/>
         ))}
-        <NewCorrection requestId={parentRequestId}/>
+        {request.status !== "COMPLETE" && <NewCorrection requestId={request.id}/>}
     </div>
 }

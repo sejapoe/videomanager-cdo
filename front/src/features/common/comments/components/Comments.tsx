@@ -3,6 +3,7 @@ import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import {useCurrentUser} from "../../../auth/authModel.ts";
 import clsx from "clsx";
 import {NewCommentForm} from "./NewCommentForm.tsx";
+import {Correction} from "../../corrections/model";
 
 type CommentSide = "MINE" | "YOURS"
 
@@ -29,12 +30,12 @@ const SingleComment = ({timestamp, text, side}: SingleCommentProps) => {
 }
 
 type CommentsProps = {
-    correctionId: number;
+    correction: Correction;
 }
 
-export const Comments = ({correctionId}: CommentsProps) => {
+export const Comments = ({correction}: CommentsProps) => {
     const user = useCurrentUser()
-    const {data: comments, isLoading, isError} = useComments(correctionId)
+    const {data: comments, isLoading, isError} = useComments(correction.id)
 
     if (isLoading) return <CenterSpinner/>
 
@@ -42,9 +43,9 @@ export const Comments = ({correctionId}: CommentsProps) => {
 
     return <div className="space-y-2">
         {comments?.map(value => (
-            <SingleComment timestamp={value.timestamp} text={value.text}
+            <SingleComment timestamp={value.timestamp} text={value.text} key={`comment-${value.id}`}
                            side={value.author.role === user.role ? "MINE" : "YOURS"}/>
         ))}
-        <NewCommentForm correctionId={correctionId}/>
+        <NewCommentForm correction={correction}/>
     </div>;
 }

@@ -1,10 +1,16 @@
-import {Correction} from "../model";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import clsx, {ClassValue} from "clsx";
 import {Comments} from "../../comments/components/Comments.tsx";
 import {useDisclosure} from "../../../../hooks/useDicslosure.ts";
 import {Transition} from "@headlessui/react";
+import {useCurrentUser} from "../../../auth/authModel.ts";
+import {correctionsKeys, useCorrection} from "../api";
+import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
+import {ResolveCorrectionButton} from "../../../user/corrections/components/ResolveCorrectionButton.tsx";
+import {requestsKeys} from "../../requests/api";
+import {useQueryClient} from "@tanstack/react-query";
+import {useParams} from "react-router-dom";
 
 const pad = (num: number, size: number) => {
     const s = "000000000" + num;
@@ -27,7 +33,7 @@ type LabeledTimeCodeProps = {
 
 
 export function LabeledTimeCode({label, timeCode, className}: LabeledTimeCodeProps) {
-    return <div className="flex flex-col justify-center items-center">
+    return <div className="flex flex-col justify-center items-center w-fit">
         <span className="text-xs">{label}</span>
         <div className={clsx(
             "flex text-xl font-['Open_Sans'] py-1 px-4 rounded-md justify-center",
@@ -39,11 +45,17 @@ export function LabeledTimeCode({label, timeCode, className}: LabeledTimeCodePro
 }
 
 type CorrectionProps = {
-    correction: Correction
+    correctionId: number
 }
 
-export const CorrectionView = ({correction}: CorrectionProps) => {
-    const {isOpen, toggle} = useDisclosure(false)
+export const CorrectionView = ({correctionId}: CorrectionProps) => {
+    const {id} = useParams()
+    const queryClient = useQueryClient()
+    const user = useCurrentUser()
+    const {isOpen, toggle, close} = useDisclosure(false)
+    const {data: correction, isLoading} = useCorrection(correctionId)
+
+    if (isLoading || !correction) return <CenterSpinner/>
 
     return <div className="flex justify-center">
         <div className={clsx(
@@ -52,22 +64,24 @@ export const CorrectionView = ({correction}: CorrectionProps) => {
         )}>
             <div className="w-full flex flex-col">
                 <div className="flex justify-between p-4 cursor-pointer" onClick={toggle}>
-                    <div className="relative grid grid-cols-2 gap-4 w-fit">
-                        <LabeledTimeCode label="Начало отрезка" timeCode={correction.startTimeCode}
-                                         className="text-orange-700 bg-gray-200 shadow shadow-orange-700"/>
-                        <div className="absolute w-full h-full flex justify-center items-center">
-                            <div className="mt-4">
+                    <div className="flex">
+                        <div className="relative flex items-center">
+                            <LabeledTimeCode label="Начало отрезка" timeCode={correction.startTimeCode}
+                                             className="text-orange-700 bg-gray-200 shadow shadow-orange-700
+                                             "/>
+                            <div className="mt-4 ml-1 mr-1">
                                 <FontAwesomeIcon icon={solid("arrow-right")}/>
                             </div>
+                            <LabeledTimeCode label="Конец отрезка" timeCode={correction.endTimeCode}
+                                             className="text-green-800 bg-gray-200 shadow shadow-green-800"/>
                         </div>
-                        <LabeledTimeCode label="Конец отрезка" timeCode={correction.endTimeCode}
-                                         className="text-green-800 bg-gray-200 shadow shadow-green-800"/>
+
                     </div>
                     <div className="w-2/3 cursor-pointer justify-end flex items-center">
                         <FontAwesomeIcon className={clsx(
                             "text-3xl",
                             "transition-transform duration-[600ms]",
-                           isOpen ? "rotate-0" : "rotate-90"
+                            isOpen ? "rotate-0" : "rotate-90"
                         )}
                                          icon={solid("chevron-down")}/>
                     </div>
@@ -81,8 +95,17 @@ export const CorrectionView = ({correction}: CorrectionProps) => {
                     leaveFrom="max-h-[1000px]"
                     leaveTo="max-h-0 opacity-0"
                 >
-                    <div className="w-full select-none p-8 pt-4">
-                        <Comments correctionId={correction.id}/>
+                    <div className="w-full select-none p-8 pt-4 pb-4">
+                        <Comments correction={correction}/>
+                        {user && user.role === "ROLE_USER" && <ResolveCorrectionButton
+                            correctionId={correction.id}
+                            isClosed={correction.closed}
+                            onSuccess={async () => {
+                                await queryClient.invalidateQueries(correctionsKeys.corrections.byId(correctionId))
+                                await queryClient.invalidateQueries(requestsKeys.requests.byId(parseInt(id || "-1")))
+                                if (!correction?.closed) close()
+                            }}
+                        />}
                     </div>
                 </Transition>
             </div>

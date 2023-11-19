@@ -7,7 +7,7 @@ type RequestTableProps = {
 }
 
 
-const statusL10n: Record<RequestStatus, string> = {
+export const statusL10n: Record<RequestStatus, string> = {
     "DENIED": "Отклонена",
     "CREATED": "Создана",
     "WIP": "В работе",

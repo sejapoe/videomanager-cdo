@@ -47,4 +47,10 @@ class RequestService(
         return request
     }
 
+    fun updateStatus(id: Long, newStatus: RequestStatus, requester: User): Request {
+        val request = get(requester, id)
+        request.status = newStatus
+        return requestRepo.save(request)
+    }
+
 }

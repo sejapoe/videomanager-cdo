@@ -11,67 +11,6 @@
     }
   ],
   "paths": {
-    "/api/users": {
-      "get": {
-        "tags": [
-          "user-controller"
-        ],
-        "operationId": "getAllLecturers",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserRes"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "user-controller"
-        ],
-        "operationId": "createLecturer",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLecturerReq"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserRes"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ]
-      }
-    },
     "/api/requests": {
       "get": {
         "tags": [
@@ -177,6 +116,39 @@
           }
         ]
       },
+      "put": {
+        "tags": [
+          "request-controller"
+        ],
+        "operationId": "updateRequestStatus",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRequestStatusReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FullRequestRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      },
       "post": {
         "tags": [
           "request-controller"
@@ -199,6 +171,67 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/RequestRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "getAllLecturers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRes"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "createLecturer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLecturerReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRes"
                 }
               }
             }
@@ -344,6 +377,39 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateCorrectionReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "correction-controller"
+        ],
+        "operationId": "updateCorrectionStatus",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCorrectionStatusReq"
               }
             }
           },
@@ -581,6 +647,42 @@
         ]
       }
     },
+    "/api/corrections/{id}": {
+      "get": {
+        "tags": [
+          "correction-controller"
+        ],
+        "operationId": "getCorrection",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionRes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/auth/activation/{uuid}": {
       "get": {
         "tags": [
@@ -655,17 +757,131 @@
           }
         }
       },
-      "CreateLecturerReq": {
+      "UpdateRequestStatusReq": {
         "required": [
-          "email",
+          "id",
+          "newStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "newStatus": {
+            "type": "string",
+            "enum": [
+              "DENIED",
+              "CREATED",
+              "WIP",
+              "COMPLETE"
+            ]
+          }
+        }
+      },
+      "CorrectionRes": {
+        "required": [
+          "closed",
+          "endTimeCode",
+          "id",
+          "startTimeCode"
+        ],
+        "type": "object",
+        "properties": {
+          "startTimeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "endTimeCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "closed": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DepartmentRes": {
+        "required": [
+          "id",
           "name"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "FullRequestRes": {
+        "required": [
+          "corrections",
+          "department",
+          "id",
+          "institute",
+          "lecturer",
+          "linkToMoodle",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
           "name": {
             "type": "string"
           },
-          "email": {
+          "lecturer": {
+            "$ref": "#/components/schemas/UserRes"
+          },
+          "institute": {
+            "$ref": "#/components/schemas/InstituteRes"
+          },
+          "department": {
+            "$ref": "#/components/schemas/DepartmentRes"
+          },
+          "linkToMoodle": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DENIED",
+              "CREATED",
+              "WIP",
+              "COMPLETE"
+            ]
+          },
+          "corrections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CorrectionRes"
+            }
+          }
+        }
+      },
+      "InstituteRes": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
             "type": "string"
           }
         }
@@ -698,6 +914,21 @@
           }
         }
       },
+      "CreateLecturerReq": {
+        "required": [
+          "email",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
       "CreateRequestReq": {
         "required": [
           "department_id",
@@ -724,38 +955,6 @@
             "format": "int64"
           },
           "linkToMoodle": {
-            "type": "string"
-          }
-        }
-      },
-      "DepartmentRes": {
-        "required": [
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "InstituteRes": {
-        "required": [
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
             "type": "string"
           }
         }
@@ -878,32 +1077,6 @@
           }
         }
       },
-      "CorrectionRes": {
-        "required": [
-          "closed",
-          "endTimeCode",
-          "id",
-          "startTimeCode"
-        ],
-        "type": "object",
-        "properties": {
-          "startTimeCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endTimeCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "closed": {
-            "type": "boolean"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
       "CreateCommentReq": {
         "required": [
           "correctionId",
@@ -1017,6 +1190,22 @@
           }
         }
       },
+      "UpdateCorrectionStatusReq": {
+        "required": [
+          "id",
+          "isClosed"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isClosed": {
+            "type": "boolean"
+          }
+        }
+      },
       "PageRequestRes": {
         "type": "object",
         "properties": {
@@ -1081,10 +1270,10 @@
           "sort": {
             "$ref": "#/components/schemas/SortObject"
           },
-          "unpaged": {
+          "paged": {
             "type": "boolean"
           },
-          "paged": {
+          "unpaged": {
             "type": "boolean"
           }
         }
@@ -1100,55 +1289,6 @@
           },
           "unsorted": {
             "type": "boolean"
-          }
-        }
-      },
-      "FullRequestRes": {
-        "required": [
-          "corrections",
-          "department",
-          "id",
-          "institute",
-          "lecturer",
-          "linkToMoodle",
-          "name",
-          "status"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "lecturer": {
-            "$ref": "#/components/schemas/UserRes"
-          },
-          "institute": {
-            "$ref": "#/components/schemas/InstituteRes"
-          },
-          "department": {
-            "$ref": "#/components/schemas/DepartmentRes"
-          },
-          "linkToMoodle": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "DENIED",
-              "CREATED",
-              "WIP",
-              "COMPLETE"
-            ]
-          },
-          "corrections": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CorrectionRes"
-            }
           }
         }
       }
