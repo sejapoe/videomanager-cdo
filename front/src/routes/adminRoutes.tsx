@@ -38,7 +38,7 @@ export const adminRoutes: RouteObject[] = [
         children: [
             {path: "requests/*", element: <RequestsRoutes/>},
             {path: "archive/*", element: <div className="text-gray-600">Тут будет архив</div>},
-            {path: "", element: <Shark/>},
+            {path: "", element: <Navigate to={PATH_PAGE.app.requests} replace/>},
             {path: "*", element: <Shark/>}
         ]
     },

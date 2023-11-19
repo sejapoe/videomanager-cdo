@@ -25,7 +25,8 @@ export const userRoutes: RouteObject[] = [
         path: "/app",
         element: <App/>,
         children: [
-            {path: "requests/*", element: <UserRequestsRoutes/>}
+            {path: "requests/*", element: <UserRequestsRoutes/>},
+            {path: "", element: <Navigate to={PATH_PAGE.app.requests} replace/>}
         ]
     },
     {

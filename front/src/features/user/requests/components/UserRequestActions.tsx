@@ -6,12 +6,13 @@ import {requestsKeys} from "../../../common/requests/api";
 
 export const UserRequestActions = ({request}: ActionProps) => {
     const queryClient = useQueryClient()
-    const {mutate} = useUpdateRequestStatus(request.id)
+    const {mutate, isLoading} = useUpdateRequestStatus(request.id)
 
     const disabled = request.status != "COMPLETE" && !request.corrections.every(value => value.closed);
     return <div className="w-full flex">
         <Button
-            variant="primary"
+            isLoading={isLoading}
+            variant="inverse"
             disabled={disabled}
             title={disabled ? "Resolve all comments first" : ""}
             onClick={() => {

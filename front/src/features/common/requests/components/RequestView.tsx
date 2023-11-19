@@ -11,10 +11,10 @@ import clsx, {ClassValue} from "clsx";
 
 
 const statusColor: Record<RequestStatus, ClassValue> = {
-    "DENIED": "bg-red-300 border-red-500",
-    "CREATED": "bg-cyan-300 border-cyan-500",
-    "WIP": "bg-yellow-300 border-yellow-500",
-    "COMPLETE": "bg-green-300 border-green-500",
+    "DENIED": "bg-red-300 border-red-700",
+    "CREATED": "bg-cyan-300 border-cyan-700",
+    "WIP": "bg-yellow-300 border-yellow-700",
+    "COMPLETE": "bg-green-300 border-green-700",
 }
 
 
@@ -23,24 +23,28 @@ type RequestContentProps = RequestProps & {
 }
 
 const RequestContent = ({request, correctionsSection, actionsSection}: RequestContentProps) => {
-    return <ContentLayout title={request.name}>
+    return <ContentLayout title={request.name}
+                          titleElement={
+                              <div className="w-full flex justify-between items-center">
+                                  <h1 className="text-2xl font-semibold text-gray-900">
+                                      {request.name}
+                                  </h1>
+                                  <div className="space-x-4">
+                                      <span
+                                          className="bg-gray-200 text-lg px-2 py-1 rounded border border-gray-800 text-gray-800">
+                                          {request.institute.name} / {request.department.name}
+                                      </span>
+                                      <span className={clsx(
+                                          statusColor[request.status],
+                                          "border px-2 py-1 rounded text-gray-800 text-lg"
+                                      )}>{statusL10n[request.status]}</span>
+                                  </div>
+                              </div>
+                          }>
         <div className="w-full grid grid-cols-2">
-            <div className="text-gray-700">
-                <div className="w-full flex justify-between items-center">
-                    <h2 className="mt-4 mb-2 text-2xl">Основная информация: </h2>
-                    <span className={clsx(
-                        statusColor[request.status],
-                        "h-fit border mr-4 px-2 py-1 rounded"
-                    )}>
-                        {statusL10n[request.status]}
-                    </span>
-                </div>
-                <ul className="ml-2 space-y-2 text-xl">
-                    <li>Институт: {request.institute.name}</li>
-                    <li>Кафедра: {request.department.name}</li>
-                    <li>Преподаватель: {request.lecturer.fullName}</li>
-                    <li><Link to={request.linkToMoodle}>Ссылка на СДО</Link></li>
-                </ul>
+            <div className="text-gray-700 text-lg">
+                <p>Преподаватель: {request.lecturer.fullName}</p>
+                <Link to={request.linkToMoodle}>Ссылка на СДО</Link>
             </div>
             <div>
                 {actionsSection({request})}
