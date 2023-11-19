@@ -11,7 +11,8 @@ import java.time.Instant
 @Service
 class CommentService(
     private val correctionService: CorrectionService,
-    private val commentRepo: CommentRepo
+    private val commentRepo: CommentRepo,
+    private val lastViewService: LastViewService
 ) {
     fun createComment(text: String, correctionId: Long, author: User): Comment {
         val correction = correctionService.get(correctionId)
@@ -25,7 +26,9 @@ class CommentService(
             correction = correction,
             timestamp = Instant.now(),
         )
-        return commentRepo.save(comment)
+        val saved = commentRepo.save(comment)
+        lastViewService.view(author, correction)
+        return saved
     }
 
     fun getAll(correctionId: Long, requester: User): List<Comment> {

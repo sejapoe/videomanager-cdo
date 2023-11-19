@@ -5,4 +5,5 @@ data class CorrectionRes(
     val endTimeCode: Int,
     val closed: Boolean,
     val id: Long,
+    val isUnread: Boolean = false
 )

@@ -10,6 +10,7 @@ import org.sejapoe.videomanager.mapper.RequestMapper
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsAdmin
 import org.sejapoe.videomanager.security.annotations.IsUser
+import org.sejapoe.videomanager.service.LastViewService
 import org.sejapoe.videomanager.service.RequestService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.HttpStatus
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/requests")
 class RequestController(
     private val requestService: RequestService,
-    private val requestMapper: RequestMapper
+    private val requestMapper: RequestMapper,
+    private val lastViewService: LastViewService
 ) {
     @IsAdmin
     @ResponseStatus(HttpStatus.CREATED)
@@ -46,7 +48,11 @@ class RequestController(
             filterRequestReq.toPredicate(),
             filterRequestReq.toPageable()
         )
-            .map(requestMapper::toRequestRes)
+            .map {
+                requestMapper.toRequestRes(it).copy(
+                    isUnread = lastViewService.isUnread(user, it)
+                )
+            }
 
 
     @IsUser

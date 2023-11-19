@@ -35,6 +35,7 @@ export interface CorrectionResDto {
   closed: boolean;
   /** @format int64 */
   id: number;
+  isUnread: boolean;
 }
 
 export interface DepartmentResDto {
@@ -94,6 +95,88 @@ export interface RequestResDto {
   department: DepartmentResDto;
   linkToMoodle: string;
   status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+  isUnread: boolean;
+}
+
+export interface ArchiveEntryDto {
+  name: string;
+  lecturer: UserDto;
+  institute: InstituteDto;
+  department: DepartmentDto;
+  linkToVideo: string;
+  linkToMoodle: string;
+  request?: RequestDto;
+  /** @format int64 */
+  id: number;
+}
+
+export interface CommentDto {
+  /** @format date-time */
+  timestamp: string;
+  author: UserDto;
+  correction: CorrectionDto;
+  text: string;
+  /** @format int64 */
+  id: number;
+}
+
+export interface CorrectionDto {
+  /** @format int32 */
+  startTimeCode: number;
+  /** @format int32 */
+  endTimeCode: number;
+  request: RequestDto;
+  closed: boolean;
+  comments: CommentDto[];
+  /** @format int64 */
+  id: number;
+}
+
+export interface DepartmentDto {
+  name: string;
+  institute: InstituteDto;
+  /** @format int64 */
+  id: number;
+}
+
+export interface GrantedAuthorityDto {
+  authority?: string;
+}
+
+export interface InstituteDto {
+  name: string;
+  /** @uniqueItems true */
+  departments: DepartmentDto[];
+  /** @format int64 */
+  id: number;
+}
+
+export interface RequestDto {
+  name: string;
+  lecturer: UserDto;
+  institute: InstituteDto;
+  department: DepartmentDto;
+  status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+  linkToMoodle: string;
+  corrections: CorrectionDto[];
+  /** @format int64 */
+  id: number;
+}
+
+export interface UserDto {
+  email: string;
+  password: string;
+  fullName: string;
+  role: "ROLE_USER" | "ROLE_ADMIN";
+  enabled: boolean;
+  /** @format int64 */
+  id: number;
+  isEnabled: boolean;
+  authorities: GrantedAuthorityDto[];
+  username: string;
+  isAccountNonLocked: boolean;
+  isCredentialsNonExpired: boolean;
+  isAccountNonExpired: boolean;
 }
 
 export interface CreateInstituteReqDto {
@@ -180,14 +263,14 @@ export interface PageRequestResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: RequestResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -535,6 +618,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags request-controller
+     * @name ArchiveRequest
+     * @request POST:/api/requests/{id}/archive
+     * @secure
+     */
+    archiveRequest: (id: number, params: RequestParams = {}) =>
+        this.request<ArchiveEntryDto, any>({
+          path: `/api/requests/${id}/archive`,
+          method: "POST",
+          secure: true,
+          ...params,
+        }),
+
+    /**
+     * No description
+     *
      * @tags institute-controller
      * @name GetAllInstitutes
      * @request GET:/api/institutes
@@ -633,6 +732,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           body: data,
           secure: true,
           type: ContentType.Json,
+          ...params,
+        }),
+
+    /**
+     * No description
+     *
+     * @tags correction-controller
+     * @name ViewCorrection
+     * @request POST:/api/corrections/{id}/view
+     * @secure
+     */
+    viewCorrection: (id: number, params: RequestParams = {}) =>
+        this.request<void, any>({
+          path: `/api/corrections/${id}/view`,
+          method: "POST",
+          secure: true,
           ...params,
         }),
 

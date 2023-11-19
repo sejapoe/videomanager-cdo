@@ -39,7 +39,7 @@ export const RequestsTable = ({requests}: RequestTableProps) => {
         {requests.map((value, index) => (
             <tr className={clsx(
                 index % 2 == 0 ? "bg-gray-200" : "bg-gray-300",
-                "space-x-2 cursor-pointer"
+                "space-x-2 cursor-pointer relative"
             )} onClick={() => nav(`./${value.id}`)} key={value.id}>
                 <td className="px-4 py-2 border-2 border-gray-100">{value.id}</td>
                 <td className="px-4 py-2 border-2 border-gray-100">{value.name}</td>
@@ -48,8 +48,12 @@ export const RequestsTable = ({requests}: RequestTableProps) => {
                 <td className="px-4 py-2 border-2 border-gray-100">{value.department.name}</td>
                 <td className={clsx(
                     "px-4 py-2 border-2 border-gray-100",
-                    statusColor[value.status][index % 2]
+                    statusColor[value.status][index % 2],
+                    value.isUnread ? "border-r-2 border-r-orange-500" : ""
                 )}>{statusL10n[value.status]}</td>
+                {/*{value.isUnread && <div className="absolute -top-1.5 -right-0.5">*/}
+                {/*    <FontAwesomeIcon className="text-xs text-orange-500" icon={solid("circle")}/>*/}
+                {/*</div>}*/}
             </tr>
         ))}
         </tbody>

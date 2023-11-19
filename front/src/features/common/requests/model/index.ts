@@ -12,6 +12,7 @@ export type Request = {
     department: Department;
     linkToMoodle: string;
     status: RequestStatus;
+    isUnread: boolean;
 }
 
 export type FullRequest = Request & {

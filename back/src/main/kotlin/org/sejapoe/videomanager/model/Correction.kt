@@ -24,6 +24,7 @@ class Correction(
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
+    @OrderBy("id asc")
     var comments: List<Comment> = emptyList(),
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "corrections_seq")

@@ -12,5 +12,6 @@ data class RequestRes(
     val institute: InstituteRes,
     val department: DepartmentRes,
     val linkToMoodle: String,
-    val status: RequestStatus
+    val status: RequestStatus,
+    val isUnread: Boolean = false
 )

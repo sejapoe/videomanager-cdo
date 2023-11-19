@@ -5,7 +5,7 @@ import {Comments} from "../../comments/components/Comments.tsx";
 import {useDisclosure} from "../../../../hooks/useDicslosure.ts";
 import {Transition} from "@headlessui/react";
 import {useCurrentUser} from "../../../auth/authModel.ts";
-import {correctionsKeys, useCorrection} from "../api";
+import {correctionsKeys, useCorrection, useViewCorrection} from "../api";
 import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import {ResolveCorrectionButton} from "../../../user/corrections/components/ResolveCorrectionButton.tsx";
 import {requestsKeys} from "../../requests/api";
@@ -54,16 +54,27 @@ export const CorrectionView = ({correctionId}: CorrectionProps) => {
     const user = useCurrentUser()
     const {isOpen, toggle, close} = useDisclosure(false)
     const {data: correction, isLoading} = useCorrection(correctionId)
+    const {mutate: view} = useViewCorrection(correctionId)
 
     if (isLoading || !correction) return <CenterSpinner/>
 
     return <div className="flex justify-center">
         <div className={clsx(
             "text-gray-700 w-2/3 rounded-xl border border-dashed border-gray-500",
-            correction.closed ? "bg-gray-300" : ""
+            correction.closed ? "bg-gray-300" : "",
+            "relative"
         )}>
             <div className="w-full flex flex-col">
-                <div className="flex justify-between p-4 cursor-pointer" onClick={toggle}>
+                <div className="flex justify-between p-4 cursor-pointer" onClick={() => {
+                    if (correction?.isUnread && !isOpen) {
+                        view(correctionId, {
+                            onSuccess: async () => {
+                                await queryClient.invalidateQueries(correctionsKeys.corrections.byId(correctionId))
+                            }
+                        })
+                    }
+                    toggle()
+                }}>
                     <div className="flex">
                         <div className="relative flex items-center">
                             <LabeledTimeCode label="Начало отрезка" timeCode={correction.startTimeCode}
@@ -109,6 +120,9 @@ export const CorrectionView = ({correctionId}: CorrectionProps) => {
                     </div>
                 </Transition>
             </div>
+            {correction.isUnread && <div className="absolute -top-3 -right-1">
+                <FontAwesomeIcon className="text-xs text-orange-500" icon={solid("circle")}/>
+            </div>}
         </div>
     </div>
 }

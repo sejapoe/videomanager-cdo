@@ -5,6 +5,7 @@ export type Correction = {
     startTimeCode: number;
     endTimeCode: number;
     closed: boolean;
+    isUnread: boolean;
 }
 
 export const mapCorrection = (dto: CorrectionResDto): Correction => {

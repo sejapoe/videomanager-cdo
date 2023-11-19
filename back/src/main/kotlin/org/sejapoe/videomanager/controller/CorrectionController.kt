@@ -7,6 +7,7 @@ import org.sejapoe.videomanager.mapper.CorrectionMapper
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsUser
 import org.sejapoe.videomanager.service.CorrectionService
+import org.sejapoe.videomanager.service.LastViewService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -14,12 +15,22 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/corrections")
 class CorrectionController(
     private val correctionService: CorrectionService,
-    private val correctionMapper: CorrectionMapper
+    private val correctionMapper: CorrectionMapper,
+    private val lastViewService: LastViewService
 ) {
     @IsUser
     @GetMapping("/{id}")
     fun getCorrection(@PathVariable("id") id: Long, @AuthenticationPrincipal user: User) =
-        correctionService.get(id, user).let(correctionMapper::toCorrectionRes)
+        correctionService.get(id, user).let {
+            correctionMapper.toCorrectionRes(it).copy(
+                isUnread = lastViewService.isUnread(user, it)
+            )
+        }
+
+    @IsUser
+    @PostMapping("/{id}/view")
+    fun viewCorrection(@PathVariable("id") id: Long, @AuthenticationPrincipal user: User) =
+        lastViewService.view(user, correctionService.get(id, user))
 
     @IsUser
     @PostMapping

@@ -1,13 +1,17 @@
 import {commonKey} from "../../api";
 import api, {GenericErrorModel, RequestParams} from "../../../../api";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, UseMutationOptions, useQuery} from "@tanstack/react-query";
 import {Correction, mapCorrection} from "../model";
 
 export const correctionsKeys = {
     corrections: {
         root: [...commonKey, 'corrections'],
-        byId: (id: number) => [...correctionsKeys.corrections.root, id]
+        byId: (id: number) => [...correctionsKeys.corrections.root, id],
     },
+
+    mutations: {
+        view: (id: number) => [...correctionsKeys.corrections.root, id, 'view']
+    }
 }
 
 export const useCorrection = (correctionId: number, params?: RequestParams) =>
@@ -21,4 +25,17 @@ export const useCorrection = (correctionId: number, params?: RequestParams) =>
 
             return mapCorrection(response.data)
         }
+    )
+
+export type UseViewCorrectionMutation = UseMutationOptions<void, GenericErrorModel, number, unknown[]>
+
+type UseViewCorrectionOptions = Omit<UseViewCorrectionMutation, 'mutationFn' | 'mutationKey'>
+
+export const useViewCorrection = (correctionId: number, options?: UseViewCorrectionOptions) =>
+    useMutation<void, GenericErrorModel, number, unknown[]>(
+        correctionsKeys.mutations.view(correctionId),
+        async () => {
+            await api.viewCorrection(correctionId)
+        },
+        options
     )
