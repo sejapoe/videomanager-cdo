@@ -4,6 +4,7 @@ import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper
 import org.sejapoe.videomanager.dto.request.FullRequestRes
 import org.sejapoe.videomanager.dto.request.RequestRes
+import org.sejapoe.videomanager.dto.request.ShortRequestRes
 import org.sejapoe.videomanager.model.Request
 
 @Mapper(
@@ -15,4 +16,6 @@ interface RequestMapper {
     fun toRequestRes(request: Request): RequestRes
 
     fun toFullRequestRes(request: Request): FullRequestRes
+
+    fun toShortRequestRes(request: Request): ShortRequestRes
 }

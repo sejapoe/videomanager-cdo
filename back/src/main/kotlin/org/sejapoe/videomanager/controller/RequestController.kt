@@ -74,4 +74,9 @@ class RequestController(
                     )
                 )
             }
+
+    @IsAdmin
+    @PostMapping("/{id}/archive")
+    fun archiveRequest(@PathVariable id: Long, @AuthenticationPrincipal user: User) =
+        requestService.archive(id, user)
 }

@@ -26,6 +26,10 @@ class ArchiveEntry(
     @Column(name = "link_to_moodle")
     val linkToMoodle: String,
 
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "request_id", nullable = true)
+    val request: Request?,
+
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "archive_entries_seq")
     @SequenceGenerator(name = "archive_entries_seq", sequenceName = "archive_entries_seq", allocationSize = 1)
     val id: Long = -1,

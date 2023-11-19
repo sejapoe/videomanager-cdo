@@ -4,10 +4,8 @@ import com.querydsl.core.types.Predicate
 import org.sejapoe.videomanager.exception.ConflictException
 import org.sejapoe.videomanager.exception.ForbiddenException
 import org.sejapoe.videomanager.exception.NotFoundException
-import org.sejapoe.videomanager.model.Request
-import org.sejapoe.videomanager.model.RequestStatus
-import org.sejapoe.videomanager.model.Role
-import org.sejapoe.videomanager.model.User
+import org.sejapoe.videomanager.model.*
+import org.sejapoe.videomanager.repo.ArchiveEntryRepo
 import org.sejapoe.videomanager.repo.RequestRepo
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -20,6 +18,8 @@ class RequestService(
     private val userService: UserService,
     private val instituteService: InstituteService,
     private val departmentService: DepartmentService,
+    private val archiveEntryRepo: ArchiveEntryRepo,
+    private val archiveEntryService: ArchiveEntryService,
 ) {
     fun create(name: String, lecturerId: Long, instituteId: Long, departmentId: Long, linkToMoodle: String): Request {
         val lecturer = userService.get(lecturerId)
@@ -51,6 +51,11 @@ class RequestService(
         val request = get(requester, id)
         request.status = newStatus
         return requestRepo.save(request)
+    }
+
+    fun archive(id: Long, requester: User): ArchiveEntry {
+        val request = get(requester, id)
+        return archiveEntryService.createFromRequest(request)
     }
 
 }
