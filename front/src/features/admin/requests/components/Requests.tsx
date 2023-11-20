@@ -13,9 +13,11 @@ export const Requests = () => {
 
 
     return <ErrorLoadLayout error={error} isLoading={isLoading}>
-        <ContentLayout title="Запросы">
-            <div className="w-full flex flex-1 justify-center">
+        <ContentLayout title="Запросы" titleElement={
+            <div className="w-full flex justify-between">
+                <h1 className="text-2xl font-semibold text-gray-900">Запросы</h1>
                 <Button
+                    variant="primary"
                     size="sm"
                     startIcon={solid("plus")}
                     onClick={() => nav("/app/requests/new")}
@@ -23,6 +25,7 @@ export const Requests = () => {
                     Создать
                 </Button>
             </div>
+        }>
             <RequestsTable requests={requests!}/>
         </ContentLayout>
     </ErrorLoadLayout>
