@@ -958,6 +958,7 @@
       "UserRes": {
         "required": [
           "email",
+          "enabled",
           "fullName",
           "id",
           "role"
@@ -980,6 +981,9 @@
               "ROLE_USER",
               "ROLE_ADMIN"
             ]
+          },
+          "enabled": {
+            "type": "boolean"
           }
         }
       },
@@ -1320,8 +1324,11 @@
             "type": "integer",
             "format": "int64"
           },
-          "isEnabled": {
+          "isAccountNonLocked": {
             "type": "boolean"
+          },
+          "username": {
+            "type": "string"
           },
           "authorities": {
             "type": "array",
@@ -1329,16 +1336,13 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "username": {
-            "type": "string"
-          },
-          "isAccountNonLocked": {
+          "isAccountNonExpired": {
             "type": "boolean"
           },
           "isCredentialsNonExpired": {
             "type": "boolean"
           },
-          "isAccountNonExpired": {
+          "isEnabled": {
             "type": "boolean"
           }
         }
@@ -1562,6 +1566,12 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -1578,12 +1588,6 @@
           },
           "sort": {
             "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
@@ -1626,10 +1630,10 @@
           "sorted": {
             "type": "boolean"
           },
-          "empty": {
+          "unsorted": {
             "type": "boolean"
           },
-          "unsorted": {
+          "empty": {
             "type": "boolean"
           }
         }

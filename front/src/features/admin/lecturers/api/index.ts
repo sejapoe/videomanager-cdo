@@ -2,6 +2,7 @@ import {useMutation, UseMutationOptions, useQuery} from "@tanstack/react-query";
 import api, {GenericErrorModel, HttpResponse, RequestParams} from "../../../../api";
 import {CreateLecturerReqDto, UserResDto} from "../../../../api/Api.ts";
 import {adminKey} from "../../api";
+import {Lecturer, mapLecturer} from "../model";
 
 export const lecturerKeys = {
     lecturers: {
@@ -33,17 +34,6 @@ export const useCreateLecturer = (options?: UseCreateLecturerOptions) =>
         },
         options
     )
-
-
-export interface Lecturer {
-    id: number;
-    email: string;
-    fullName: string;
-}
-
-export function mapLecturer(userDto: UserResDto): Lecturer {
-    return userDto;
-}
 
 
 export const useLecturers = (params?: RequestParams) =>

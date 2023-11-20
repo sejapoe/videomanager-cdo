@@ -7,4 +7,5 @@ data class UserRes(
     val email: String,
     val fullName: String,
     val role: Role,
+    val enabled: Boolean
 )

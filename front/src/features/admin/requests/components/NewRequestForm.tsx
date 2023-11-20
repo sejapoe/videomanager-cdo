@@ -3,7 +3,7 @@ import {Form} from "../../../../ui/form/Form.tsx";
 import {useInstitutes} from "../../../common/institutes/api";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {SelectField} from "../../../../ui/form/SelectField.tsx";
-import {NewLecturerDialog} from "./NewLecturerDialog.tsx";
+import {NewLecturerDialog} from "../../lecturers/components/NewLecturerDialog.tsx";
 import {lecturerKeys, useLecturers} from "../../lecturers/api";
 import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";

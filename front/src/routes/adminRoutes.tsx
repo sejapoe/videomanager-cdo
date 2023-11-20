@@ -7,6 +7,7 @@ import {ContentLayout} from "../ui/layout/ContentLayout.tsx";
 import shark from '../assets/shark.gif';
 import {PATH_PAGE} from "../lib/react-router";
 import {CenterSpinner} from "../ui/layout/CenterSpinner.tsx";
+import {UsersRoutes} from "../features/admin/lecturers/routes";
 
 const App = () => {
     return (
@@ -38,6 +39,7 @@ export const adminRoutes: RouteObject[] = [
         children: [
             {path: "requests/*", element: <RequestsRoutes/>},
             {path: "archive/*", element: <div className="text-gray-600">Тут будет архив</div>},
+            {path: "users/*", element: <UsersRoutes/>},
             {path: "", element: <Navigate to={PATH_PAGE.app.requests} replace/>},
             {path: "*", element: <Shark/>}
         ]

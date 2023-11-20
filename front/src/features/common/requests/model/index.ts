@@ -1,6 +1,6 @@
-import {Lecturer} from "../../../admin/lecturers/api";
 import {Department, Institute} from "../../institutes/model";
 import {Correction} from "../../corrections/model";
+import {Lecturer} from "../../../admin/lecturers/model";
 
 export type RequestStatus = "DENIED" | "CREATED" | "WIP" | "COMPLETE";
 
