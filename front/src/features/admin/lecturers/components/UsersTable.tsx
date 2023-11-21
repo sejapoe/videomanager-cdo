@@ -11,7 +11,7 @@ import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {useQueryClient} from "@tanstack/react-query";
 
 const statusL10n: Record<"false" | "true", string> = {
-    "false": "Нактивен",
+    "false": "Неактивен",
     "true": "Активен"
 }
 
