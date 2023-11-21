@@ -17,7 +17,8 @@ const schema = z.object({
     lecturer_id: z.number().positive("Required"),
     institute_id: z.string().min(1, "Required"),
     department_id: z.string().min(1, "Required"),
-    linkToMoodle: z.string().url("Should be valid url")
+    linkToMoodle: z.string().url("Should be valid url"),
+    linkToVideo: z.string().url("Should be valid url")
 })
 
 type NewRequestValues = {
@@ -26,6 +27,7 @@ type NewRequestValues = {
     institute_id: string;
     department_id: string;
     linkToMoodle: string;
+    linkToVideo: string;
 }
 
 type NewRequestFormProps = {
@@ -60,13 +62,13 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
             </Dialog>
             <Form<NewRequestValues, typeof schema>
                 onSubmit={data => {
-                    console.log(data)
                     mutate({
                         name: data.name,
                         lecturer_id: data.lecturer_id,
                         institute_id: parseInt(data.institute_id),
                         department_id: parseInt(data.department_id),
-                        linkToMoodle: data.linkToMoodle
+                        linkToMoodle: data.linkToMoodle,
+                        linkToVideo: data.linkToVideo
                     }, {
                         onSuccess
                     })
@@ -139,6 +141,12 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
                                     label="Ссылка СДО"
                                     error={formState.errors["linkToMoodle"]}
                                     registration={register("linkToMoodle")}/>
+
+                        <InputField type="text"
+                                    noAutocomplete
+                                    label="Ссылка на видео"
+                                    error={formState.errors["linkToVideo"]}
+                                    registration={register("linkToVideo")}/>
 
                         <Button type="submit" isLoading={isLoading}>Создать</Button>
                     </>

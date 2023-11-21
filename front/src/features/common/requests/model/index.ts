@@ -11,6 +11,7 @@ export type Request = {
     institute: Institute;
     department: Department;
     linkToMoodle: string;
+    linkToVideo: string;
     status: RequestStatus;
     unreadCount: number;
 }

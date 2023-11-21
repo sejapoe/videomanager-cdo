@@ -21,14 +21,30 @@ class RequestService(
     private val archiveEntryRepo: ArchiveEntryRepo,
     private val archiveEntryService: ArchiveEntryService,
 ) {
-    fun create(name: String, lecturerId: Long, instituteId: Long, departmentId: Long, linkToMoodle: String): Request {
+    fun create(
+        name: String,
+        lecturerId: Long,
+        instituteId: Long,
+        departmentId: Long,
+        linkToMoodle: String,
+        linkToVideo: String
+    ): Request {
         val lecturer = userService.get(lecturerId)
         val institute = instituteService.get(instituteId)
         val department = departmentService.get(departmentId)
         if (department.institute != institute) throw ConflictException("Department ${department.name} does not belong to institute ${institute.name}")
 
         val request =
-            Request(name, lecturer, institute, department, RequestStatus.CREATED, linkToMoodle, emptyList()).let(
+            Request(
+                name,
+                lecturer,
+                institute,
+                department,
+                RequestStatus.CREATED,
+                linkToMoodle,
+                linkToVideo,
+                emptyList()
+            ).let(
                 requestRepo::save
             )
 

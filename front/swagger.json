@@ -898,6 +898,7 @@
           "institute",
           "lecturer",
           "linkToMoodle",
+          "linkToVideo",
           "name",
           "status"
         ],
@@ -920,6 +921,9 @@
             "$ref": "#/components/schemas/DepartmentRes"
           },
           "linkToMoodle": {
+            "type": "string"
+          },
+          "linkToVideo": {
             "type": "string"
           },
           "status": {
@@ -1008,6 +1012,7 @@
           "institute_id",
           "lecturer_id",
           "linkToMoodle",
+          "linkToVideo",
           "name"
         ],
         "type": "object",
@@ -1029,6 +1034,9 @@
           },
           "linkToMoodle": {
             "type": "string"
+          },
+          "linkToVideo": {
+            "type": "string"
           }
         }
       },
@@ -1039,6 +1047,7 @@
           "institute",
           "lecturer",
           "linkToMoodle",
+          "linkToVideo",
           "name",
           "status",
           "unreadCount"
@@ -1062,6 +1071,9 @@
             "$ref": "#/components/schemas/DepartmentRes"
           },
           "linkToMoodle": {
+            "type": "string"
+          },
+          "linkToVideo": {
             "type": "string"
           },
           "status": {
@@ -1244,6 +1256,7 @@
           "institute",
           "lecturer",
           "linkToMoodle",
+          "linkToVideo",
           "name",
           "status"
         ],
@@ -1271,6 +1284,9 @@
             ]
           },
           "linkToMoodle": {
+            "type": "string"
+          },
+          "linkToVideo": {
             "type": "string"
           },
           "corrections": {

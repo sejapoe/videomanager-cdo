@@ -10,4 +10,5 @@ data class CreateRequestReq(
     @JsonProperty("institute_id") @Positive val instituteId: Long,
     @JsonProperty("department_id") @Positive val departmentId: Long,
     @NotBlank val linkToMoodle: String,
+    @NotBlank val linkToVideo: String,
 )

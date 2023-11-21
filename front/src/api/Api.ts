@@ -52,6 +52,7 @@ export interface FullRequestResDto {
   institute: InstituteResDto;
   department: DepartmentResDto;
   linkToMoodle: string;
+  linkToVideo: string;
   status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
   corrections: CorrectionResDto[];
 }
@@ -85,6 +86,7 @@ export interface CreateRequestReqDto {
   /** @format int64 */
   department_id: number;
   linkToMoodle: string;
+  linkToVideo: string;
 }
 
 export interface RequestResDto {
@@ -95,6 +97,7 @@ export interface RequestResDto {
   institute: InstituteResDto;
   department: DepartmentResDto;
   linkToMoodle: string;
+  linkToVideo: string;
   status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
   /** @format int32 */
   unreadCount: number;
@@ -160,6 +163,7 @@ export interface RequestDto {
   department: DepartmentDto;
   status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
   linkToMoodle: string;
+  linkToVideo: string;
   corrections: CorrectionDto[];
   /** @format int64 */
   id: number;

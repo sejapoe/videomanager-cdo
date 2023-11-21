@@ -8,6 +8,8 @@ import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
 import {ActionProps} from "./ActionProps.ts";
 import {statusL10n} from "./RequestsTable.tsx";
 import clsx, {ClassValue} from "clsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 
 
 const statusColor: Record<RequestStatus, ClassValue> = {
@@ -41,18 +43,32 @@ const RequestContent = ({request, correctionsSection, actionsSection}: RequestCo
                                   </div>
                               </div>
                           }>
-        <div className="w-full grid grid-rows-2 md:grid-cols-2">
+        <div className="w-full mt-2 grid grid-rows-2 md:grid-rows-none md:grid-cols-2">
             <div className="text-gray-700 text-lg">
                 <p>Преподаватель: {request.lecturer.fullName}</p>
                 <Link to={request.linkToMoodle}>Ссылка на СДО</Link>
+                <div>
+                    {actionsSection({request})}
+                </div>
             </div>
-            <div>
-                {actionsSection({request})}
+            <div className="flex justify-end">
+                <a className={clsx(
+                    "w-3/5 aspect-video rounded-xl flex items-center justify-center",
+                    "bg-[url('/blurred.jpg')] bg-contain",
+                    "text-gray-500/80 hover:text-red-500/80 hover:scale-105 cursor-pointer transition-all"
+                )} href={request.linkToVideo} target="_blank">
+                    <div
+                        className="rounded-full bg-black/80 border-black w-16 aspect-square flex justify-center items-center">
+                        <FontAwesomeIcon className="ml-1 text-4xl" icon={solid("play")}/>
+                    </div>
+                </a>
             </div>
         </div>
-        {correctionsSection({
-            request
-        })}
+        <div className="mt-4">
+            {correctionsSection({
+                request
+            })}
+        </div>
     </ContentLayout>
 }
 

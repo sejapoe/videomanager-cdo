@@ -13,6 +13,7 @@ data class FullRequestRes(
     val institute: InstituteRes,
     val department: DepartmentRes,
     val linkToMoodle: String,
+    val linkToVideo: String,
     val status: RequestStatus,
     val corrections: List<CorrectionRes>
 )

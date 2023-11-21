@@ -12,6 +12,7 @@ data class RequestRes(
     val institute: InstituteRes,
     val department: DepartmentRes,
     val linkToMoodle: String,
+    val linkToVideo: String,
     val status: RequestStatus,
     val unreadCount: Int = 0
 )

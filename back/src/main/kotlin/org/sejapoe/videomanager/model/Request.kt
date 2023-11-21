@@ -27,6 +27,9 @@ class Request(
     @Column(name = "link_to_moodle", length = 1023)
     var linkToMoodle: String,
 
+    @Column(name = "link_to_video", length = 1023)
+    var linkToVideo: String,
+
     @OneToMany(
         mappedBy = "request", cascade = [CascadeType.PERSIST, CascadeType.MERGE],
         orphanRemoval = true,

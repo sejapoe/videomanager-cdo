@@ -33,7 +33,8 @@ class RequestController(
             createRequestReq.lecturerId,
             createRequestReq.instituteId,
             createRequestReq.departmentId,
-            createRequestReq.linkToMoodle
+            createRequestReq.linkToMoodle,
+            createRequestReq.linkToVideo
         ).let(requestMapper::toRequestRes)
 
     @IsUser

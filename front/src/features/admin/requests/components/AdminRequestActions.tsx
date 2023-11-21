@@ -9,7 +9,7 @@ export const AdminRequestActions = ({request}: ActionProps) => {
     // const {mutate} = useUpdateRequestStatus(request.id)
 
     const disabled = request.status !== "COMPLETE";
-    return <div className="w-full flex justify-end pt-2">
+    return <div className="w-full flex pt-2">
         <Button
             variant="inverse"
             disabled={disabled}
