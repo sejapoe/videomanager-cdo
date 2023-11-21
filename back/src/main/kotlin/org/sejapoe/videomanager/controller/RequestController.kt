@@ -50,7 +50,7 @@ class RequestController(
         )
             .map {
                 requestMapper.toRequestRes(it).copy(
-                    isUnread = lastViewService.isUnread(user, it)
+                    unreadCount = lastViewService.countUnread(user, it)
                 )
             }
 

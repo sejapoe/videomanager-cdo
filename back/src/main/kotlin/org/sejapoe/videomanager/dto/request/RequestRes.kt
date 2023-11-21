@@ -13,5 +13,5 @@ data class RequestRes(
     val department: DepartmentRes,
     val linkToMoodle: String,
     val status: RequestStatus,
-    val isUnread: Boolean = false
+    val unreadCount: Int = 0
 )

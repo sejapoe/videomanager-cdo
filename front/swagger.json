@@ -1037,11 +1037,11 @@
           "department",
           "id",
           "institute",
-          "isUnread",
           "lecturer",
           "linkToMoodle",
           "name",
-          "status"
+          "status",
+          "unreadCount"
         ],
         "type": "object",
         "properties": {
@@ -1073,8 +1073,9 @@
               "COMPLETE"
             ]
           },
-          "isUnread": {
-            "type": "boolean"
+          "unreadCount": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1324,11 +1325,8 @@
             "type": "integer",
             "format": "int64"
           },
-          "isAccountNonLocked": {
+          "isEnabled": {
             "type": "boolean"
-          },
-          "username": {
-            "type": "string"
           },
           "authorities": {
             "type": "array",
@@ -1336,13 +1334,16 @@
               "$ref": "#/components/schemas/GrantedAuthority"
             }
           },
-          "isAccountNonExpired": {
+          "username": {
+            "type": "string"
+          },
+          "isAccountNonLocked": {
             "type": "boolean"
           },
           "isCredentialsNonExpired": {
             "type": "boolean"
           },
-          "isEnabled": {
+          "isAccountNonExpired": {
             "type": "boolean"
           }
         }
@@ -1630,10 +1631,10 @@
           "sorted": {
             "type": "boolean"
           },
-          "unsorted": {
+          "empty": {
             "type": "boolean"
           },
-          "empty": {
+          "unsorted": {
             "type": "boolean"
           }
         }

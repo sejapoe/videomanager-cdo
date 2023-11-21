@@ -68,7 +68,7 @@ export interface UserResDto {
   email: string;
   fullName: string;
   role: "ROLE_USER" | "ROLE_ADMIN";
-    enabled: boolean;
+  enabled: boolean;
 }
 
 export interface CreateLecturerReqDto {
@@ -96,7 +96,8 @@ export interface RequestResDto {
   department: DepartmentResDto;
   linkToMoodle: string;
   status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
-  isUnread: boolean;
+  /** @format int32 */
+  unreadCount: number;
 }
 
 export interface ArchiveEntryDto {
@@ -172,12 +173,12 @@ export interface UserDto {
   enabled: boolean;
   /** @format int64 */
   id: number;
+  isEnabled: boolean;
+  authorities: GrantedAuthorityDto[];
+  username: string;
   isAccountNonLocked: boolean;
-    username: string;
-    authorities: GrantedAuthorityDto[];
-    isAccountNonExpired: boolean;
   isCredentialsNonExpired: boolean;
-    isEnabled: boolean;
+  isAccountNonExpired: boolean;
 }
 
 export interface CreateInstituteReqDto {
@@ -264,8 +265,8 @@ export interface PageRequestResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-    first?: boolean;
-    last?: boolean;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: RequestResDto[];
@@ -291,8 +292,8 @@ export interface PageableObjectDto {
 
 export interface SortObjectDto {
   sorted?: boolean;
-    unsorted?: boolean;
   empty?: boolean;
+  unsorted?: boolean;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -556,12 +557,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     updateRequestStatus: (data: UpdateRequestStatusReqDto, params: RequestParams = {}) =>
         this.request<FullRequestResDto, any>({
-            path: `/api/requests`,
-            method: "PUT",
-            body: data,
-            secure: true,
-            type: ContentType.Json,
-            ...params,
+          path: `/api/requests`,
+          method: "PUT",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
         }),
 
     /**
@@ -592,10 +593,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getAllLecturers: (params: RequestParams = {}) =>
         this.request<UserResDto[], any>({
-            path: `/api/users`,
-            method: "GET",
-            secure: true,
-            ...params,
+          path: `/api/users`,
+          method: "GET",
+          secure: true,
+          ...params,
         }),
 
     /**
@@ -608,12 +609,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createLecturer: (data: CreateLecturerReqDto, params: RequestParams = {}) =>
         this.request<UserResDto, any>({
-            path: `/api/users`,
-            method: "POST",
-            body: data,
-            secure: true,
-            type: ContentType.Json,
-            ...params,
+          path: `/api/users`,
+          method: "POST",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
         }),
 
     /**
@@ -626,10 +627,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     archiveRequest: (id: number, params: RequestParams = {}) =>
         this.request<ArchiveEntryDto, any>({
-            path: `/api/requests/${id}/archive`,
-            method: "POST",
-            secure: true,
-            ...params,
+          path: `/api/requests/${id}/archive`,
+          method: "POST",
+          secure: true,
+          ...params,
         }),
 
     /**
@@ -728,12 +729,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     updateCorrectionStatus: (data: UpdateCorrectionStatusReqDto, params: RequestParams = {}) =>
         this.request<CorrectionResDto, any>({
-            path: `/api/corrections`,
-            method: "PATCH",
-            body: data,
-            secure: true,
-            type: ContentType.Json,
-            ...params,
+          path: `/api/corrections`,
+          method: "PATCH",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
         }),
 
     /**
@@ -746,10 +747,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     viewCorrection: (id: number, params: RequestParams = {}) =>
         this.request<void, any>({
-            path: `/api/corrections/${id}/view`,
-            method: "POST",
-            secure: true,
-            ...params,
+          path: `/api/corrections/${id}/view`,
+          method: "POST",
+          secure: true,
+          ...params,
         }),
 
     /**
@@ -867,10 +868,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getCorrection: (id: number, params: RequestParams = {}) =>
         this.request<CorrectionResDto, any>({
-            path: `/api/corrections/${id}`,
-            method: "GET",
-            secure: true,
-            ...params,
+          path: `/api/corrections/${id}`,
+          method: "GET",
+          secure: true,
+          ...params,
         }),
 
     /**

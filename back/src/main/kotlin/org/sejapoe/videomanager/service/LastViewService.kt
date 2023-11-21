@@ -13,6 +13,10 @@ class LastViewService(
         isUnread(user, it)
     }
 
+    fun countUnread(user: User, request: Request): Int = request.corrections.count {
+        isUnread(user, it)
+    }
+
     fun isUnread(user: User, correction: Correction): Boolean = lastViewRepo.findOne(
         QLastView.lastView.user.id.eq(user.id).and(QLastView.lastView.correction.id.eq(correction.id))
     ).map {
@@ -34,4 +38,5 @@ class LastViewService(
         lastView.lastViewedComment = correction.comments.last()
         lastViewRepo.save(lastView)
     }
+
 }

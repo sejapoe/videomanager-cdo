@@ -12,9 +12,9 @@ export type Request = {
     department: Department;
     linkToMoodle: string;
     status: RequestStatus;
-    isUnread: boolean;
+    unreadCount: number;
 }
 
-export type FullRequest = Request & {
+export type FullRequest = Omit<Request, 'unreadCount'> & {
     corrections: Correction[]
 }

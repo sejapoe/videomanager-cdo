@@ -33,6 +33,7 @@ export const RequestsTable = ({requests}: RequestTableProps) => {
             <th className="px-4 py-2 border-2 border-gray-100">Институт</th>
             <th className="px-4 py-2 border-2 border-gray-100">Кафедра</th>
             <th className="px-4 py-2 border-2 rounded-tr-lg border-gray-100">Статус</th>
+            <th className="hidden"></th>
         </tr>
         </thead>
         <tbody className="space-y-1">
@@ -49,11 +50,14 @@ export const RequestsTable = ({requests}: RequestTableProps) => {
                 <td className={clsx(
                     "px-4 py-2 border-2 border-gray-100",
                     statusColor[value.status][index % 2],
-                    value.isUnread ? "border-r-2 border-r-orange-500" : ""
                 )}>{statusL10n[value.status]}</td>
-                {/*{value.isUnread && <div className="absolute -top-1.5 -right-0.5">*/}
-                {/*    <FontAwesomeIcon className="text-xs text-orange-500" icon={solid("circle")}/>*/}
-                {/*</div>}*/}
+                <td className={clsx(
+                    value.unreadCount == 0
+                        ? "hidden"
+                        : "px-2 py-2 border-2 border-gray-100 bg-orange-500 text-white rounded-r-xl text-center text-lg"
+                )}>
+                    {value.unreadCount}
+                </td>
             </tr>
         ))}
         </tbody>
