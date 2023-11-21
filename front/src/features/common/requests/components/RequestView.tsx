@@ -25,7 +25,7 @@ type RequestContentProps = RequestProps & {
 const RequestContent = ({request, correctionsSection, actionsSection}: RequestContentProps) => {
     return <ContentLayout title={request.name}
                           titleElement={
-                              <div className="w-full flex justify-between items-center">
+                              <div className="w-full md:flex justify-between items-center">
                                   <h1 className="text-2xl font-semibold text-gray-900">
                                       {request.name}
                                   </h1>
@@ -41,7 +41,7 @@ const RequestContent = ({request, correctionsSection, actionsSection}: RequestCo
                                   </div>
                               </div>
                           }>
-        <div className="w-full grid grid-cols-2">
+        <div className="w-full grid grid-rows-2 md:grid-cols-2">
             <div className="text-gray-700 text-lg">
                 <p>Преподаватель: {request.lecturer.fullName}</p>
                 <Link to={request.linkToMoodle}>Ссылка на СДО</Link>

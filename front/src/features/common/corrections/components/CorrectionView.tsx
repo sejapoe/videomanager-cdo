@@ -60,7 +60,7 @@ export const CorrectionView = ({correctionId}: CorrectionProps) => {
 
     return <div className="flex justify-center">
         <div className={clsx(
-            "text-gray-700 w-2/3 rounded-xl border border-dashed border-gray-500",
+            "text-gray-700 w-full md:w-2/3 rounded-xl border border-dashed border-gray-500",
             correction.closed ? "bg-gray-300" : "",
             "relative"
         )}>

@@ -9,6 +9,7 @@ import {useQueryClient} from "@tanstack/react-query";
 import logo from '../../assets/react.svg';
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 
 type NavigationItem = {
     name: string;
@@ -28,7 +29,7 @@ const UserNavigationItem = ({name, to, onClick}: UserNavigationItemProps) => {
             <Link
                 onClick={onClick}
                 to={to}
-                className={clsx(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                className={clsx(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-900")}>
                 {name}
             </Link>
         )}
@@ -64,7 +65,8 @@ const UserNavigation = () => {
                         className={clsx("whitespace-nowrap bg-gray-200 py-2 px-4 flex items-center rounded-full",
                             "text-gray-500 text-lg",
                             "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")}>
-                        {user.fullName}
+                        <FontAwesomeIcon icon={solid("user")}/><span
+                        className="hidden md:block ml-2">{user.fullName}</span>
                     </Menu.Button>
                 </div>
                 <Transition
@@ -79,6 +81,13 @@ const UserNavigation = () => {
                 >
                     <Menu.Items static
                                 className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Item>
+                            {() => (
+                                <span className="block md:hidden px-4 py-2 text-sm text-gray-500 cursor-default ">
+                                    {user.fullName}
+                                </span>
+                            )}
+                        </Menu.Item>
                         {
                             userNavigation.map(item => (
                                 <UserNavigationItem key={item.name} name={item.name} to={item.to}
@@ -114,8 +123,44 @@ const AppNavigationItem = (nav: NavigationItem) => {
     </NavLink>;
 }
 
+const MobileAppNavigation = ({navigation}: AppNavigationProps) => {
+    return <Menu as="div" className="md:hidden relative">
+        {({open}) => (
+            <>
+                <div>
+                    <Menu.Button
+                        className={clsx("whitespace-nowrap bg-gray-200 py-2 px-4 flex items-center rounded-full",
+                            "text-gray-500 text-lg",
+                            "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")}
+                    >
+                        <FontAwesomeIcon className="text-black" icon={solid("bars")}/>
+                    </Menu.Button>
+                </div>
+                <Transition
+                    show={open}
+                    as={React.Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                >
+                    <Menu.Items static
+                                className="origin-top-left absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {
+                            navigation.map(item => (
+                                <UserNavigationItem key={item.name} name={item.name} to={item.to}/>))
+                        }
+                    </Menu.Items>
+                </Transition>
+            </>
+        )}
+    </Menu>
+}
+
 const AppNavigation = ({navigation}: AppNavigationProps) => {
-    return <div className="flex items-center space-x-3">
+    return <div className="hidden md:flex items-center space-x-3">
         {navigation.map(nav => (<AppNavigationItem key={nav.name} name={nav.name} to={nav.to} icon={nav.icon}/>))}
     </div>;
 }
@@ -129,9 +174,11 @@ export const MainLayout = ({children, navigation}: MainLayoutProps) => {
     return <div className="h-screen flex overflow-hidden bg-gray-100">
         <div className="flex flex-col w-screen flex-1 overflow-hidden">
             <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
+                <div className="flex items-center ml-2 md:ml-4">
+                    <MobileAppNavigation navigation={navigation}/>
+                </div>
                 <Link className="flex ml-4 items-center" to=".">
                     <img src={logo} alt="logo"/>
-                    {/*<span className="text-gray-600 ml-4">Name</span>*/}
                 </Link>
 
                 <div className="flex ml-6 items-center text-gray-900 justify-start w-full">
