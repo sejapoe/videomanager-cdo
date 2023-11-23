@@ -3,6 +3,8 @@ package org.sejapoe.videomanager.dto.request
 import com.querydsl.core.types.ExpressionUtils
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.Expressions
+import org.sejapoe.videomanager.dto.core.PageableReq
+import org.sejapoe.videomanager.dto.core.SortableReq
 import org.sejapoe.videomanager.model.QRequest
 import org.sejapoe.videomanager.model.RequestStatus
 import org.springframework.data.domain.PageRequest
@@ -10,15 +12,15 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 
 data class FilterRequestReq(
-    val page: Int? = 0,
-    val size: Int? = 50,
+        override val page: Int? = 0,
+        override val size: Int? = 50,
     val user: Long?,
     val institute: Long?,
     val department: Long?,
     val status: RequestStatus?,
-    val sorting: String? = "id",
-    val direction: Sort.Direction? = Sort.Direction.ASC
-) {
+        override val sorting: String? = "id",
+        override val direction: Sort.Direction? = Sort.Direction.ASC
+) : PageableReq, SortableReq {
 
     fun toPredicate(): Predicate {
         val list = listOfNotNull(

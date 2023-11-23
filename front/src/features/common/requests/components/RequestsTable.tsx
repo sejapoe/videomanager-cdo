@@ -1,65 +1,73 @@
-import {Request, RequestStatus} from "../model";
-import clsx, {ClassValue} from "clsx";
-import {useNavigate} from "react-router-dom";
+import {RequestsFilter, useRequests} from "../api";
+import React from "react";
+import {RequestsTableContent} from "./RequestsTableContent.tsx";
+import Pageable from "../../../../ui/table/Pageable.tsx";
+import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
+import Spinner from "../../../../ui/spinner";
+import {FormContextProvider} from "../../../../ui/form/Form.tsx";
+import {z} from "zod";
+import {m1u} from "../../../../utils/numbers.ts";
+import {RequestStatus} from "../model";
 
-type RequestTableProps = {
-    requests: Request[];
+type RequestsProps = {
+    filter?: RequestsFilter
 }
 
+const RequestsLoader: React.FC<RequestsProps> = ({filter}) => {
+    const {data: requests, isFetching} = useRequests(filter);
 
-export const statusL10n: Record<RequestStatus, string> = {
-    "DENIED": "Отклонена",
-    "CREATED": "Создана",
-    "WIP": "В работе",
-    "COMPLETE": "Завершена"
+    return !requests
+        ? <CenterSpinner/>
+        : <div className="relative">
+            <RequestsTableContent requests={requests}/>
+            {isFetching &&
+                <div className="absolute rounded top-0 w-full h-full bg-gray-600/20 flex justify-center items-center">
+                    <Spinner/>
+                </div>}
+        </div>
 }
 
-const statusColor: Record<RequestStatus, [ClassValue, ClassValue]> = {
-    "DENIED": ["bg-red-200", "bg-red-300"],
-    "CREATED": ["bg-cyan-200", "bg-cyan-300"],
-    "WIP": ["bg-yellow-200", "bg-yellow-300"],
-    "COMPLETE": ["bg-green-200", "bg-green-300"],
+const schema = z.object({
+    user: z.number().nullish()
+})
+
+export type RequestsTableFilter = {
+    user?: number;
+    institute?: number;
+    department?: number;
+    status?: number;
 }
 
-export const RequestsTable = ({requests}: RequestTableProps) => {
-    const nav = useNavigate();
+export const statuses: { [p: number]: RequestStatus | undefined } = {
+    [-1]: undefined,
+    [1]: "DENIED",
+    [2]: "CREATED",
+    [3]: "WIP",
+    [4]: "COMPLETE"
+}
 
-    return <table className="text-gray-900 table-auto w-full">
-        <thead className="text-left text-white">
-        <tr className="bg-gray-700">
-            <th className="px-4 py-2 border-2 rounded-tl-lg border-gray-100">#</th>
-            <th className="px-4 py-2 border-2 border-gray-100">Название</th>
-            <th className="px-4 py-2 border-2 border-gray-100">Преподаватель</th>
-            <th className="px-4 py-2 border-2 border-gray-100">Институт</th>
-            <th className="px-4 py-2 border-2 border-gray-100">Кафедра</th>
-            <th className="px-4 py-2 border-2 rounded-tr-lg border-gray-100">Статус</th>
-            <th className="hidden"></th>
-        </tr>
-        </thead>
-        <tbody className="space-y-1">
-        {requests.map((value, index) => (
-            <tr className={clsx(
-                index % 2 == 0 ? "bg-gray-200" : "bg-gray-300",
-                "space-x-2 cursor-pointer relative"
-            )} onClick={() => nav(`./${value.id}`)} key={value.id}>
-                <td className="px-4 py-2 border-2 border-gray-100">{value.id}</td>
-                <td className="px-4 py-2 border-2 border-gray-100">{value.name}</td>
-                <td className="px-4 py-2 border-2 border-gray-100">{value.lecturer.fullName}</td>
-                <td className="px-4 py-2 border-2 border-gray-100">{value.institute.name}</td>
-                <td className="px-4 py-2 border-2 border-gray-100">{value.department.name}</td>
-                <td className={clsx(
-                    "px-4 py-2 border-2 border-gray-100",
-                    statusColor[value.status][index % 2],
-                )}>{statusL10n[value.status]}</td>
-                <td className={clsx(
-                    value.unreadCount == 0
-                        ? "hidden"
-                        : "px-2 py-2 border-2 border-gray-100 bg-orange-500 text-white rounded-r-xl text-center text-lg"
-                )}>
-                    {value.unreadCount}
-                </td>
-            </tr>
-        ))}
-        </tbody>
-    </table>
+export const RequestsTable: React.FC<RequestsProps> = ({filter}) => {
+    return <>
+        <FormContextProvider<RequestsTableFilter, typeof schema>
+            onSubmit={() => {
+            }}
+            className="space-y-0"
+        >
+            {({watch}) =>
+                <Pageable defaultPageSize={10}>
+                    {({sort, page}) => (
+                        <RequestsLoader filter={{
+                            user: m1u(watch("user")),
+                            institute: m1u(watch("institute")),
+                            department: m1u(watch("department")),
+                            status: statuses[watch("status") || -1],
+                            ...filter,
+                            ...sort,
+                            ...page
+                        }}/>
+                    )}
+                </Pageable>
+            }
+        </FormContextProvider>
+    </>
 }

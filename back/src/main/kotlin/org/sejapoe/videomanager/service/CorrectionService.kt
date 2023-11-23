@@ -3,10 +3,7 @@ package org.sejapoe.videomanager.service
 import org.sejapoe.videomanager.dto.correction.CreateCorrectionReq
 import org.sejapoe.videomanager.exception.ForbiddenException
 import org.sejapoe.videomanager.exception.NotFoundException
-import org.sejapoe.videomanager.model.Comment
-import org.sejapoe.videomanager.model.Correction
-import org.sejapoe.videomanager.model.Role
-import org.sejapoe.videomanager.model.User
+import org.sejapoe.videomanager.model.*
 import org.sejapoe.videomanager.repo.CommentRepo
 import org.sejapoe.videomanager.repo.CorrectionRepo
 import org.sejapoe.videomanager.repo.RequestRepo
@@ -18,7 +15,8 @@ import kotlin.jvm.optionals.getOrNull
 class CorrectionService(
     private val correctionRepo: CorrectionRepo,
     private val requestRepo: RequestRepo,
-    private val commentRepo: CommentRepo
+    private val commentRepo: CommentRepo,
+    private val lastViewService: LastViewService
 ) {
     fun get(id: Long) =
         correctionRepo.findById(id).getOrNull() ?: throw NotFoundException("Correction with id $id is not found")
@@ -37,6 +35,8 @@ class CorrectionService(
             ?: throw NotFoundException("Request with id ${createCorrectionReq.requestId} is not found")
 
         if (request.lecturer.id != user.id) throw ForbiddenException("You have no access!")
+        if (request.status != RequestStatus.CREATED && request.status != RequestStatus.WIP)
+            throw ForbiddenException("Request is unmodifiable")
 
         val correction = Correction(
             createCorrectionReq.startTimeCode,
@@ -51,10 +51,12 @@ class CorrectionService(
             createCorrectionReq.comment,
         )
 
-//        commentRepo.save(comment)
         correction.comments = listOf(comment)
+        correction.request.status = RequestStatus.WIP
 
-        return correctionRepo.save(correction)
+        val saved = correctionRepo.save(correction)
+        lastViewService.view(user, saved)
+        return saved
     }
 
     fun updateStatus(id: Long, closed: Boolean, requester: User): Correction {

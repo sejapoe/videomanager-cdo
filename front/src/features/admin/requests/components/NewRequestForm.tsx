@@ -127,7 +127,9 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
                         <SelectField
                             defaultBlank
                             options={
-                                institutes?.find(v => v.id.toString() == watch("institute_id"))?.departments?.map(value => ({
+                                institutes
+                                    ?.find(v => v.id.toString() == watch("institute_id"))
+                                    ?.departments?.map(value => ({
                                     value: value.id,
                                     label: value.name
                                 })) || []

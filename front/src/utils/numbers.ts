@@ -1,0 +1,1 @@
+export const m1u = (x?: number) => x === -1 ? undefined : x

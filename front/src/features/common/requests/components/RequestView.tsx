@@ -6,7 +6,7 @@ import {useRequest} from "../api";
 import {CorrectionsProps} from "../../corrections/components/CorrectionProps.ts";
 import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
 import {ActionProps} from "./ActionProps.ts";
-import {statusL10n} from "./RequestsTable.tsx";
+import {statusL10n} from "./RequestsTableContent.tsx";
 import clsx, {ClassValue} from "clsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";

@@ -1,6 +1,6 @@
 import {Request} from "../../../common/requests/model";
-import {CreateRequestReqDto, HttpResponse, RequestParams, RequestResDto} from "../../../../api/Api.ts";
-import {useMutation, UseMutationOptions, useQuery} from "@tanstack/react-query";
+import {CreateRequestReqDto, HttpResponse, RequestResDto} from "../../../../api/Api.ts";
+import {useMutation, UseMutationOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
 import {adminKey} from "../../api";
 
@@ -34,17 +34,4 @@ export const useCreateRequest = (options?: UseCreateRequestOptions) =>
             return api.createRequest(useCreateRequest)
         },
         options
-    )
-
-export const useRequests = (filter?: {}, params?: RequestParams) =>
-    useQuery<Request[], GenericErrorModel, Request[], unknown[]>(
-        requestsKeys.requests.root,
-        async ({signal}) => {
-            const response = await api.getRequests(filter || {}, {
-                signal,
-                ...params
-            })
-
-            return response.data.content?.map(mapRequest) || []
-        }
     )

@@ -1,6 +1,14 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import clsx from "clsx";
-import {FieldValues, SubmitHandler, useForm, UseFormProps, UseFormReturn} from "react-hook-form";
+import {
+    FieldValues,
+    FormProvider,
+    SubmitHandler,
+    useForm,
+    useFormContext,
+    UseFormProps,
+    UseFormReturn
+} from "react-hook-form";
 import React, {FormEventHandler} from "react";
 import {ZodType, ZodTypeDef} from "zod";
 
@@ -41,4 +49,39 @@ export const Form = <
             {children(methods)}
         </form>
     )
+}
+
+type FormContextProps<TFormValues extends FieldValues, Schema> =
+    Omit<FormProps<TFormValues, Schema>, 'children'> & ({
+    children: React.ReactNode;
+} | {
+    children: (methods: UseFormReturn<TFormValues>) => React.ReactNode;
+})
+
+export const FormContextProvider = <
+    TFormValues extends FieldValues = FieldValues,
+    Schema extends ZodType<unknown, ZodTypeDef, unknown> = ZodType<unknown, ZodTypeDef, unknown>
+>(props: FormContextProps<TFormValues, Schema>) => {
+    return Form<TFormValues, Schema>({
+        ...props,
+        children: methods => <FormProvider {...methods}>
+            {'function' === typeof props.children ? props.children(methods) : props.children}
+        </FormProvider>
+    })
+}
+
+export type FormContextConsumerProps<TFormValues extends FieldValues> = {
+    children: (methods: UseFormReturn<TFormValues>) => React.ReactNode;
+}
+
+export const FormContextConsumer = <
+    TFormValues extends FieldValues = FieldValues,
+>({children}: FormContextConsumerProps<TFormValues>) => {
+    const methods = useFormContext<TFormValues>()
+
+    if (methods == null) {
+        throw new Error(`<FormContextConsumer /> is missing a parent <FormContextProvider /> component.`)
+    }
+
+    return children(methods)
 }

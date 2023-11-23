@@ -53,6 +53,7 @@ class RequestService(
     }
 
     fun getAll(requester: User, filterUserId: Long?, predicate: Predicate, pageable: Pageable): Page<Request> {
+        Thread.sleep(500)
         if (requester.role == Role.ROLE_USER && requester.id != filterUserId) throw ForbiddenException("You cannot get other user's requests!")
         return requestRepo.findAll(predicate, pageable)
     }

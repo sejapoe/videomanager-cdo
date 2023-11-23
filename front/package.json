@@ -28,6 +28,7 @@
     "clsx": "^2.0.0",
     "dayjs": "^1.11.7",
     "formik": "^2.4.0",
+    "lodash.once": "^4.1.1",
     "postcss": "^8.4.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -46,6 +47,7 @@
     "zustand": "^4.3.8"
   },
   "devDependencies": {
+    "@types/lodash.once": "^4.1.9",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@types/react-input-mask": "^3.0.4",

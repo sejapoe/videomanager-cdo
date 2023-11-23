@@ -17,7 +17,8 @@ type ComboboxFieldProps = FieldWrapperPassThroughProps & {
     className?: string;
     defaultValue?: string | number;
     notFoundComponent?: (query: string) => React.ReactNode;
-    control: Control<any, any>
+    control: Control<any, any>;
+    multiple?: true | false;
 }
 
 export const ComboboxField = ({
@@ -28,7 +29,8 @@ export const ComboboxField = ({
                                   control,
                                   label,
                                   error,
-                                  notFoundComponent
+                                  notFoundComponent,
+                                  multiple
                               }: ComboboxFieldProps) => {
     const [query, setQuery] = useState("")
 
@@ -42,6 +44,7 @@ export const ComboboxField = ({
         return option?.label || "";
     }
 
+    // @ts-ignore
     return (
         <Controller
             defaultValue={defaultValue}
@@ -53,6 +56,8 @@ export const ComboboxField = ({
                     <Combobox
                         value={value}
                         onChange={onChange}
+                        // @ts-ignore
+                        multiple={multiple || false}
                     >
                         <div className="relative mt-3">
                             <div className={clsx(
