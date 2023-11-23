@@ -1,5 +1,6 @@
 package org.sejapoe.videomanager.service
 
+import com.querydsl.core.types.Predicate
 import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.exception.UserActivationNotFoundException
 import org.sejapoe.videomanager.exception.auth.EmailAlreadyExitsRegistrationException
@@ -11,6 +12,8 @@ import org.sejapoe.videomanager.model.UserActivation
 import org.sejapoe.videomanager.repo.UserActivationRepo
 import org.sejapoe.videomanager.repo.UserRepo
 import org.sejapoe.videomanager.security.JwtService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -72,8 +75,8 @@ class UserService(
         return user to jwtService.generateToken(user)
     }
 
-    fun getLecturers(): List<User> {
-        return userRepo.findByRole(Role.ROLE_USER)
+    fun getLecturers(predicate: Predicate, pageable: Pageable): Page<User> {
+        return userRepo.findAll(QUser.user.role.eq(Role.ROLE_USER).and(predicate), pageable)
     }
 
     fun get(id: Long): User = userRepo.findById(id).orElseThrow { NotFoundException("User with $id is not found") }

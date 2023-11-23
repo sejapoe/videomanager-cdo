@@ -121,7 +121,7 @@ const SortButton: React.FC<SortButtonProps> = ({field, className}) => {
             type: ActionTypes.SelectSort,
             sort: {
                 sorting: field,
-                direction: state.sort.sorting !== field ? Direction.DESC :
+                direction: state.sort.sorting !== field ? Direction.ASC :
                     state.sort.direction == Direction.ASC ? Direction.DESC : Direction.ASC
             }
         })

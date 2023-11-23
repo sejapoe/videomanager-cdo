@@ -1,11 +1,14 @@
 package org.sejapoe.videomanager.controller
 
+import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.user.CreateLecturerReq
+import org.sejapoe.videomanager.dto.user.FilterUserReq
 import org.sejapoe.videomanager.mapper.UserMapper
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsAdmin
 import org.sejapoe.videomanager.security.annotations.IsUser
 import org.sejapoe.videomanager.service.UserService
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -26,5 +29,8 @@ class UserController(
 
     @IsAdmin
     @GetMapping("/users")
-    fun getAllLecturers() = userService.getLecturers().map(userMapper::toUserRes)
+    fun getLecturers(@ParameterObject @Valid filterUserReq: FilterUserReq) = userService.getLecturers(
+            filterUserReq.toPredicate(),
+            filterUserReq.toPageable()
+    ).map(userMapper::toUserRes)
 }

@@ -188,17 +188,62 @@
         "tags": [
           "user-controller"
         ],
-        "operationId": "getAllLecturers",
+        "operationId": "getLecturers",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "enabled",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "sorting",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserRes"
-                  }
+                  "$ref": "#/components/schemas/PageUserRes"
                 }
               }
             }
@@ -1569,7 +1614,7 @@
           }
         }
       },
-      "PageRequestRes": {
+      "PageUserRes": {
         "type": "object",
         "properties": {
           "totalPages": {
@@ -1596,7 +1641,7 @@
           "content": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RequestRes"
+              "$ref": "#/components/schemas/UserRes"
             }
           },
           "number": {
@@ -1651,6 +1696,52 @@
             "type": "boolean"
           },
           "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageRequestRes": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestRes"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "empty": {
             "type": "boolean"
           }
         }

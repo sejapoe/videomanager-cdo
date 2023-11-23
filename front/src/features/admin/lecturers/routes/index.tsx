@@ -1,5 +1,6 @@
 import {Navigate, Route, Routes} from "react-router-dom";
-import {Users} from "../components/UsersTable.tsx";
+
+import {Users} from "../components/Users.tsx";
 
 export const UsersRoutes = () =>
     <Routes>

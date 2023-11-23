@@ -14,6 +14,7 @@ import {ZodType, ZodTypeDef} from "zod";
 
 type FormProps<TFormValues extends FieldValues, Schema> = {
     className?: string;
+    defaultValue?: TFormValues;
     onSubmit: SubmitHandler<TFormValues>;
     onReset?: FormEventHandler;
     children: (methods: UseFormReturn<TFormValues>) => React.ReactNode;

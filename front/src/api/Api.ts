@@ -263,7 +263,7 @@ export interface UpdateCorrectionStatusReqDto {
   isClosed: boolean;
 }
 
-export interface PageRequestResDto {
+export interface PageUserResDto {
   /** @format int32 */
   totalPages?: number;
   /** @format int64 */
@@ -273,7 +273,7 @@ export interface PageRequestResDto {
   last?: boolean;
   /** @format int32 */
   size?: number;
-  content?: RequestResDto[];
+  content?: UserResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
@@ -298,6 +298,25 @@ export interface SortObjectDto {
   sorted?: boolean;
   empty?: boolean;
   unsorted?: boolean;
+}
+
+export interface PageRequestResDto {
+  /** @format int32 */
+  totalPages?: number;
+  /** @format int64 */
+  totalElements?: number;
+  pageable?: PageableObjectDto;
+  first?: boolean;
+  last?: boolean;
+  /** @format int32 */
+  size?: number;
+  content?: RequestResDto[];
+  /** @format int32 */
+  number?: number;
+  sort?: SortObjectDto;
+  /** @format int32 */
+  numberOfElements?: number;
+  empty?: boolean;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -591,14 +610,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags user-controller
-     * @name GetAllLecturers
+     * @name GetLecturers
      * @request GET:/api/users
      * @secure
      */
-    getAllLecturers: (params: RequestParams = {}) =>
-        this.request<UserResDto[], any>({
+    getLecturers: (
+        query?: {
+          /** @format int32 */
+          page?: number;
+          /** @format int32 */
+          size?: number;
+          enabled?: boolean;
+          sorting?: string;
+          direction?: "ASC" | "DESC";
+        },
+        params: RequestParams = {},
+    ) =>
+        this.request<PageUserResDto, any>({
           path: `/api/users`,
           method: "GET",
+          query: query,
           secure: true,
           ...params,
         }),

@@ -6,7 +6,7 @@ import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import Spinner from "../../../../ui/spinner";
 import {FormContextProvider} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
-import {m1u} from "../../../../utils/numbers.ts";
+import {m1u} from "../../../../utils/undefineds.ts";
 import {RequestStatus} from "../model";
 
 type RequestsProps = {
@@ -28,15 +28,25 @@ const RequestsLoader: React.FC<RequestsProps> = ({filter}) => {
 }
 
 const schema = z.object({
-    user: z.number().nullish()
+    user: z.number().nullish(),
+    institute: z.number().nullish(),
+    department: z.number().nullish(),
+    status: z.number().nullish()
 })
 
 export type RequestsTableFilter = {
-    user?: number;
-    institute?: number;
-    department?: number;
-    status?: number;
+    user: number;
+    institute: number;
+    department: number;
+    status: number;
 }
+
+export const defaultValues = {
+    user: -1,
+    institute: -1,
+    department: -1,
+    status: -1
+};
 
 export const statuses: { [p: number]: RequestStatus | undefined } = {
     [-1]: undefined,
@@ -47,11 +57,15 @@ export const statuses: { [p: number]: RequestStatus | undefined } = {
 }
 
 export const RequestsTable: React.FC<RequestsProps> = ({filter}) => {
+
     return <>
         <FormContextProvider<RequestsTableFilter, typeof schema>
             onSubmit={() => {
             }}
             className="space-y-0"
+            options={{
+                defaultValues,
+            }}
         >
             {({watch}) =>
                 <Pageable defaultPageSize={10}>
@@ -60,7 +74,7 @@ export const RequestsTable: React.FC<RequestsProps> = ({filter}) => {
                             user: m1u(watch("user")),
                             institute: m1u(watch("institute")),
                             department: m1u(watch("department")),
-                            status: statuses[watch("status") || -1],
+                            status: statuses[watch("status")],
                             ...filter,
                             ...sort,
                             ...page

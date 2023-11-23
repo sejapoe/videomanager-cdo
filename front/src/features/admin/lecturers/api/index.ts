@@ -3,18 +3,16 @@ import api, {GenericErrorModel, HttpResponse, RequestParams} from "../../../../a
 import {CreateLecturerReqDto, UserResDto} from "../../../../api/Api.ts";
 import {adminKey} from "../../api";
 import {Lecturer, mapLecturer} from "../model";
+import {mapPage, Page} from "../../../common/model";
 
 export const lecturerKeys = {
     lecturers: {
-        root: [...adminKey, 'lecturers']
-    },
-
-    lecturer: {
-        root: [...adminKey, 'lecturer']
+        root: [...adminKey, 'lecturers'],
+        byFilter: (filter: LecturersFilter) => [...lecturerKeys.lecturers.root, filter]
     },
 
     mutation: {
-        create: () => [...lecturerKeys.lecturer.root, 'create']
+        create: () => [...lecturerKeys.lecturers.root, 'create']
     }
 }
 
@@ -35,16 +33,24 @@ export const useCreateLecturer = (options?: UseCreateLecturerOptions) =>
         options
     )
 
+export type LecturersFilter = {
+    page?: number;
+    size?: number;
+    enabled?: boolean;
+    sorting?: string;
+    direction?: "ASC" | "DESC";
+}
 
-export const useLecturers = (params?: RequestParams) =>
-    useQuery<Lecturer[], GenericErrorModel, Lecturer[], unknown[]>(
-        lecturerKeys.lecturers.root,
+export const useLecturers = (filter: LecturersFilter, params?: RequestParams) =>
+    useQuery<Page<Lecturer>, GenericErrorModel, Page<Lecturer>, unknown[]>(
+        lecturerKeys.lecturers.byFilter(filter),
         async ({signal}) => {
-            const response = await api.getAllLecturers({
-                signal,
-                ...params
-            })
+            const response = await api.getLecturers(filter,
+                {
+                    signal,
+                    ...params
+                })
 
-            return response.data.map(mapLecturer)
+            return mapPage(response.data as any, mapLecturer)
         }
     )
