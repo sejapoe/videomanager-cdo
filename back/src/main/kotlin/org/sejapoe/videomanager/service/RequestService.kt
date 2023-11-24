@@ -5,7 +5,6 @@ import org.sejapoe.videomanager.exception.ConflictException
 import org.sejapoe.videomanager.exception.ForbiddenException
 import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.model.*
-import org.sejapoe.videomanager.repo.ArchiveEntryRepo
 import org.sejapoe.videomanager.repo.RequestRepo
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -18,7 +17,6 @@ class RequestService(
     private val userService: UserService,
     private val instituteService: InstituteService,
     private val departmentService: DepartmentService,
-    private val archiveEntryRepo: ArchiveEntryRepo,
     private val archiveEntryService: ArchiveEntryService,
 ) {
     fun create(
