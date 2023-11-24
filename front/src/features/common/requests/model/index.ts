@@ -4,6 +4,11 @@ import {Lecturer} from "../../../admin/lecturers/model";
 
 export type RequestStatus = "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
 
+export type ShortRequest = {
+    id: number;
+    name: string;
+}
+
 export type Request = {
     id: number;
     name: string;

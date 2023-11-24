@@ -4,12 +4,11 @@ import {useInstitutes} from "../../../common/institutes/api";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {SelectField} from "../../../../ui/form/SelectField.tsx";
 import {NewLecturerDialog} from "../../lecturers/components/NewLecturerDialog.tsx";
-import {lecturerKeys, useLecturers} from "../../lecturers/api";
+import {useLecturers} from "../../lecturers/api";
 import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
 import {useDialog} from "../../../../hooks/useDialog.tsx";
-import {useQueryClient} from "@tanstack/react-query";
-import {useCreateRequest} from "../api";
+import {UseMutationResult, useQueryClient} from "@tanstack/react-query";
 import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
 
 const schema = z.object({
@@ -21,7 +20,7 @@ const schema = z.object({
     linkToVideo: z.string().url("Should be valid url")
 })
 
-type NewRequestValues = {
+type NewRequestLikeValues = {
     name: string;
     lecturer_id: number;
     institute_id: string;
@@ -30,12 +29,19 @@ type NewRequestValues = {
     linkToVideo: string;
 }
 
-type NewRequestFormProps = {
+
+type NewRequestLikeFormProps = {
     onSuccess: () => void;
+    mutationRes: UseMutationResult
+    invalidationKeys: unknown[]
 }
 
-export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
-    const {mutate, isLoading} = useCreateRequest();
+export const NewRequestLikeForm = ({
+                                       onSuccess,
+                                       mutationRes,
+                                       invalidationKeys
+                                   }: NewRequestLikeFormProps) => {
+    const {mutate, isLoading} = mutationRes;
 
     const queryClient = useQueryClient();
 
@@ -60,7 +66,7 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
                     <NewLecturerDialog onSubmit={ok} defaultName={name} close={close}/>
                 )}
             </Dialog>
-            <Form<NewRequestValues, typeof schema>
+            <Form<NewRequestLikeValues, typeof schema>
                 onSubmit={data => {
                     mutate({
                         name: data.name,
@@ -99,7 +105,7 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
                                     className="cursor-pointer"
                                     onClick={() => {
                                         open(query, async (data) => {
-                                            await queryClient.invalidateQueries(lecturerKeys.lecturers.root)
+                                            await queryClient.invalidateQueries(invalidationKeys)
                                             // @ts-ignore
                                             setValue("lecturer_id", data)
                                         })

@@ -1,5 +1,5 @@
 import {Request} from "../../../common/requests/model";
-import {ArchiveEntryDto, CreateRequestReqDto, HttpResponse, RequestResDto} from "../../../../api/Api.ts";
+import {ArchiveEntryResDto, CreateRequestReqDto, HttpResponse, RequestResDto} from "../../../../api/Api.ts";
 import {useMutation, UseMutationOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
 import {requestsKeys} from "../../../common/requests/api";
@@ -34,7 +34,7 @@ export const useCreateRequest = (options?: UseCreateRequestOptions) =>
     )
 
 type UseArchiveRequestMutation = UseMutationOptions<
-    HttpResponse<ArchiveEntryDto>,
+    HttpResponse<ArchiveEntryResDto>,
     GenericErrorModel,
     number
 >

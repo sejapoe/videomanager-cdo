@@ -1,10 +1,14 @@
 package org.sejapoe.videomanager.dto.archive
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Positive
+
 data class CreateArchiveEntryReq(
-    val name: String,
-    val lecturerId: Long,
-    val instituteId: Long,
-    val departmentId: Long,
-    val linkToVideo: String,
-    val linkToMoodle: String,
+    @NotBlank val name: String,
+    @JsonProperty("lecturer_id") @Positive val lecturerId: Long,
+    @JsonProperty("institute_id") @Positive val instituteId: Long,
+    @JsonProperty("department_id") @Positive val departmentId: Long,
+    @NotBlank val linkToMoodle: String,
+    @NotBlank val linkToVideo: String,
 )

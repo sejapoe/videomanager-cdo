@@ -1305,8 +1305,7 @@
           "lecturer",
           "linkToMoodle",
           "linkToVideo",
-          "name",
-          "request"
+          "name"
         ],
         "type": "object",
         "properties": {
@@ -1544,9 +1543,9 @@
       },
       "CreateArchiveEntryReq": {
         "required": [
-          "departmentId",
-          "instituteId",
-          "lecturerId",
+          "department_id",
+          "institute_id",
+          "lecturer_id",
           "linkToMoodle",
           "linkToVideo",
           "name"
@@ -1556,22 +1555,22 @@
           "name": {
             "type": "string"
           },
-          "lecturerId": {
+          "lecturer_id": {
             "type": "integer",
             "format": "int64"
           },
-          "instituteId": {
+          "institute_id": {
             "type": "integer",
             "format": "int64"
           },
-          "departmentId": {
+          "department_id": {
             "type": "integer",
             "format": "int64"
-          },
-          "linkToVideo": {
-            "type": "string"
           },
           "linkToMoodle": {
+            "type": "string"
+          },
+          "linkToVideo": {
             "type": "string"
           }
         }
@@ -1606,6 +1605,12 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -1622,12 +1627,6 @@
           },
           "sort": {
             "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
@@ -1692,6 +1691,12 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -1708,12 +1713,6 @@
           },
           "sort": {
             "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
@@ -1738,6 +1737,12 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
           "size": {
             "type": "integer",
             "format": "int32"
@@ -1754,12 +1759,6 @@
           },
           "sort": {
             "$ref": "#/components/schemas/SortObject"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "last": {
-            "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",

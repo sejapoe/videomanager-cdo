@@ -112,7 +112,7 @@ export interface ArchiveEntryResDto {
   department: DepartmentResDto;
   linkToVideo: string;
   linkToMoodle: string;
-  request: ShortRequestResDto;
+  request?: ShortRequestResDto;
 }
 
 export interface ShortRequestResDto {
@@ -196,13 +196,13 @@ export interface ActivateUserReqDto {
 export interface CreateArchiveEntryReqDto {
   name: string;
   /** @format int64 */
-  lecturerId: number;
+  lecturer_id: number;
   /** @format int64 */
-  instituteId: number;
+  institute_id: number;
   /** @format int64 */
-  departmentId: number;
-  linkToVideo: string;
+  department_id: number;
   linkToMoodle: string;
+  linkToVideo: string;
 }
 
 export interface UpdateCorrectionStatusReqDto {
@@ -217,14 +217,14 @@ export interface PageUserResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: UserResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -254,14 +254,14 @@ export interface PageRequestResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: RequestResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -273,14 +273,14 @@ export interface PageArchiveEntryResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: ArchiveEntryResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;

@@ -3,6 +3,7 @@ export const PATH_PAGE = {
     login: '/auth/login',
     app: {
         root: "/app",
-        requests: "/app/requests"
+        requests: "/app/requests",
+        archive: "/app/archive"
     }
 }
