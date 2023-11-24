@@ -12,7 +12,9 @@ type UsersLoaderProps = {
 }
 
 const UsersLoader = ({filter}: UsersLoaderProps) => {
-    const {data: lecturers, isFetching} = useLecturers(filter)
+    const {data: lecturers, isFetching} = useLecturers(filter, undefined, {
+        keepPreviousData: true
+    })
 
     return !lecturers
         ? <CenterSpinner/>

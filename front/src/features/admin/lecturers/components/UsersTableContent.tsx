@@ -62,7 +62,7 @@ type UsersTableProps = {
 }
 
 export const UsersTableContent = ({users}: UsersTableProps) => {
-    return <div>
+    return <div className="mt-2">
         <table className="text-gray-900 table-fixed w-full">
             <UsersTableHead/>
             <tbody>

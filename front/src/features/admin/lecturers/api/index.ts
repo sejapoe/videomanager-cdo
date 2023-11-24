@@ -1,4 +1,4 @@
-import {useMutation, UseMutationOptions, useQuery} from "@tanstack/react-query";
+import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel, HttpResponse, RequestParams} from "../../../../api";
 import {CreateLecturerReqDto, UserResDto} from "../../../../api/Api.ts";
 import {adminKey} from "../../api";
@@ -41,7 +41,9 @@ export type LecturersFilter = {
     direction?: "ASC" | "DESC";
 }
 
-export const useLecturers = (filter: LecturersFilter, params?: RequestParams) =>
+export const useLecturers = (filter: LecturersFilter,
+                             params?: RequestParams,
+                             options?: UseQueryOptions<Page<Lecturer>, GenericErrorModel, Page<Lecturer>, unknown[]>) =>
     useQuery<Page<Lecturer>, GenericErrorModel, Page<Lecturer>, unknown[]>(
         lecturerKeys.lecturers.byFilter(filter),
         async ({signal}) => {
@@ -52,5 +54,6 @@ export const useLecturers = (filter: LecturersFilter, params?: RequestParams) =>
                 })
 
             return mapPage(response.data as any, mapLecturer)
-        }
+        },
+        options
     )

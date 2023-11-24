@@ -4,7 +4,6 @@ import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {NewLecturerDialog} from "./NewLecturerDialog.tsx";
 import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {UsersTable} from "./UsersTable.tsx";
 
@@ -25,11 +24,12 @@ export const Users = () => {
                 <h1 className="text-2xl font-semibold text-gray-900">{"Пользователи"}</h1>
                 <Button
                     size="sm"
+                    startIcon={solid("plus")}
                     onClick={() => open("", async () => {
                         await queryClient.invalidateQueries(lecturerKeys.lecturers.root)
                     })}
                 >
-                    <FontAwesomeIcon icon={solid("plus")}/> Создать
+                    Создать
                 </Button>
             </div>
         }>
