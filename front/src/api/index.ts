@@ -4,6 +4,7 @@ import {Api, ContentType, ProblemDetailDto} from "./Api.ts";
 type GenericErrorModel = HttpResponse<unknown, ProblemDetailDto>
 
 const api = new Api<string>({
+    baseUrl: import.meta.env.VITE_SERVER_URL, // "http://localhost:8080"
     baseApiParams: {
         headers: {
             'Content-Type': ContentType.Json
