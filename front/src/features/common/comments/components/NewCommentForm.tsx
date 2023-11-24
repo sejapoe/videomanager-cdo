@@ -23,16 +23,13 @@ export const NewCommentForm = ({correction}: NewCommentFormProps) => {
     const queryClient = useQueryClient()
     const {mutate, isLoading} = useCreateComment(correction.id)
     const hiddenSubmitButton = useRef<HTMLButtonElement>(null);
-    const hiddenResetButton = useRef<HTMLButtonElement>(null)
 
     return <Form<NewCommentValues, typeof schema>
-        onSubmit={(data, e) => {
+        onSubmit={(data, {reset}) => {
             mutate(data.comment, {
-                onSuccess: async (_) => {
+                onSuccess: async (_,) => {
                     await queryClient.invalidateQueries(commentKeys.comments.byCorrection(correction.id))
-                    // hiddenResetButton.current?.click()
-                    console.log(hiddenResetButton.current)
-                    e?.target?.reset()
+                    reset()
                 }
             })
         }}
@@ -45,6 +42,12 @@ export const NewCommentForm = ({correction}: NewCommentFormProps) => {
                     registration={register("comment")}
                     rows={1}
                     disabled={correction.closed || isLoading}
+                    onKeyDown={event => {
+                        if (event.key === "Enter" && event.ctrlKey) {
+                            event.preventDefault()
+                            hiddenSubmitButton.current?.click()
+                        }
+                    }}
                 />
                 {correction.closed ?
                     <div className="cursor-not-allowed absolute top-0 right-0 h-full flex items-center">
@@ -58,7 +61,6 @@ export const NewCommentForm = ({correction}: NewCommentFormProps) => {
                                hiddenSubmitButton.current?.click()
                            }}>
                         <button className="hidden" type="submit" ref={hiddenSubmitButton}/>
-                        <button className="hidden" type="reset" ref={hiddenResetButton}/>
                         <FontAwesomeIcon icon={regular("paper-plane")} className={clsx(
                             "mr-3",
                             isLoading ? "opacity-50" : ""

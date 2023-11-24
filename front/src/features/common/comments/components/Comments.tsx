@@ -22,7 +22,7 @@ const SingleComment = ({timestamp, text, side}: SingleCommentProps) => {
     >
         <div className={clsx(
             side === "MINE" ? "bg-purple-800 text-white" : "bg-gray-700 text-white",
-            "py-1 px-3 rounded w-fit max-w-[70%] break-words",
+            "py-1 px-3 rounded w-fit max-w-[70%] break-words whitespace-pre-line",
         )}>
             {text}
         </div>

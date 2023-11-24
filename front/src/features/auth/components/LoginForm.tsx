@@ -25,11 +25,15 @@ export const LoginForm = ({onSuccess}: LoginFormProps) => {
     return (
         <div>
             <Form<LoginValues, typeof schema>
-                onSubmit={(data) => {
+                onSubmit={(data, {setError}) => {
                     mutate(data, {
                         onSuccess: (response) => {
                             addUser(response.data)
                             onSuccess()
+                        },
+                        onError: data => {
+                            console.log(data)
+                            setError("root", {message: data.error.detail})
                         }
                     })
                 }}
@@ -49,6 +53,12 @@ export const LoginForm = ({onSuccess}: LoginFormProps) => {
                             <Button type="submit" className="w-full" isLoading={isLoading}>
                                 Войти
                             </Button>
+                            {formState.errors["root"]?.message && (
+                                <div role="alert" aria-label={formState.errors["root"].message}
+                                     className="text-sm font-semibold text-red-500">
+                                    {formState.errors["root"].message}
+                                </div>
+                            )}
                         </div>
                     </>
                 )}

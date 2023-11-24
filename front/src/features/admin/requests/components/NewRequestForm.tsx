@@ -47,7 +47,7 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
     const {
         data: lecturers,
         isLoading: isLoadingLecturers
-    } = useLecturers()
+    } = useLecturers({})
 
     const {Dialog, open} = useDialog<string, number>({
         title: "Создание преподавателя",
@@ -88,7 +88,7 @@ export const NewRequestForm = ({onSuccess}: NewRequestFormProps) => {
                             name="lecturer_id"
                             defaultValue={-1}
                             label="Преподаватель"
-                            options={lecturers?.map(value => ({
+                            options={lecturers?.content?.map(value => ({
                                 value: value.id,
                                 label: value.fullName,
                             })) || []}
