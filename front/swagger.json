@@ -70,10 +70,10 @@
             "schema": {
               "type": "string",
               "enum": [
-                "DENIED",
                 "CREATED",
                 "WIP",
-                "COMPLETE"
+                "COMPLETED",
+                "ARCHIVED"
               ]
             }
           },
@@ -312,7 +312,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/ArchiveEntry"
+                  "$ref": "#/components/schemas/ArchiveEntryDto"
                 }
               }
             }
@@ -881,10 +881,10 @@
           "newStatus": {
             "type": "string",
             "enum": [
-              "DENIED",
               "CREATED",
               "WIP",
-              "COMPLETE"
+              "COMPLETED",
+              "ARCHIVED"
             ]
           }
         }
@@ -974,10 +974,10 @@
           "status": {
             "type": "string",
             "enum": [
-              "DENIED",
               "CREATED",
               "WIP",
-              "COMPLETE"
+              "COMPLETED",
+              "ARCHIVED"
             ]
           },
           "corrections": {
@@ -1124,10 +1124,10 @@
           "status": {
             "type": "string",
             "enum": [
-              "DENIED",
               "CREATED",
               "WIP",
-              "COMPLETE"
+              "COMPLETED",
+              "ARCHIVED"
             ]
           },
           "unreadCount": {
@@ -1136,166 +1136,8 @@
           }
         }
       },
-      "ArchiveEntry": {
+      "ArchiveEntryDto": {
         "required": [
-          "department",
-          "id",
-          "institute",
-          "lecturer",
-          "linkToMoodle",
-          "linkToVideo",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "lecturer": {
-            "$ref": "#/components/schemas/User"
-          },
-          "institute": {
-            "$ref": "#/components/schemas/Institute"
-          },
-          "department": {
-            "$ref": "#/components/schemas/Department"
-          },
-          "linkToVideo": {
-            "type": "string"
-          },
-          "linkToMoodle": {
-            "type": "string"
-          },
-          "request": {
-            "$ref": "#/components/schemas/Request"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "Comment": {
-        "required": [
-          "author",
-          "correction",
-          "id",
-          "text",
-          "timestamp"
-        ],
-        "type": "object",
-        "properties": {
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "author": {
-            "$ref": "#/components/schemas/User"
-          },
-          "correction": {
-            "$ref": "#/components/schemas/Correction"
-          },
-          "text": {
-            "type": "string"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "Correction": {
-        "required": [
-          "closed",
-          "comments",
-          "endTimeCode",
-          "id",
-          "request",
-          "startTimeCode"
-        ],
-        "type": "object",
-        "properties": {
-          "startTimeCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "endTimeCode": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "request": {
-            "$ref": "#/components/schemas/Request"
-          },
-          "closed": {
-            "type": "boolean"
-          },
-          "comments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Comment"
-            }
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "Department": {
-        "required": [
-          "id",
-          "institute",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "institute": {
-            "$ref": "#/components/schemas/Institute"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "GrantedAuthority": {
-        "type": "object",
-        "properties": {
-          "authority": {
-            "type": "string"
-          }
-        }
-      },
-      "Institute": {
-        "required": [
-          "departments",
-          "id",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "departments": {
-            "uniqueItems": true,
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Department"
-            }
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "Request": {
-        "required": [
-          "corrections",
           "department",
           "id",
           "institute",
@@ -1303,109 +1145,50 @@
           "linkToMoodle",
           "linkToVideo",
           "name",
-          "status"
+          "request"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
           "name": {
             "type": "string"
           },
           "lecturer": {
-            "$ref": "#/components/schemas/User"
+            "$ref": "#/components/schemas/UserRes"
           },
           "institute": {
-            "$ref": "#/components/schemas/Institute"
+            "$ref": "#/components/schemas/InstituteRes"
           },
           "department": {
-            "$ref": "#/components/schemas/Department"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "DENIED",
-              "CREATED",
-              "WIP",
-              "COMPLETE"
-            ]
-          },
-          "linkToMoodle": {
-            "type": "string"
+            "$ref": "#/components/schemas/DepartmentRes"
           },
           "linkToVideo": {
             "type": "string"
           },
-          "corrections": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Correction"
-            }
+          "linkToMoodle": {
+            "type": "string"
           },
-          "id": {
-            "type": "integer",
-            "format": "int64"
+          "request": {
+            "$ref": "#/components/schemas/ShortRequestRes"
           }
         }
       },
-      "User": {
+      "ShortRequestRes": {
         "required": [
-          "authorities",
-          "email",
-          "enabled",
-          "fullName",
           "id",
-          "isAccountNonExpired",
-          "isAccountNonLocked",
-          "isCredentialsNonExpired",
-          "isEnabled",
-          "password",
-          "role",
-          "username"
+          "name"
         ],
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "fullName": {
-            "type": "string"
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "ROLE_USER",
-              "ROLE_ADMIN"
-            ]
-          },
-          "enabled": {
-            "type": "boolean"
-          },
           "id": {
             "type": "integer",
             "format": "int64"
           },
-          "isEnabled": {
-            "type": "boolean"
-          },
-          "authorities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/GrantedAuthority"
-            }
-          },
-          "username": {
+          "name": {
             "type": "string"
-          },
-          "isAccountNonLocked": {
-            "type": "boolean"
-          },
-          "isCredentialsNonExpired": {
-            "type": "boolean"
-          },
-          "isAccountNonExpired": {
-            "type": "boolean"
           }
         }
       },

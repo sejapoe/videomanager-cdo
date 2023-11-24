@@ -1,11 +1,10 @@
-import {commonKey} from "../../api";
 import api, {GenericErrorModel, RequestParams} from "../../../../api";
 import {useMutation, UseMutationOptions, useQuery} from "@tanstack/react-query";
 import {Correction, mapCorrection} from "../model";
 
 export const correctionsKeys = {
     corrections: {
-        root: [...commonKey, 'corrections'],
+        root: ['corrections'],
         byId: (id: number) => [...correctionsKeys.corrections.root, id],
     },
 

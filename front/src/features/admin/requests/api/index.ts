@@ -1,21 +1,18 @@
 import {Request} from "../../../common/requests/model";
-import {CreateRequestReqDto, HttpResponse, RequestResDto} from "../../../../api/Api.ts";
+import {ArchiveEntryDto, CreateRequestReqDto, HttpResponse, RequestResDto} from "../../../../api/Api.ts";
 import {useMutation, UseMutationOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
-import {adminKey} from "../../api";
+import {requestsKeys} from "../../../common/requests/api";
 
 
 export function mapRequest(requestDto: RequestResDto): Request {
     return requestDto
 }
 
-export const requestsKeys = {
-    requests: {
-        root: [...adminKey, 'requests']
-    },
-
+export const adminRequestsKeys = {
     mutation: {
-        create: () => [...requestsKeys.requests.root, 'create']
+        create: () => [...requestsKeys.requests.root, 'create'],
+        archive: () => [...requestsKeys.requests.root, 'archive']
     }
 }
 
@@ -29,9 +26,26 @@ type UseCreateRequestOptions = Omit<UseCreateRequestMutation, 'mutationFn' | 'mu
 
 export const useCreateRequest = (options?: UseCreateRequestOptions) =>
     useMutation(
-        requestsKeys.mutation.create(),
+        adminRequestsKeys.mutation.create(),
         (useCreateRequest: CreateRequestReqDto) => {
             return api.createRequest(useCreateRequest)
+        },
+        options
+    )
+
+type UseArchiveRequestMutation = UseMutationOptions<
+    HttpResponse<ArchiveEntryDto>,
+    GenericErrorModel,
+    number
+>
+
+type UseArchiveRequestOptions = Omit<UseArchiveRequestMutation, 'mutationFn' | 'mutationKey'>
+
+export const useArchiveRequest = (options?: UseArchiveRequestOptions) =>
+    useMutation(
+        adminRequestsKeys.mutation.archive(),
+        (id: number) => {
+            return api.archiveRequest(id)
         },
         options
     )

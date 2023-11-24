@@ -2,7 +2,6 @@ import {FullRequest, Request} from "../model";
 import {FullRequestResDto, RequestParams, RequestResDto} from "../../../../api/Api.ts";
 import {useQuery} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
-import {commonKey} from "../../api";
 import {mapPage, Page} from "../../model";
 
 
@@ -17,7 +16,7 @@ export function mapFullRequest(requestDto: FullRequestResDto): FullRequest {
 
 export const requestsKeys = {
     requests: {
-        root: [...commonKey, 'requests'],
+        root: ['requests'],
         byFilter: (filter: RequestsFilter) => [...requestsKeys.requests.root, filter],
         byId: (id: number) => [...requestsKeys.requests.root, id.toString()],
     },
@@ -34,7 +33,7 @@ export type RequestsFilter = {
     institute?: number;
     /** @format int64 */
     department?: number;
-    status?: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+    status?: "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
     sorting?: string;
     direction?: "ASC" | "DESC";
 }

@@ -1,5 +1,5 @@
 import {z} from "zod";
-import {commentKeys, useCreateComment} from "../api";
+import {commentsKeys, useCreateComment} from "../api";
 import {useQueryClient} from "@tanstack/react-query";
 import {Form} from "../../../../ui/form/Form.tsx";
 import {TextAreaField} from "../../../../ui/form/TextareaField.tsx";
@@ -28,7 +28,7 @@ export const NewCommentForm = ({correction}: NewCommentFormProps) => {
         onSubmit={(data, {reset}) => {
             mutate(data.comment, {
                 onSuccess: async (_,) => {
-                    await queryClient.invalidateQueries(commentKeys.comments.byCorrection(correction.id))
+                    await queryClient.invalidateQueries(commentsKeys.comments.byCorrection(correction.id))
                     reset()
                 }
             })

@@ -1,7 +1,7 @@
 import {ActionProps} from "../../../common/requests/components/ActionProps.ts";
 import {Button} from "../../../../ui/button/Button.tsx";
 import {useQueryClient} from "@tanstack/react-query";
-import {requestKeys, useUpdateRequestStatus} from "../api";
+import {userRequestsKeys, useUpdateRequestStatus} from "../api";
 import {requestsKeys} from "../../../common/requests/api";
 
 export const UserRequestActions = ({request}: ActionProps) => {
@@ -18,7 +18,7 @@ export const UserRequestActions = ({request}: ActionProps) => {
             onClick={() => {
                 mutate(request.status === "COMPLETE" ? "WIP" : "COMPLETE", {
                     onSuccess: async () => {
-                        await queryClient.invalidateQueries(requestKeys.requests.root)
+                        await queryClient.invalidateQueries(userRequestsKeys.requests.root)
                         await queryClient.invalidateQueries(requestsKeys.requests.root)
                     }
                 })

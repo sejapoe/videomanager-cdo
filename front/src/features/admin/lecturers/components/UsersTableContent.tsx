@@ -70,7 +70,7 @@ export const UsersTableContent = ({users}: UsersTableProps) => {
                 users.content.map((value, index) => <tr className={clsx(
                         index % 2 == 0 ? "bg-gray-200" : "bg-gray-300",
                         "space-x-2 cursor-pointer relative"
-                    )}>
+                    )} key={index}>
                         <td className="px-4 py-2 border-2 border-gray-100">{value.id}</td>
                         <td className="px-4 py-2 border-2 border-gray-100">{value.fullName}</td>
                         <td className="px-4 py-2 border-2 border-gray-100">{value.email}</td>

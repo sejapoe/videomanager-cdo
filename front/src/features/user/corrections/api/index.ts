@@ -1,13 +1,9 @@
 import {useMutation, UseMutationOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel, HttpResponse} from "../../../../api";
 import {CorrectionResDto, CreateCorrectionReqDto} from "../../../../api/Api.ts";
-import {userKey} from "../../api";
+import {correctionsKeys} from "../../../common/corrections/api";
 
-export const correctionsKeys = {
-    corrections: {
-        root: [...userKey, 'corrections']
-    },
-
+export const userCorrectionsKeys = {
     mutation: {
         create: () => [...correctionsKeys.corrections.root, 'create'],
         updateStatus: (id: number) => [...correctionsKeys.corrections.root, 'update', id]
@@ -24,7 +20,7 @@ type UseCreateCorrectionOptions = Omit<UseCreateCorrectionMutation, 'mutationFn'
 
 export const useCreateCorrection = (options?: UseCreateCorrectionOptions) =>
     useMutation<HttpResponse<CorrectionResDto, void>, GenericErrorModel, CreateCorrectionReqDto>(
-        correctionsKeys.mutation.create(),
+        userCorrectionsKeys.mutation.create(),
         api.createCorrection,
         options
     )
@@ -40,7 +36,7 @@ type UseUpdateCorrectionStatusOptions = Omit<UseUpdateCorrectionStatusMutation, 
 
 export const useUpdateCorrectionStatus = (id: number, options?: UseUpdateCorrectionStatusOptions) =>
     useMutation<HttpResponse<CorrectionResDto>, GenericErrorModel, boolean>(
-        correctionsKeys.mutation.updateStatus(id),
+        userCorrectionsKeys.mutation.updateStatus(id),
         isClosed => api.updateCorrectionStatus({
             id,
             isClosed

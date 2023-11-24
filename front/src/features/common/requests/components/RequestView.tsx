@@ -13,10 +13,10 @@ import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 
 
 const statusColor: Record<RequestStatus, ClassValue> = {
-    "DENIED": "bg-red-300 border-red-700",
     "CREATED": "bg-cyan-300 border-cyan-700",
     "WIP": "bg-yellow-300 border-yellow-700",
-    "COMPLETE": "bg-green-300 border-green-700",
+    "COMPLETED": "bg-green-300 border-green-700",
+    "ARCHIVED": "bg-gray-500 border-gray-700 text-white"
 }
 
 

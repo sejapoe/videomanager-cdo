@@ -1,13 +1,12 @@
 import {useMutation, UseMutationOptions, useQuery, UseQueryOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel, HttpResponse, RequestParams} from "../../../../api";
 import {CreateLecturerReqDto, UserResDto} from "../../../../api/Api.ts";
-import {adminKey} from "../../api";
 import {Lecturer, mapLecturer} from "../model";
 import {mapPage, Page} from "../../../common/model";
 
 export const lecturerKeys = {
     lecturers: {
-        root: [...adminKey, 'lecturers'],
+        root: ['lecturers'],
         byFilter: (filter: LecturersFilter) => [...lecturerKeys.lecturers.root, filter]
     },
 

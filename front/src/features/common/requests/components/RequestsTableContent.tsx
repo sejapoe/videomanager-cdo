@@ -16,17 +16,17 @@ import {TableHeadItem} from "../../../../ui/table/TableHeadItem.tsx";
 import {ComboboxFilter} from "../../../../ui/table/ComboboxFilter.tsx";
 
 export const statusL10n: Record<RequestStatus, string> = {
-    "DENIED": "Отклонена",
     "CREATED": "Создана",
     "WIP": "В работе",
-    "COMPLETE": "Завершена"
+    "COMPLETED": "Завершена",
+    "ARCHIVED": "В архиве"
 }
 
 const statusColor: Record<RequestStatus, [ClassValue, ClassValue]> = {
-    "DENIED": ["bg-red-200", "bg-red-300"],
     "CREATED": ["bg-cyan-200", "bg-cyan-300"],
     "WIP": ["bg-yellow-200", "bg-yellow-300"],
-    "COMPLETE": ["bg-green-200", "bg-green-300"],
+    "COMPLETED": ["bg-green-200", "bg-green-300"],
+    "ARCHIVED": ["bg-gray-500 text-white", "bg-gray-600 text-gray-100"]
 }
 
 const RequestTableHead = () => {
@@ -87,6 +87,7 @@ const RequestTableHead = () => {
                                                     name="status"
                                                     options={Object.entries(statuses)
                                                         .filter(value => !!value[1])
+                                                        .filter(value => user?.role === "ROLE_ADMIN" || value[1] !== "ARCHIVED")
                                                         .map(value => ({
                                                             value: parseInt(value[0]),
                                                             label: statusL10n[value[1] as RequestStatus]

@@ -50,10 +50,10 @@ export const defaultValues = {
 
 export const statuses: { [p: number]: RequestStatus | undefined } = {
     [-1]: undefined,
-    [1]: "DENIED",
-    [2]: "CREATED",
-    [3]: "WIP",
-    [4]: "COMPLETE"
+    [1]: "CREATED",
+    [2]: "WIP",
+    [3]: "COMPLETED",
+    [4]: "ARCHIVED"
 }
 
 export const RequestsTable: React.FC<RequestsProps> = ({filter}) => {

@@ -1,22 +1,21 @@
-import {commonKey} from "../../api";
 import api, {GenericErrorModel, RequestParams} from "../../../../api";
 import {useMutation, UseMutationOptions, useQuery} from "@tanstack/react-query";
 import {Comment, mapComment} from "../model";
 
-export const commentKeys = {
+export const commentsKeys = {
     comments: {
-        root: [...commonKey, 'comments'],
-        byCorrection: (correctionId: number) => [...commentKeys.comments.root, {correctionId}]
+        root: ['comments'],
+        byCorrection: (correctionId: number) => [...commentsKeys.comments.root, {correctionId}]
     },
 
     mutation: {
-        create: () => [...commentKeys.comments.root, 'create']
+        create: () => [...commentsKeys.comments.root, 'create']
     }
 }
 
 export const useComments = (correctionId: number, params?: RequestParams) =>
     useQuery<Comment[], GenericErrorModel, Comment[], unknown[]>(
-        commentKeys.comments.byCorrection(correctionId),
+        commentsKeys.comments.byCorrection(correctionId),
         async ({signal}) => {
             const response = await api.getComments({
                 correctionId
@@ -37,7 +36,7 @@ type UseCreateCommentOptions = Omit<UseCreateCommentMutation, 'mutationFn' | 'mu
 
 export const useCreateComment = (correctionId: number, options?: UseCreateCommentOptions) =>
     useMutation(
-        commentKeys.mutation.create(),
+        commentsKeys.mutation.create(),
         async (text: string) => {
             const response = await api.createComment({
                 correctionId,

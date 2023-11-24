@@ -2,7 +2,7 @@ import {Department, Institute} from "../../institutes/model";
 import {Correction} from "../../corrections/model";
 import {Lecturer} from "../../../admin/lecturers/model";
 
-export type RequestStatus = "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+export type RequestStatus = "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
 
 export type Request = {
     id: number;

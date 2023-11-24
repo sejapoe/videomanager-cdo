@@ -1,16 +1,11 @@
-import {userKey} from "../../api";
 import {useMutation, UseMutationOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
 import {FullRequest, RequestStatus} from "../../../common/requests/model";
-import {mapFullRequest} from "../../../common/requests/api";
+import {mapFullRequest, requestsKeys} from "../../../common/requests/api";
 
-export const requestKeys = {
-    requests: {
-        root: [...userKey, 'requests']
-    },
-
+export const userRequestsKeys = {
     mutation: {
-        updateStatus: (id: number) => [...requestKeys.requests.root, 'updateStatus', id]
+        updateStatus: (id: number) => [...requestsKeys.requests.root, 'updateStatus', id]
     }
 }
 
@@ -20,7 +15,7 @@ type UseUpdateRequestStatusOptions = Omit<UseUpdateRequestStatusMutation, 'mutat
 
 export const useUpdateRequestStatus = (requestId: number, options?: UseUpdateRequestStatusOptions) =>
     useMutation(
-        requestKeys.mutation.updateStatus(requestId),
+        userRequestsKeys.mutation.updateStatus(requestId),
         async (status: RequestStatus) => {
             const response = await api.updateRequestStatus({
                 id: requestId,
