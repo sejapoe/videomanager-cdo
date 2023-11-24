@@ -4,7 +4,6 @@ import com.querydsl.core.types.ExpressionUtils
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.Expressions
 import org.sejapoe.videomanager.dto.core.PageableReq
-import org.sejapoe.videomanager.dto.core.SortableReq
 import org.sejapoe.videomanager.model.QRequest
 import org.sejapoe.videomanager.model.RequestStatus
 import org.springframework.data.domain.PageRequest
@@ -20,9 +19,9 @@ data class FilterRequestReq(
         val status: RequestStatus?,
         override val sorting: String? = "id",
         override val direction: Sort.Direction? = Sort.Direction.ASC
-) : PageableReq, SortableReq {
+) : PageableReq {
 
-    fun toPredicate(): Predicate {
+    override fun toPredicate(): Predicate {
         val list = listOfNotNull(
                 user?.let {
                     QRequest.request.lecturer.id.eq(it)
@@ -40,7 +39,7 @@ data class FilterRequestReq(
         return ExpressionUtils.allOf(list) ?: Expressions.TRUE
     }
 
-    fun toPageable(): Pageable =
+    override fun toPageable(): Pageable =
             PageRequest.of(
                     page ?: 0,
                     size ?: 50,
