@@ -16,6 +16,6 @@ export const UserCorrections = ({request}: CorrectionsProps) => {
         {request.corrections.map(value => (
             <UserCorrection correction={value} key={value.id}/>
         ))}
-        {request.status !== "COMPLETE" && <NewCorrection requestId={request.id}/>}
+        {request.status !== "COMPLETED" && <NewCorrection requestId={request.id}/>}
     </div>
 }
