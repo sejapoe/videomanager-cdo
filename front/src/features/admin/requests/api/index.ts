@@ -1,8 +1,9 @@
 import {Request} from "../../../common/requests/model";
-import {ArchiveEntryResDto, CreateRequestReqDto, HttpResponse, RequestResDto} from "../../../../api/Api.ts";
+import {CreateRequestReqDto, HttpResponse, RequestResDto} from "../../../../api/Api.ts";
 import {useMutation, UseMutationOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
 import {requestsKeys} from "../../../common/requests/api";
+import {ArchiveEntry, mapArchiveEntry} from "../../archive/model";
 
 
 export function mapRequest(requestDto: RequestResDto): Request {
@@ -34,7 +35,7 @@ export const useCreateRequest = (options?: UseCreateRequestOptions) =>
     )
 
 type UseArchiveRequestMutation = UseMutationOptions<
-    HttpResponse<ArchiveEntryResDto>,
+    ArchiveEntry,
     GenericErrorModel,
     number
 >
@@ -44,8 +45,10 @@ type UseArchiveRequestOptions = Omit<UseArchiveRequestMutation, 'mutationFn' | '
 export const useArchiveRequest = (options?: UseArchiveRequestOptions) =>
     useMutation(
         adminRequestsKeys.mutation.archive(),
-        (id: number) => {
-            return api.archiveRequest(id)
+        async (id: number) => {
+            const response = await api.archiveRequest(id);
+
+            return mapArchiveEntry(response.data)
         },
         options
     )
