@@ -23,17 +23,14 @@ export const requestsKeys = {
 }
 
 export type RequestsFilter = {
-    /** @format int32 */
     page?: number;
-    /** @format int32 */
     size?: number;
-    /** @format int64 */
+
     user?: number;
-    /** @format int64 */
     institute?: number;
-    /** @format int64 */
     department?: number;
     status?: "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
+
     sorting?: string;
     direction?: "ASC" | "DESC";
 }

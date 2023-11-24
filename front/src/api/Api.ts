@@ -103,7 +103,7 @@ export interface RequestResDto {
   unreadCount: number;
 }
 
-export interface ArchiveEntryDtoDto {
+export interface ArchiveEntryResDto {
   /** @format int64 */
   id: number;
   name: string;
@@ -193,6 +193,18 @@ export interface ActivateUserReqDto {
   password: string;
 }
 
+export interface CreateArchiveEntryReqDto {
+  name: string;
+  /** @format int64 */
+  lecturerId: number;
+  /** @format int64 */
+  instituteId: number;
+  /** @format int64 */
+  departmentId: number;
+  linkToVideo: string;
+  linkToMoodle: string;
+}
+
 export interface UpdateCorrectionStatusReqDto {
   /** @format int64 */
   id: number;
@@ -205,14 +217,14 @@ export interface PageUserResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: UserResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -242,14 +254,33 @@ export interface PageRequestResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: RequestResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+  first?: boolean;
+  last?: boolean;
+  /** @format int32 */
+  numberOfElements?: number;
+  empty?: boolean;
+}
+
+export interface PageArchiveEntryResDto {
+  /** @format int32 */
+  totalPages?: number;
+  /** @format int64 */
+  totalElements?: number;
+  pageable?: PageableObjectDto;
+  /** @format int32 */
+  size?: number;
+  content?: ArchiveEntryResDto[];
+  /** @format int32 */
+  number?: number;
+  sort?: SortObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -597,7 +628,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     archiveRequest: (id: number, params: RequestParams = {}) =>
-        this.request<ArchiveEntryDtoDto, any>({
+        this.request<ArchiveEntryResDto, any>({
           path: `/api/requests/${id}/archive`,
           method: "POST",
           secure: true,
@@ -800,6 +831,57 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags archive-controller
+     * @name GetAllArchiveEntries
+     * @request GET:/api/archive
+     * @secure
+     */
+    getAllArchiveEntries: (
+        query?: {
+          /** @format int32 */
+          page?: number;
+          /** @format int32 */
+          size?: number;
+          /** @format int64 */
+          user?: number;
+          /** @format int64 */
+          institute?: number;
+          /** @format int64 */
+          department?: number;
+          sorting?: string;
+          direction?: "ASC" | "DESC";
+        },
+        params: RequestParams = {},
+    ) =>
+        this.request<PageArchiveEntryResDto, any>({
+          path: `/api/archive`,
+          method: "GET",
+          query: query,
+          secure: true,
+          ...params,
+        }),
+
+    /**
+     * No description
+     *
+     * @tags archive-controller
+     * @name CreateArchive
+     * @request POST:/api/archive
+     * @secure
+     */
+    createArchive: (data: CreateArchiveEntryReqDto, params: RequestParams = {}) =>
+        this.request<ArchiveEntryResDto, any>({
+          path: `/api/archive`,
+          method: "POST",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
+        }),
+
+    /**
+     * No description
+     *
      * @tags user-controller
      * @name GetUser
      * @request GET:/api/user
@@ -858,5 +940,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "GET",
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags archive-controller
+     * @name GetArchive
+     * @request GET:/api/archive/{id}
+     * @secure
+     */
+    getArchive: (id: number, params: RequestParams = {}) =>
+        this.request<ArchiveEntryResDto, any>({
+          path: `/api/archive/${id}`,
+          method: "GET",
+          secure: true,
+          ...params,
+        }),
   };
 }

@@ -5,7 +5,7 @@ import org.sejapoe.videomanager.dto.institute.InstituteRes
 import org.sejapoe.videomanager.dto.request.ShortRequestRes
 import org.sejapoe.videomanager.dto.user.UserRes
 
-data class ArchiveEntryDto(
+data class ArchiveEntryRes(
     val id: Long,
     val name: String,
     val lecturer: UserRes,
