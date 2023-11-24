@@ -24,7 +24,7 @@ export interface ProblemDetailDto {
 export interface UpdateRequestStatusReqDto {
   /** @format int64 */
   id: number;
-  newStatus: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+  newStatus: "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
 }
 
 export interface CorrectionResDto {
@@ -53,7 +53,7 @@ export interface FullRequestResDto {
   department: DepartmentResDto;
   linkToMoodle: string;
   linkToVideo: string;
-  status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+  status: "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
   corrections: CorrectionResDto[];
 }
 
@@ -98,91 +98,27 @@ export interface RequestResDto {
   department: DepartmentResDto;
   linkToMoodle: string;
   linkToVideo: string;
-  status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+  status: "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
   /** @format int32 */
   unreadCount: number;
 }
 
-export interface ArchiveEntryDto {
+export interface ArchiveEntryDtoDto {
+  /** @format int64 */
+  id: number;
   name: string;
-  lecturer: UserDto;
-  institute: InstituteDto;
-  department: DepartmentDto;
+  lecturer: UserResDto;
+  institute: InstituteResDto;
+  department: DepartmentResDto;
   linkToVideo: string;
   linkToMoodle: string;
-  request?: RequestDto;
-  /** @format int64 */
-  id: number;
+  request: ShortRequestResDto;
 }
 
-export interface CommentDto {
-  /** @format date-time */
-  timestamp: string;
-  author: UserDto;
-  correction: CorrectionDto;
-  text: string;
+export interface ShortRequestResDto {
   /** @format int64 */
   id: number;
-}
-
-export interface CorrectionDto {
-  /** @format int32 */
-  startTimeCode: number;
-  /** @format int32 */
-  endTimeCode: number;
-  request: RequestDto;
-  closed: boolean;
-  comments: CommentDto[];
-  /** @format int64 */
-  id: number;
-}
-
-export interface DepartmentDto {
   name: string;
-  institute: InstituteDto;
-  /** @format int64 */
-  id: number;
-}
-
-export interface GrantedAuthorityDto {
-  authority?: string;
-}
-
-export interface InstituteDto {
-  name: string;
-  /** @uniqueItems true */
-  departments: DepartmentDto[];
-  /** @format int64 */
-  id: number;
-}
-
-export interface RequestDto {
-  name: string;
-  lecturer: UserDto;
-  institute: InstituteDto;
-  department: DepartmentDto;
-  status: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
-  linkToMoodle: string;
-  linkToVideo: string;
-  corrections: CorrectionDto[];
-  /** @format int64 */
-  id: number;
-}
-
-export interface UserDto {
-  email: string;
-  password: string;
-  fullName: string;
-  role: "ROLE_USER" | "ROLE_ADMIN";
-  enabled: boolean;
-  /** @format int64 */
-  id: number;
-  isEnabled: boolean;
-  authorities: GrantedAuthorityDto[];
-  username: string;
-  isAccountNonLocked: boolean;
-  isCredentialsNonExpired: boolean;
-  isAccountNonExpired: boolean;
 }
 
 export interface CreateInstituteReqDto {
@@ -556,7 +492,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         institute?: number;
         /** @format int64 */
         department?: number;
-        status?: "DENIED" | "CREATED" | "WIP" | "COMPLETE";
+        status?: "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
         sorting?: string;
         direction?: "ASC" | "DESC";
       },
@@ -661,7 +597,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     archiveRequest: (id: number, params: RequestParams = {}) =>
-        this.request<ArchiveEntryDto, any>({
+        this.request<ArchiveEntryDtoDto, any>({
           path: `/api/requests/${id}/archive`,
           method: "POST",
           secure: true,

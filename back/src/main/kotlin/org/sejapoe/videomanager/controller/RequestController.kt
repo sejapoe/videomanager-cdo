@@ -6,6 +6,7 @@ import org.sejapoe.videomanager.dto.correction.CorrectionRes
 import org.sejapoe.videomanager.dto.request.CreateRequestReq
 import org.sejapoe.videomanager.dto.request.FilterRequestReq
 import org.sejapoe.videomanager.dto.request.UpdateRequestStatusReq
+import org.sejapoe.videomanager.mapper.ArchiveEntryMapper
 import org.sejapoe.videomanager.mapper.RequestMapper
 import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsAdmin
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.*
 class RequestController(
     private val requestService: RequestService,
     private val requestMapper: RequestMapper,
-    private val lastViewService: LastViewService
+    private val lastViewService: LastViewService, private val archiveEntryMapper: ArchiveEntryMapper
 ) {
     @IsAdmin
     @ResponseStatus(HttpStatus.CREATED)
@@ -85,5 +86,5 @@ class RequestController(
     @IsAdmin
     @PostMapping("/{id}/archive")
     fun archiveRequest(@PathVariable id: Long, @AuthenticationPrincipal user: User) =
-        requestService.archive(id, user)
+        requestService.archive(id, user).let(archiveEntryMapper::toDto)
 }

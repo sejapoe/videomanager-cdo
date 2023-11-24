@@ -54,7 +54,9 @@ class RequestService(
 
     fun getAll(requester: User, filterUserId: Long?, predicate: Predicate, pageable: Pageable): Page<Request> {
         if (requester.role == Role.ROLE_USER && requester.id != filterUserId) throw ForbiddenException("You cannot get other user's requests!")
-        return requestRepo.findAll(predicate, pageable)
+        return requestRepo.findAll(predicate.let {
+            if (requester.role == Role.ROLE_USER) QRequest.request.status.ne(RequestStatus.ARCHIVED).and(it) else it
+        }, pageable)
     }
 
     fun get(requester: User, id: Long): Request {
@@ -71,6 +73,8 @@ class RequestService(
 
     fun archive(id: Long, requester: User): ArchiveEntry {
         val request = get(requester, id)
+        request.status = RequestStatus.ARCHIVED
+        requestRepo.save(request)
         return archiveEntryService.createFromRequest(request)
     }
 
