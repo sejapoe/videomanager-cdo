@@ -1,0 +1,30 @@
+<institutes>
+    <institute>
+        <name>ИИТ</name>
+        <departments>
+            <department>ИППО</department>
+            <department>МОСИТ</department>
+            <department>ИТАЭ</department>
+            <department>ПМ</department>
+            <department>ВТ</department>
+        </departments>
+    </institute>
+    <institute>
+        <name>ИИИ</name>
+        <departments>
+            <department>АС</department>
+            <department>ПИ</department>
+            <department>ВМ</department>
+            <department>ОИ</department>
+        </departments>
+    </institute>
+    <institute>
+        <name>ИРИ</name>
+        <departments>
+            <department>ИГ</department>
+            <department>ГС</department>
+            <department>РСК</department>
+            <department>ТК</department>
+        </departments>
+    </institute>
+</institutes>

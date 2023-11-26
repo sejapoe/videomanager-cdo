@@ -14,7 +14,8 @@ class Institute(
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
-    val departments: Set<Department> = emptySet(),
+    @OrderBy("id asc")
+    var departments: Set<Department> = emptySet(),
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institutes_seq")
     @SequenceGenerator(name = "institutes_seq", sequenceName = "institutes_seq", allocationSize = 1)

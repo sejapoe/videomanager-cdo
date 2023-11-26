@@ -132,6 +132,15 @@ export interface InstituteWithDepartmentsResDto {
   departments: DepartmentResDto[];
 }
 
+export interface CreateInstituteWithDepartmentsDto {
+  name: string;
+  departments: string[];
+}
+
+export interface CreateInstitutesWithDepartmentsReqDto {
+  institutes: CreateInstituteWithDepartmentsDto[];
+}
+
 export interface CreateDepartmentReqDto {
   name: string;
   /** @format int64 */
@@ -672,12 +681,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags institute-controller
+     * @name CreateInstitutes
+     * @request POST:/api/institutes/with_departments
+     * @secure
+     */
+    createInstitutes: (data: CreateInstitutesWithDepartmentsReqDto, params: RequestParams = {}) =>
+        this.request<InstituteWithDepartmentsResDto[], any>({
+          path: `/api/institutes/with_departments`,
+          method: "POST",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
+        }),
+
+    /**
+     * No description
+     *
      * @tags department-controller
-     * @name GetAll
+     * @name GetAllDepartments
      * @request GET:/api/departments
      * @secure
      */
-    getAll: (params: RequestParams = {}) =>
+    getAllDepartments: (params: RequestParams = {}) =>
       this.request<DepartmentResDto[], any>({
         path: `/api/departments`,
         method: "GET",
@@ -689,11 +716,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags department-controller
-     * @name Create
+     * @name CreateDepartment
      * @request POST:/api/departments
      * @secure
      */
-    create: (data: CreateDepartmentReqDto, params: RequestParams = {}) =>
+    createDepartment: (data: CreateDepartmentReqDto, params: RequestParams = {}) =>
       this.request<DepartmentResDto, any>({
         path: `/api/departments`,
         method: "POST",

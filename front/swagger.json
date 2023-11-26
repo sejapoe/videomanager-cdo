@@ -386,12 +386,50 @@
         ]
       }
     },
+    "/api/institutes/with_departments": {
+      "post": {
+        "tags": [
+          "institute-controller"
+        ],
+        "operationId": "createInstitutes",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInstitutesWithDepartmentsReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InstituteWithDepartmentsRes"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/departments": {
       "get": {
         "tags": [
           "department-controller"
         ],
-        "operationId": "getAll",
+        "operationId": "getAllDepartments",
         "responses": {
           "200": {
             "description": "OK",
@@ -417,7 +455,7 @@
         "tags": [
           "department-controller"
         ],
-        "operationId": "create",
+        "operationId": "createDepartment",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1382,6 +1420,38 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/DepartmentRes"
+            }
+          }
+        }
+      },
+      "CreateInstituteWithDepartments": {
+        "required": [
+          "departments",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "departments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateInstitutesWithDepartmentsReq": {
+        "required": [
+          "institutes"
+        ],
+        "type": "object",
+        "properties": {
+          "institutes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateInstituteWithDepartments"
             }
           }
         }
