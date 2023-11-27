@@ -62,7 +62,7 @@ export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentF
             />
 
             <InputField
-                label="Название института"
+                label="Название кафедры"
                 registration={register("name")}
                 noAutocomplete
                 error={formState.errors["name"]}

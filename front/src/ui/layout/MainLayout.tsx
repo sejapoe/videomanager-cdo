@@ -63,7 +63,7 @@ const UserNavigation = () => {
                 <div>
                     <Menu.Button
                         className={clsx("whitespace-nowrap bg-gray-200 py-2 px-4 flex items-center rounded-full",
-                            "text-gray-500 text-lg",
+                            "text-gray-700 text-lg",
                             "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")}>
                         <FontAwesomeIcon icon={solid("user")}/><span
                         className="hidden md:block ml-2">{user.fullName}</span>
@@ -115,7 +115,7 @@ const AppNavigationItem = (nav: NavigationItem) => {
             "hover:border-indigo-500 hover:text-indigo-500",
             "active:bg-gray-300",
             isActive ? "border-indigo-500 text-indigo-500" : "border-transparent",
-            "space-x-2 px-3 py-1 text-lg text-gray-500"
+            "space-x-2 px-3 py-1 text-lg text-gray-700"
         )}
     >
         <FontAwesomeIcon icon={nav.icon}/>

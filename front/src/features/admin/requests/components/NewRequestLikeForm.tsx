@@ -80,7 +80,7 @@ export const NewRequestLikeForm = ({
                     })
                 }}
                 schema={schema}
-                className="w-1/3"
+                className="md:w-1/3"
             >
                 {({register, formState, watch, control, setValue}) => (
                     <>
