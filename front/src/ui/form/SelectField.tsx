@@ -13,7 +13,8 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
     className?: string;
     defaultValue?: string;
     placeholder?: string;
-    defaultBlank?: boolean
+    defaultBlank?: boolean;
+    defaultBlankText?: string;
     registration: Partial<UseFormRegisterReturn>
 };
 
@@ -25,7 +26,8 @@ export const SelectField = ({
                                 defaultValue,
                                 registration,
                                 placeholder,
-                                defaultBlank
+                                defaultBlank,
+                                defaultBlankText
                             }: SelectFieldProps) => {
     return (
         <FieldWrapper label={label} error={error}>
@@ -40,7 +42,8 @@ export const SelectField = ({
                 defaultValue={defaultBlank ? "" : defaultValue}
                 {...registration}
             >
-                {defaultBlank ? <option disabled value={""}> -- выберите из списка -- </option> : null}
+                {defaultBlank ?
+                    <option disabled value={""}>{defaultBlankText || " --выберите из списка -- "}</option> : null}
                 {options.map(({label, value}) => (
                     <option key={label?.toString()} value={value}>
                         {label}

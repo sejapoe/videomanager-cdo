@@ -132,6 +132,7 @@ export const NewRequestLikeForm = ({
 
                         <SelectField
                             defaultBlank
+                            defaultBlankText={!watch("institute_id") ? " -- выберите институт -- " : undefined}
                             options={
                                 institutes
                                     ?.find(v => v.id.toString() == watch("institute_id"))
