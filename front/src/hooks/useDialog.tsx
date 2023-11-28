@@ -3,7 +3,7 @@ import {DialogWrapper} from "../ui/dialog/DialogWrapper.tsx";
 
 type UseDialogReturn<TArgs, TOk> = {
     Dialog: (props: DialogProps<TArgs, TOk>) => React.ReactNode;
-    open: (args: TArgs, ok: (data: TOk) => void) => void;
+    open: (args: TArgs, ok?: (data: TOk) => void) => void;
 }
 
 type DialogChildrenProps<TArgs, TOk> = {
@@ -33,15 +33,16 @@ export const useDialog = <TArgs, TOk>({title}: UseDialogProps): UseDialogReturn<
 
     return {
         Dialog: (({children}) => (<DialogWrapper isOpen={open} setOpen={setOpen} title={title}>
-            {children({
+            {props.args && children({
                 close: () => setOpen(false),
                 ...props
             })}
         </DialogWrapper>)),
-        open: (args: TArgs, ok: (data: TOk) => void) => {
+        open: (args: TArgs, ok?: (data: TOk) => void) => {
             setProps({
                 args,
-                ok
+                ok: ok || (() => {
+                })
             })
             setOpen(true);
         }

@@ -295,6 +295,12 @@ export interface PageArchiveEntryResDto {
   empty?: boolean;
 }
 
+export interface DeleteInstituteReqDto {
+  /** @format int64 */
+  id: number;
+  departmentReplacement?: Record<string, number>;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -677,6 +683,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         type: ContentType.Json,
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags institute-controller
+     * @name DeleteInstitute
+     * @request DELETE:/api/institutes
+     * @secure
+     */
+    deleteInstitute: (data: DeleteInstituteReqDto, params: RequestParams = {}) =>
+        this.request<void, any>({
+          path: `/api/institutes`,
+          method: "DELETE",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
+        }),
 
     /**
      * No description

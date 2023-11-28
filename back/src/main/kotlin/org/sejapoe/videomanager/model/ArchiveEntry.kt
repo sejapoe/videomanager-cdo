@@ -14,11 +14,11 @@ class ArchiveEntry(
 
     @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "institute_id")
-    val institute: Institute,
+    var institute: Institute,
 
     @ManyToOne(cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
-    val department: Department,
+    var department: Department,
 
     @Column(name = "link_to_video")
     val linkToVideo: String,

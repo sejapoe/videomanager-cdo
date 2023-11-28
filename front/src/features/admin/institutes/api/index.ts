@@ -4,14 +4,17 @@ import {
     CreateDepartmentReqDto,
     CreateInstituteReqDto,
     CreateInstitutesWithDepartmentsReqDto,
+    DeleteInstituteReqDto,
     DepartmentResDto,
     InstituteWithDepartmentsResDto,
+    ProblemDetailDto,
 } from "../../../../api/Api.ts";
 import {institutesKeys} from "../../../common/institutes/api";
 
 export const adminInstitutesKeys = {
     mutation: {
         create: () => [...institutesKeys.institutes.root, 'create'],
+        delete: () => [...institutesKeys.institutes.root, 'delete'],
         createDepartment: () => [...institutesKeys.institutes.root, 'createDepartment'],
         createMultiple: () => [...institutesKeys.institutes.root, 'createMultiple'],
     }
@@ -64,6 +67,21 @@ export const useCreateInstitutes = (options?: UseCreateInstitutesOptions) =>
         adminInstitutesKeys.mutation.createMultiple(),
         (createInstitutes: CreateInstitutesWithDepartmentsReqDto) => {
             return api.createInstitutes(createInstitutes)
+        },
+        options
+    )
+
+type UseDeleteInstituteMutation = UseMutationOptions<HttpResponse<void>, HttpResponse<unknown, ProblemDetailDto & {
+    departmentIds: number[]
+}>, DeleteInstituteReqDto>
+
+type UseDeleteInstituteOptions = Omit<UseDeleteInstituteMutation, 'mutationFn' | 'mutationKey'>
+
+export const useDeleteInstitute = (options?: UseDeleteInstituteOptions) =>
+    useMutation(
+        adminInstitutesKeys.mutation.delete(),
+        (dto) => {
+            return api.deleteInstitute(dto);
         },
         options
     )

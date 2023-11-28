@@ -1,6 +1,6 @@
 import {useInstitutes} from "../../../common/institutes/api";
 import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
-import {InstituteWithDepartments} from "../../../common/institutes/model";
+import {Institute, InstituteWithDepartments} from "../../../common/institutes/model";
 import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
 import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
@@ -8,6 +8,8 @@ import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {NewInstituteForm} from "./NewInstituteForm.tsx";
 import {NewDepartmentForm} from "./NewDepartmentForm.tsx";
 import {UploadFileForm} from "./UploadFileForm.tsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {DeleteInstituteDialog} from "./DeleteInstituteDialog.tsx";
 
 type SingleInstituteProps = {
     institute: InstituteWithDepartments
@@ -16,11 +18,27 @@ type SingleInstituteProps = {
 
 
 const SingleInstitute = ({institute, onClickNew}: SingleInstituteProps) => {
+    const {Dialog, open} = useDialog<{ institute: Institute }, void>({title: "Удаление института"})
+
     return <div
         className="shadow bg-gray-200 border border-gray-300 flex flex-col items-center p-2 rounded-xl justify-between">
+        <Dialog>
+            {({ok, close}) =>
+                <DeleteInstituteDialog onSubmit={ok} close={close} institute={institute}/>
+            }
+        </Dialog>
+
         <div className="w-full text-center">
-            <div className="w-full border-b-2 border-b-gray-600 pb-1 mb-1">
+            <div className="w-full border-b-2 border-b-gray-600 pb-1 mb-1 relative">
                 <h1 className="text-3xl text-gray-900">{institute.name}</h1>
+                <div className="absolute top-0 right-0 space-x-2">
+                    <FontAwesomeIcon icon={solid("pen")}
+                                     className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"/>
+                    <FontAwesomeIcon icon={solid("trash")}
+                                     className="text-gray-400 transition-colors hover:text-red-600 cursor-pointer"
+                                     onClick={() => open({institute})}
+                    />
+                </div>
             </div>
 
             {institute.departments.map(department => (
@@ -88,8 +106,7 @@ const InstitutesContent = ({institutes}: InstitutesContentProps) => {
                 </Button>
                 <Button
                     startIcon={solid("plus")}
-                    onClick={() => openCreateInstitute({}, () => {
-                    })}>
+                    onClick={() => openCreateInstitute({})}>
                     Создать
                 </Button>
             </div>
@@ -97,8 +114,7 @@ const InstitutesContent = ({institutes}: InstitutesContentProps) => {
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
                 {institutes.map(institute => (
                     <SingleInstitute key={`institute-${institute.id}`} institute={institute} onClickNew={() => {
-                        openCreateDepartment(institute.id, () => {
-                        })
+                        openCreateDepartment(institute.id)
                     }}/>
                 ))}
             </div>
