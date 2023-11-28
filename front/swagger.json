@@ -509,6 +509,32 @@
             "bearerToken": []
           }
         ]
+      },
+      "delete": {
+        "tags": [
+          "department-controller"
+        ],
+        "operationId": "deleteDepartment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteDepartmentReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
       }
     },
     "/api/corrections": {
@@ -1881,6 +1907,22 @@
               "type": "integer",
               "format": "int64"
             }
+          }
+        }
+      },
+      "DeleteDepartmentReq": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "replacementId": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       }

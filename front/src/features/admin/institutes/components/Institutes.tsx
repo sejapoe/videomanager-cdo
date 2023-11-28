@@ -1,6 +1,6 @@
 import {useInstitutes} from "../../../common/institutes/api";
 import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
-import {Institute, InstituteWithDepartments} from "../../../common/institutes/model";
+import {Department, Institute, InstituteWithDepartments} from "../../../common/institutes/model";
 import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
 import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
@@ -9,24 +9,65 @@ import {NewInstituteForm} from "./NewInstituteForm.tsx";
 import {NewDepartmentForm} from "./NewDepartmentForm.tsx";
 import {UploadFileForm} from "./UploadFileForm.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {DeleteInstituteDialog} from "./DeleteInstituteDialog.tsx";
+import {DeleteInstituteForm} from "./DeleteInstituteForm.tsx";
+import {DeleteDepartmentForm} from "./DeleteDepartmentForm.tsx";
+
+type SingleDepartmentProps = {
+    department: Department
+}
+
+const SingleDepartment = ({department}: SingleDepartmentProps) => {
+    const {
+        Dialog: DeleteDepartmentDialog,
+        open: openDeleteDepartment
+    } = useDialog<{}, void>({title: "Удаление кафедры"})
+
+    return <p className="relative w-full text-gray-900 group hover:bg-gray-300 rounded py-1 transition-colors"
+              key={`department-${department.id}`}>
+        <DeleteDepartmentDialog>
+            {({ok, close}) => (
+                <DeleteDepartmentForm department={department} onSubmit={ok} close={close}/>
+            )}
+        </DeleteDepartmentDialog>
+
+        {department.name}
+        <div className="absolute top-1 right-2 space-x-2 hidden group-hover:block">
+            <FontAwesomeIcon icon={solid("pen")}
+                             className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"/>
+            <FontAwesomeIcon icon={solid("trash")}
+                             className="text-gray-400 transition-colors hover:text-red-600 cursor-pointer"
+                             onClick={() => openDeleteDepartment({})}
+            />
+        </div>
+    </p>
+}
 
 type SingleInstituteProps = {
     institute: InstituteWithDepartments
-    onClickNew: () => void
 }
 
+const SingleInstitute = ({institute}: SingleInstituteProps) => {
+    const {
+        Dialog: CreateDepartmentDialog,
+        open: openCreateDepartment
+    } = useDialog<number, void>({title: "Создание института"})
 
-const SingleInstitute = ({institute, onClickNew}: SingleInstituteProps) => {
-    const {Dialog, open} = useDialog<{ institute: Institute }, void>({title: "Удаление института"})
+    const {Dialog: DeleteInstituteDialog, open: openDeleteInstitute} = useDialog<{
+        institute: Institute
+    }, void>({title: "Удаление института"})
 
     return <div
         className="shadow bg-gray-200 border border-gray-300 flex flex-col items-center p-2 rounded-xl justify-between">
-        <Dialog>
-            {({ok, close}) =>
-                <DeleteInstituteDialog onSubmit={ok} close={close} institute={institute}/>
+        <CreateDepartmentDialog>
+            {({ok, close, args: id}) =>
+                <NewDepartmentForm instituteId={id} onSubmit={ok} close={close}/>
             }
-        </Dialog>
+        </CreateDepartmentDialog>
+        <DeleteInstituteDialog>
+            {({ok, close}) =>
+                <DeleteInstituteForm onSubmit={ok} close={close} institute={institute}/>
+            }
+        </DeleteInstituteDialog>
 
         <div className="w-full text-center">
             <div className="w-full border-b-2 border-b-gray-600 pb-1 mb-1 relative">
@@ -36,13 +77,13 @@ const SingleInstitute = ({institute, onClickNew}: SingleInstituteProps) => {
                                      className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"/>
                     <FontAwesomeIcon icon={solid("trash")}
                                      className="text-gray-400 transition-colors hover:text-red-600 cursor-pointer"
-                                     onClick={() => open({institute})}
+                                     onClick={() => openDeleteInstitute({institute})}
                     />
                 </div>
             </div>
 
             {institute.departments.map(department => (
-                <p className="text-gray-900" key={`department-${department.id}`}>{department.name}</p>
+                <SingleDepartment department={department}/>
             ))}
         </div>
 
@@ -51,7 +92,9 @@ const SingleInstitute = ({institute, onClickNew}: SingleInstituteProps) => {
             size="sm"
             variant="inverse"
             startIcon={solid("plus")}
-            onClick={onClickNew}
+            onClick={() => {
+                openCreateDepartment(institute.id)
+            }}
         >
             Создать
         </Button>
@@ -69,10 +112,6 @@ const InstitutesContent = ({institutes}: InstitutesContentProps) => {
         open: openCreateInstitute
     } = useDialog<{}, void>({title: "Создание института"})
 
-    const {
-        Dialog: CreateDepartmentDialog,
-        open: openCreateDepartment
-    } = useDialog<number, void>({title: "Создание института"})
 
     const {
         Dialog: UploadFileDialog,
@@ -85,11 +124,6 @@ const InstitutesContent = ({institutes}: InstitutesContentProps) => {
                 <NewInstituteForm onSubmit={ok} close={close}/>
             }
         </CreateInstituteDialog>
-        <CreateDepartmentDialog>
-            {({ok, close, args: id}) =>
-                <NewDepartmentForm instituteId={id} onSubmit={ok} close={close}/>
-            }
-        </CreateDepartmentDialog>
 
         <UploadFileDialog>
             {({ok, close}) => <UploadFileForm onSubmit={ok} close={close}/>}
@@ -113,9 +147,7 @@ const InstitutesContent = ({institutes}: InstitutesContentProps) => {
         </div>}>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
                 {institutes.map(institute => (
-                    <SingleInstitute key={`institute-${institute.id}`} institute={institute} onClickNew={() => {
-                        openCreateDepartment(institute.id)
-                    }}/>
+                    <SingleInstitute key={`institute-${institute.id}`} institute={institute}/>
                 ))}
             </div>
         </ContentLayout>

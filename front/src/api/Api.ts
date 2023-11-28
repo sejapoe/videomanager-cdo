@@ -301,6 +301,13 @@ export interface DeleteInstituteReqDto {
   departmentReplacement?: Record<string, number>;
 }
 
+export interface DeleteDepartmentReqDto {
+  /** @format int64 */
+  id: number;
+  /** @format int64 */
+  replacementId?: number;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -753,6 +760,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         type: ContentType.Json,
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @tags department-controller
+     * @name DeleteDepartment
+     * @request DELETE:/api/departments
+     * @secure
+     */
+    deleteDepartment: (data: DeleteDepartmentReqDto, params: RequestParams = {}) =>
+        this.request<void, any>({
+          path: `/api/departments`,
+          method: "DELETE",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
+        }),
 
     /**
      * No description
