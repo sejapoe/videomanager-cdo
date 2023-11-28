@@ -30,6 +30,10 @@ export const DeleteDepartmentForm = ({department, onSubmit, close}: DeleteDepart
                 Object.entries(data)
                     .find(v => v[0].startsWith("department_id_"))?.[1]
 
+            console.log({
+                id: department.id,
+                replacementId: replacement ? parseInt(replacement) : undefined
+            })
 
             mutate({
                 id: department.id,

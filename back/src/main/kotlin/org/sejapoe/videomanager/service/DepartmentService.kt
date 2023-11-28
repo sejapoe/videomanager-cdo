@@ -30,7 +30,7 @@ class DepartmentService(
         val linkedRequests = requestRepo.findAll(QRequest.request.department.id.eq(id))
         val linkedArchiveEntries = archiveEntryRepo.findAll(QArchiveEntry.archiveEntry.department.id.eq(id))
 
-        if (linkedRequests.any() && linkedArchiveEntries.any()) {
+        if (linkedRequests.any() || linkedArchiveEntries.any()) {
             if (replacementDepartment == null) {
                 throw ConflictException("Cascade error while trying delete department")
             }

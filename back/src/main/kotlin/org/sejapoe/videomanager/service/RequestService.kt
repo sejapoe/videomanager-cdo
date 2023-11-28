@@ -18,6 +18,7 @@ class RequestService(
     private val instituteService: InstituteService,
     private val departmentService: DepartmentService,
     private val archiveEntryService: ArchiveEntryService,
+    private val emailService: EmailService,
 ) {
     fun create(
         name: String,
@@ -46,7 +47,8 @@ class RequestService(
                 requestRepo::save
             )
 
-        // todo: notify lecturer
+        emailService.notify(request)
+
         return request
     }
 
