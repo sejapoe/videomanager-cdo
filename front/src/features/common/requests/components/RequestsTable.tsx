@@ -3,7 +3,6 @@ import React from "react";
 import {RequestsTableContent} from "./RequestsTableContent.tsx";
 import Pageable from "../../../../ui/table/Pageable.tsx";
 import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
-import Spinner from "../../../../ui/spinner";
 import {FormContextProvider} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
 import {m1u} from "../../../../utils/undefineds.ts";
@@ -21,9 +20,8 @@ const RequestsLoader: React.FC<RequestsProps> = ({filter}) => {
         : <div className="relative">
             <RequestsTableContent requests={requests}/>
             {isFetching &&
-                <div className="absolute rounded top-0 w-full h-full bg-gray-600/20 flex justify-center items-center">
-                    <Spinner/>
-                </div>}
+                <div className="absolute rounded top-0 w-full h-full cursor-wait"/>
+            }
         </div>
 }
 

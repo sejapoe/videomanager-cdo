@@ -4,7 +4,6 @@ import {z} from "zod";
 import Pageable from "../../../../ui/table/Pageable.tsx";
 import {LecturersFilter, useLecturers} from "../api";
 import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
-import Spinner from "../../../../ui/spinner";
 import {UsersTableContent} from "./UsersTableContent.tsx";
 
 type UsersLoaderProps = {
@@ -21,9 +20,8 @@ const UsersLoader = ({filter}: UsersLoaderProps) => {
         : <div className="relative">
             <UsersTableContent users={lecturers}/>
             {isFetching &&
-                <div className="absolute rounded top-0 w-full h-full bg-gray-600/20 flex justify-center items-center">
-                    <Spinner/>
-                </div>}
+                <div className="absolute rounded top-0 w-full h-full cursor-wait"/>
+            }
         </div>
 }
 
