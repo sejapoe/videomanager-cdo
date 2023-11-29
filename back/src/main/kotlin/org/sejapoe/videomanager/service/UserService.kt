@@ -25,12 +25,14 @@ class UserService(
     private val jwtService: JwtService,
     private val authenticationManager: AuthenticationManager,
     private val passwordEncoder: PasswordEncoder,
-    private val userActivationRepo: UserActivationRepo
+    private val userActivationRepo: UserActivationRepo,
 ) {
-
-    fun login(email: String, password: String): Pair<User, String> {
+    fun login(
+        email: String,
+        password: String,
+    ): Pair<User, String> {
         authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(email, password)
+            UsernamePasswordAuthenticationToken(email, password),
         )
 
         val user = userRepo.findByEmail(email) ?: throw EmailDoesntExistsLoginException()
@@ -38,7 +40,10 @@ class UserService(
         return user to jwtService.generateToken(user)
     }
 
-    fun createLecturer(name: String, email: String): User {
+    fun createLecturer(
+        name: String,
+        email: String,
+    ): User {
         val user = User(email, "", name, Role.ROLE_USER, false)
 
         if (userRepo.findByEmail(user.email) != null) {
@@ -50,7 +55,10 @@ class UserService(
         return user
     }
 
-    fun createAdmin(name: String, email: String) {
+    fun createAdmin(
+        name: String,
+        email: String,
+    ) {
         if (userRepo.exists(QUser.user.role.eq(Role.ROLE_ADMIN))) return // Admin already exists
         val user = User(email, "", name, Role.ROLE_ADMIN, false)
         val activator = UserActivation(UUID.randomUUID(), user)
@@ -61,7 +69,11 @@ class UserService(
         userActivationRepo.findByUuid(uuid) ?: throw NotFoundException("Неизвестный код активации")
 
     fun getUserByActivationUuid(uuid: UUID) = getUserActivation(uuid).user
-    fun activateLecturer(uuid: UUID, password: String): Pair<User, String> {
+
+    fun activateLecturer(
+        uuid: UUID,
+        password: String,
+    ): Pair<User, String> {
         val activator = getUserActivation(uuid)
         activator.user.password = passwordEncoder.encode(password)
         activator.user.enabled = true
@@ -70,7 +82,10 @@ class UserService(
         return user to jwtService.generateToken(user)
     }
 
-    fun getLecturers(predicate: Predicate, pageable: Pageable): Page<User> {
+    fun getLecturers(
+        predicate: Predicate,
+        pageable: Pageable,
+    ): Page<User> {
         return userRepo.findAll(QUser.user.role.eq(Role.ROLE_USER).and(predicate), pageable)
     }
 

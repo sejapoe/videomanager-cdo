@@ -8,5 +8,5 @@ data class CreateCorrectionReq(
     @Positive val requestId: Long,
     @NotBlank val comment: String,
     @PositiveOrZero val startTimeCode: Int,
-    @Positive val endTimeCode: Int
+    @Positive val endTimeCode: Int,
 )

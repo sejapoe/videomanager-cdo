@@ -26,12 +26,16 @@ class RequestService(
         instituteId: Long,
         departmentId: Long,
         linkToMoodle: String,
-        linkToVideo: String
+        linkToVideo: String,
     ): Request {
         val lecturer = userService.get(lecturerId)
         val institute = instituteService.get(instituteId)
         val department = departmentService.get(departmentId)
-        if (department.institute != institute) throw ConflictException("Кафедра \"${department.name}\" не принадлежит институту \"${institute.name}\"")
+        if (department.institute != institute) {
+            throw ConflictException(
+                "Кафедра \"${department.name}\" не принадлежит институту \"${institute.name}\"",
+            )
+        }
 
         val request =
             Request(
@@ -42,9 +46,9 @@ class RequestService(
                 RequestStatus.CREATED,
                 linkToMoodle,
                 linkToVideo,
-                emptyList()
+                emptyList(),
             ).let(
-                requestRepo::save
+                requestRepo::save,
             )
 
         emailService.notify(request)
@@ -52,32 +56,53 @@ class RequestService(
         return request
     }
 
-    fun getAll(requester: User, filterUserId: List<Long>, predicate: Predicate, pageable: Pageable): Page<Request> {
+    fun getAll(
+        requester: User,
+        filterUserId: List<Long>,
+        predicate: Predicate,
+        pageable: Pageable,
+    ): Page<Request> {
         if (requester.role == Role.ROLE_USER && (filterUserId.size != 1 || requester.id != filterUserId.first())) {
             throw ForbiddenException("You cannot get other user's requests!")
         }
-        return requestRepo.findAll(predicate.let {
-            if (requester.role == Role.ROLE_USER) QRequest.request.status.ne(RequestStatus.ARCHIVED).and(it) else it
-        }, pageable)
+        return requestRepo.findAll(
+            predicate.let {
+                if (requester.role == Role.ROLE_USER) QRequest.request.status.ne(RequestStatus.ARCHIVED).and(it) else it
+            },
+            pageable,
+        )
     }
 
-    fun get(requester: User, id: Long): Request {
+    fun get(
+        requester: User,
+        id: Long,
+    ): Request {
         val request = requestRepo.findById(id).getOrNull() ?: throw NotFoundException("Request with $id is not found")
-        if (requester.role == Role.ROLE_USER && requester.id != request.lecturer.id) throw ForbiddenException("You cannot get other user's requests!")
+        if (requester.role == Role.ROLE_USER && requester.id != request.lecturer.id) {
+            throw ForbiddenException(
+                "You cannot get other user's requests!",
+            )
+        }
         return request
     }
 
-    fun updateStatus(id: Long, newStatus: RequestStatus, requester: User): Request {
+    fun updateStatus(
+        id: Long,
+        newStatus: RequestStatus,
+        requester: User,
+    ): Request {
         val request = get(requester, id)
         request.status = newStatus
         return requestRepo.save(request)
     }
 
-    fun archive(id: Long, requester: User): ArchiveEntry {
+    fun archive(
+        id: Long,
+        requester: User,
+    ): ArchiveEntry {
         val request = get(requester, id)
         request.status = RequestStatus.ARCHIVED
         requestRepo.save(request)
         return archiveEntryService.createFromRequest(request)
     }
-
 }

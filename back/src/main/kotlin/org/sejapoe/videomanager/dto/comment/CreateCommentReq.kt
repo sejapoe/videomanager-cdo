@@ -7,5 +7,5 @@ data class CreateCommentReq(
     @NotBlank
     val text: String,
     @Positive
-    val correctionId: Long
+    val correctionId: Long,
 )

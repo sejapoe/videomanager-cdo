@@ -7,7 +7,7 @@ import org.sejapoe.videomanager.model.ArchiveEntry
 
 @Mapper(
     componentModel = MappingConstants.ComponentModel.SPRING,
-    uses = [UserMapper::class, InstituteMapper::class, DepartmentMapper::class, RequestMapper::class]
+    uses = [UserMapper::class, InstituteMapper::class, DepartmentMapper::class, RequestMapper::class],
 )
 interface ArchiveEntryMapper {
     fun toDto(archiveEntry: ArchiveEntry): ArchiveEntryRes

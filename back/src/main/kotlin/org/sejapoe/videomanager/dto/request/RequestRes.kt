@@ -14,5 +14,5 @@ data class RequestRes(
     val linkToMoodle: String,
     val linkToVideo: String,
     val status: RequestStatus,
-    val unreadCount: Int = 0
+    val unreadCount: Int = 0,
 )

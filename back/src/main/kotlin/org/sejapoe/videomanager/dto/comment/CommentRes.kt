@@ -8,5 +8,5 @@ data class CommentRes(
     val author: UserRes,
     val text: String,
     val isClosed: Boolean,
-    val id: Long
+    val id: Long,
 )

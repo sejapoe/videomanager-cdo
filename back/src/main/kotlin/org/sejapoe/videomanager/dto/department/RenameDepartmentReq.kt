@@ -4,5 +4,5 @@ import jakarta.validation.constraints.NotBlank
 
 data class RenameDepartmentReq(
     val id: Long,
-    @NotBlank val name: String
+    @NotBlank val name: String,
 )

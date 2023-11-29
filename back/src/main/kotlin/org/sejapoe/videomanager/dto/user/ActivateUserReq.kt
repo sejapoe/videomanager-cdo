@@ -7,5 +7,5 @@ import java.util.*
 data class ActivateUserReq(
     val uuid: UUID,
     @NotBlank @Min(8)
-    val password: String
+    val password: String,
 )

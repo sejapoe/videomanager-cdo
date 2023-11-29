@@ -38,15 +38,17 @@ class InstituteService(
 
     @Transactional
     fun create(names: List<CreateInstituteWithDepartments>): List<Institute> {
-        val institutes = names.map {
-            Institute(
-                it.name,
-            ).apply {
-                this.departments = it.departments.map { name ->
-                    Department(name, this)
-                }.toSet()
+        val institutes =
+            names.map {
+                Institute(
+                    it.name,
+                ).apply {
+                    this.departments =
+                        it.departments.map { name ->
+                            Department(name, this)
+                        }.toSet()
+                }
             }
-        }
 
         institutes.forEach { checkDuplicate(it, it.name) }
 
@@ -54,14 +56,18 @@ class InstituteService(
     }
 
     @Transactional
-    fun delete(id: Long, departmentReplacement: Map<Long, Long>) {
+    fun delete(
+        id: Long,
+        departmentReplacement: Map<Long, Long>,
+    ) {
         val institute = get(id)
 
-        val departmentReplacements = departmentReplacement.mapValues {
-            departmentRepo.findById(it.value).orElseThrow {
-                NotFoundException("Кафедра с ID ${it.value} не найдена")
+        val departmentReplacements =
+            departmentReplacement.mapValues {
+                departmentRepo.findById(it.value).orElseThrow {
+                    NotFoundException("Кафедра с ID ${it.value} не найдена")
+                }
             }
-        }
 
         val departmentIds = institute.departments.map { it.id }
 
@@ -72,9 +78,9 @@ class InstituteService(
         if (isLinkedRequests || isLinkedArchiveEntries) {
             throw InstituteDeletionCascadeException(
                 departmentIds.filter {
-                    requestRepo.exists(QRequest.request.department.id.eq(it))
-                            || archiveEntryRepo.exists(QArchiveEntry.archiveEntry.department.id.eq(it))
-                }
+                    requestRepo.exists(QRequest.request.department.id.eq(it)) ||
+                            archiveEntryRepo.exists(QArchiveEntry.archiveEntry.department.id.eq(it))
+                },
             )
         }
 
@@ -91,7 +97,10 @@ class InstituteService(
         instituteRepo.deleteById(id)
     }
 
-    fun rename(id: Long, name: String): Institute {
+    fun rename(
+        id: Long,
+        name: String,
+    ): Institute {
         val institute = get(id)
 
         checkDuplicate(institute, name)
@@ -100,7 +109,10 @@ class InstituteService(
         return instituteRepo.save(institute)
     }
 
-    private fun checkDuplicate(institute: Institute, name: String) {
+    private fun checkDuplicate(
+        institute: Institute,
+        name: String,
+    ) {
         val isDuplicate = getAll().any { it.name == name && it.id != institute.id }
         if (isDuplicate) {
             throw ConflictException("Институт с именем \"${name}\" уже существует")

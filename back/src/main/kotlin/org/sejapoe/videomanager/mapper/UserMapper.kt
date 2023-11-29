@@ -11,5 +11,8 @@ interface UserMapper {
     fun toUserRes(user: User): UserRes
 
     @Mapping(target = "token", source = "token")
-    fun toTokenUserRes(user: User, token: String): TokenUserRes
+    fun toTokenUserRes(
+        user: User,
+        token: String,
+    ): TokenUserRes
 }

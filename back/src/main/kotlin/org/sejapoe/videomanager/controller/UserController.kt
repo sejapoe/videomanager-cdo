@@ -20,17 +20,22 @@ class UserController(
 ) {
     @IsUser
     @GetMapping("/user")
-    fun getUser(@AuthenticationPrincipal user: User) = userMapper.toUserRes(user)
+    fun getUser(
+        @AuthenticationPrincipal user: User,
+    ) = userMapper.toUserRes(user)
 
     @IsAdmin
     @PostMapping("/users")
-    fun createLecturer(@RequestBody createLecturerReq: CreateLecturerReq) =
-        userService.createLecturer(createLecturerReq.name, createLecturerReq.email).let(userMapper::toUserRes)
+    fun createLecturer(
+        @RequestBody createLecturerReq: CreateLecturerReq,
+    ) = userService.createLecturer(createLecturerReq.name, createLecturerReq.email).let(userMapper::toUserRes)
 
     @IsAdmin
     @GetMapping("/users")
-    fun getLecturers(@ParameterObject @Valid filterUserReq: FilterUserReq) = userService.getLecturers(
-            filterUserReq.toPredicate(),
-            filterUserReq.toPageable()
+    fun getLecturers(
+        @ParameterObject @Valid filterUserReq: FilterUserReq,
+    ) = userService.getLecturers(
+        filterUserReq.toPredicate(),
+        filterUserReq.toPageable(),
     ).map(userMapper::toUserRes)
 }

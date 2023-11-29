@@ -12,12 +12,17 @@ import org.springframework.stereotype.Service
 
 @Service
 class DepartmentService(
-    private val instituteService: InstituteService, private val departmentRepo: DepartmentRepo,
-    private val requestRepo: RequestRepo, private val archiveEntryRepo: ArchiveEntryRepo
+    private val instituteService: InstituteService,
+    private val departmentRepo: DepartmentRepo,
+    private val requestRepo: RequestRepo,
+    private val archiveEntryRepo: ArchiveEntryRepo,
 ) {
     fun getAll(): List<Department> = departmentRepo.findAll()
 
-    fun create(name: String, instituteId: Long): Department {
+    fun create(
+        name: String,
+        instituteId: Long,
+    ): Department {
         val department = Department(name, instituteService.get(instituteId))
 
         checkDuplicate(department, name)
@@ -28,7 +33,10 @@ class DepartmentService(
     fun get(id: Long): Department =
         departmentRepo.findById(id).orElseThrow { NotFoundException("Кафедра с ID $id не найдена") }
 
-    fun delete(id: Long, replacementId: Long?) {
+    fun delete(
+        id: Long,
+        replacementId: Long?,
+    ) {
         val department = get(id)
         val replacementDepartment = replacementId?.let(::get)
 
@@ -54,7 +62,10 @@ class DepartmentService(
         departmentRepo.delete(department)
     }
 
-    fun rename(id: Long, name: String): Department {
+    fun rename(
+        id: Long,
+        name: String,
+    ): Department {
         val department = get(id)
 
         checkDuplicate(department, name)
@@ -63,7 +74,10 @@ class DepartmentService(
         return departmentRepo.save(department)
     }
 
-    private fun checkDuplicate(department: Department, name: String) {
+    private fun checkDuplicate(
+        department: Department,
+        name: String,
+    ) {
         val isDuplicate = department.institute.departments.any { it.name == name && it.id != department.id }
         if (isDuplicate) {
             throw ConflictException("Кафедра с именем \"${name}\" уже существует в институте \"${department.institute.name}\"")

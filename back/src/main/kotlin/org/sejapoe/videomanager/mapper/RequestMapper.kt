@@ -10,7 +10,7 @@ import org.sejapoe.videomanager.model.Request
 @Mapper(
     componentModel = "spring",
     uses = [InstituteMapper::class, DepartmentMapper::class, UserMapper::class, CorrectionMapper::class],
-    injectionStrategy = InjectionStrategy.CONSTRUCTOR
+    injectionStrategy = InjectionStrategy.CONSTRUCTOR,
 )
 interface RequestMapper {
     fun toRequestRes(request: Request): RequestRes

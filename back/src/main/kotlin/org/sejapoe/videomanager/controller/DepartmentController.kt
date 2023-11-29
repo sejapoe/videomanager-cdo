@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/departments")
 class DepartmentController(
     private val departmentService: DepartmentService,
-    private val departmentMapper: DepartmentMapper
+    private val departmentMapper: DepartmentMapper,
 ) {
     @IsUser
     @GetMapping
@@ -22,18 +22,21 @@ class DepartmentController(
 
     @IsAdmin
     @PostMapping
-    fun createDepartment(@RequestBody @Valid createDepartmentReq: CreateDepartmentReq) =
-        departmentService.create(createDepartmentReq.name, createDepartmentReq.instituteId)
-            .let(departmentMapper::toDepartmentRes)
+    fun createDepartment(
+        @RequestBody @Valid createDepartmentReq: CreateDepartmentReq,
+    ) = departmentService.create(createDepartmentReq.name, createDepartmentReq.instituteId)
+        .let(departmentMapper::toDepartmentRes)
 
     @IsAdmin
     @DeleteMapping
-    fun deleteDepartment(@RequestBody @Valid deleteDepartmentReq: DeleteDepartmentReq) =
-        departmentService.delete(deleteDepartmentReq.id, deleteDepartmentReq.replacementId)
+    fun deleteDepartment(
+        @RequestBody @Valid deleteDepartmentReq: DeleteDepartmentReq,
+    ) = departmentService.delete(deleteDepartmentReq.id, deleteDepartmentReq.replacementId)
 
     @IsAdmin
     @PatchMapping
-    fun renameDepartment(@RequestBody @Valid renameDepartmentReq: RenameDepartmentReq) =
-        departmentService.rename(renameDepartmentReq.id, renameDepartmentReq.name)
-            .let(departmentMapper::toDepartmentRes)
+    fun renameDepartment(
+        @RequestBody @Valid renameDepartmentReq: RenameDepartmentReq,
+    ) = departmentService.rename(renameDepartmentReq.id, renameDepartmentReq.name)
+        .let(departmentMapper::toDepartmentRes)
 }

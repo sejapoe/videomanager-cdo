@@ -9,6 +9,8 @@ interface PageableReq {
     val size: Int?
     val sorting: String?
     val direction: Sort.Direction?
+
     fun toPredicate(): Predicate
+
     fun toPageable(): Pageable
 }

@@ -7,5 +7,5 @@ data class TokenUserRes(
     val email: String,
     val fullName: String,
     val role: Role,
-    val token: String
+    val token: String,
 )

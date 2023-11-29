@@ -19,35 +19,31 @@ data class FilterRequestReq(
     val department: List<Long>?,
     val status: List<RequestStatus>?,
     override val sorting: String? = "id",
-    override val direction: Sort.Direction? = Sort.Direction.ASC
+    override val direction: Sort.Direction? = Sort.Direction.ASC,
 ) : PageableReq {
-
     override fun toPredicate(): Predicate {
-        val list = listOfNotNull(
-            name?.let {
-                QRequest.request.name.likeIgnoreCase("%$name%")
-            },
-
-            user?.takeIf { it.isNotEmpty() }
-                ?.let {
-                    QRequest.request.lecturer.id.`in`(it)
+        val list =
+            listOfNotNull(
+                name?.let {
+                    QRequest.request.name.likeIgnoreCase("%$name%")
                 },
-
-            institute?.takeIf { it.isNotEmpty() }
-                ?.let {
-                    QRequest.request.institute.id.`in`(it)
-                },
-
-            department?.takeIf { it.isNotEmpty() }
-                ?.let {
-                    QRequest.request.department.id.`in`(it)
-                },
-
-            status?.takeIf { it.isNotEmpty() }
-                ?.let {
-                    QRequest.request.status.`in`(it)
-                }
-        )
+                user?.takeIf { it.isNotEmpty() }
+                    ?.let {
+                        QRequest.request.lecturer.id.`in`(it)
+                    },
+                institute?.takeIf { it.isNotEmpty() }
+                    ?.let {
+                        QRequest.request.institute.id.`in`(it)
+                    },
+                department?.takeIf { it.isNotEmpty() }
+                    ?.let {
+                        QRequest.request.department.id.`in`(it)
+                    },
+                status?.takeIf { it.isNotEmpty() }
+                    ?.let {
+                        QRequest.request.status.`in`(it)
+                    },
+            )
 
         return ExpressionUtils.allOf(list) ?: Expressions.TRUE
     }
@@ -58,7 +54,7 @@ data class FilterRequestReq(
             size ?: 50,
             Sort.by(
                 direction ?: Sort.Direction.ASC,
-                sorting ?: "id"
-            )
+                sorting ?: "id",
+            ),
         )
 }

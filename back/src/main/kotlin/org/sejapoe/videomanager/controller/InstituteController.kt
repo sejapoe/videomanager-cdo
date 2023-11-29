@@ -20,29 +20,31 @@ class InstituteController(
 ) {
     @IsUser
     @GetMapping
-    fun getAllInstitutes() =
-        instituteService.getAll().map(instituteMapper::toInstituteWithDepartmentsRes)
-
+    fun getAllInstitutes() = instituteService.getAll().map(instituteMapper::toInstituteWithDepartmentsRes)
 
     @IsAdmin
     @PostMapping
-    fun createInstitute(@RequestBody @Valid createInstituteReq: CreateInstituteReq) =
-        instituteService.create(createInstituteReq.name).let(instituteMapper::toInstituteWithDepartmentsRes)
+    fun createInstitute(
+        @RequestBody @Valid createInstituteReq: CreateInstituteReq,
+    ) = instituteService.create(createInstituteReq.name).let(instituteMapper::toInstituteWithDepartmentsRes)
 
     @IsAdmin
     @PostMapping("/with_departments")
-    fun createInstitutes(@RequestBody @Valid createInstitutesReq: CreateInstitutesWithDepartmentsReq) =
-        instituteService.create(createInstitutesReq.institutes).map(instituteMapper::toInstituteWithDepartmentsRes)
+    fun createInstitutes(
+        @RequestBody @Valid createInstitutesReq: CreateInstitutesWithDepartmentsReq,
+    ) = instituteService.create(createInstitutesReq.institutes).map(instituteMapper::toInstituteWithDepartmentsRes)
 
     @IsAdmin
     @DeleteMapping
-    fun deleteInstitute(@RequestBody @Valid deleteInstituteReq: DeleteInstituteReq) =
-        instituteService.delete(deleteInstituteReq.id, deleteInstituteReq.departmentReplacement ?: mapOf())
+    fun deleteInstitute(
+        @RequestBody @Valid deleteInstituteReq: DeleteInstituteReq,
+    ) = instituteService.delete(deleteInstituteReq.id, deleteInstituteReq.departmentReplacement ?: mapOf())
 
     @IsAdmin
     @PatchMapping
-    fun renameInstitute(@RequestBody @Valid renameInstituteReq: RenameInstituteReq) =
-        instituteService.rename(renameInstituteReq.id, renameInstituteReq.name).let(instituteMapper::toInstituteRes)
+    fun renameInstitute(
+        @RequestBody @Valid renameInstituteReq: RenameInstituteReq,
+    ) = instituteService.rename(renameInstituteReq.id, renameInstituteReq.name).let(instituteMapper::toInstituteRes)
 
     @ExceptionHandler(InstituteDeletionCascadeException::class)
     fun handleInstituteDeletionCascade(e: InstituteDeletionCascadeException) =

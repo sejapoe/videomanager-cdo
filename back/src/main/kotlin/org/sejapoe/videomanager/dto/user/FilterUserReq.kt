@@ -16,23 +16,22 @@ data class FilterUserReq(
     val email: String?,
     val enabled: List<Boolean>?,
     override val sorting: String? = "id",
-    override val direction: Sort.Direction? = Sort.Direction.ASC
+    override val direction: Sort.Direction? = Sort.Direction.ASC,
 ) : PageableReq {
     override fun toPredicate(): Predicate {
-        val list = listOfNotNull(
-            name?.let {
-                QUser.user.fullName.likeIgnoreCase("%$name%")
-            },
-
-            email?.let {
-                QUser.user.email.likeIgnoreCase("%$name%")
-            },
-
-            enabled?.takeIf { it.isNotEmpty() }
-                ?.let {
-                    QUser.user.enabled.`in`(it)
-                }
-        )
+        val list =
+            listOfNotNull(
+                name?.let {
+                    QUser.user.fullName.likeIgnoreCase("%$name%")
+                },
+                email?.let {
+                    QUser.user.email.likeIgnoreCase("%$name%")
+                },
+                enabled?.takeIf { it.isNotEmpty() }
+                    ?.let {
+                        QUser.user.enabled.`in`(it)
+                    },
+            )
         return ExpressionUtils.allOf(list) ?: Expressions.TRUE
     }
 
@@ -42,7 +41,7 @@ data class FilterUserReq(
             size ?: 50,
             Sort.by(
                 direction ?: Sort.Direction.ASC,
-                sorting ?: "id"
-            )
+                sorting ?: "id",
+            ),
         )
 }

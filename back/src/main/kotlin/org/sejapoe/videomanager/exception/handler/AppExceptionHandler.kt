@@ -8,6 +8,5 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 class AppExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(BaseException::class)
-    fun handleHttpClientErrorException(exception: BaseException) =
-        exception.toProblemDetail()
+    fun handleHttpClientErrorException(exception: BaseException) = exception.toProblemDetail()
 }

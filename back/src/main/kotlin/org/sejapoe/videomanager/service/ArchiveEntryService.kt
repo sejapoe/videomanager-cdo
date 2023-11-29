@@ -15,31 +15,35 @@ class ArchiveEntryService(
     private val archiveEntryRepo: ArchiveEntryRepo,
     private val userService: UserService,
     private val instituteService: InstituteService,
-    private val departmentService: DepartmentService
+    private val departmentService: DepartmentService,
 ) {
     fun get(id: Long): ArchiveEntry =
         archiveEntryRepo.findById(id).orElseThrow { NotFoundException("Архивная запись с ID $id не найдена") }
 
-    fun createFromRequest(request: Request) = ArchiveEntry(
-        request.name,
-        request.lecturer,
-        request.institute,
-        request.department,
-        request.linkToVideo,
-        request.linkToMoodle,
-        request
-    ).let(archiveEntryRepo::save)
+    fun createFromRequest(request: Request) =
+        ArchiveEntry(
+            request.name,
+            request.lecturer,
+            request.institute,
+            request.department,
+            request.linkToVideo,
+            request.linkToMoodle,
+            request,
+        ).let(archiveEntryRepo::save)
 
-    fun create(createArchiveEntryReq: CreateArchiveEntryReq) = ArchiveEntry(
-        createArchiveEntryReq.name,
-        userService.get(createArchiveEntryReq.lecturerId),
-        instituteService.get(createArchiveEntryReq.instituteId),
-        departmentService.get(createArchiveEntryReq.departmentId),
-        createArchiveEntryReq.linkToVideo,
-        createArchiveEntryReq.linkToMoodle,
-        null
-    ).let(archiveEntryRepo::save)
+    fun create(createArchiveEntryReq: CreateArchiveEntryReq) =
+        ArchiveEntry(
+            createArchiveEntryReq.name,
+            userService.get(createArchiveEntryReq.lecturerId),
+            instituteService.get(createArchiveEntryReq.instituteId),
+            departmentService.get(createArchiveEntryReq.departmentId),
+            createArchiveEntryReq.linkToVideo,
+            createArchiveEntryReq.linkToMoodle,
+            null,
+        ).let(archiveEntryRepo::save)
 
-    fun getAll(predicate: Predicate, pageable: Pageable): Page<ArchiveEntry> =
-        archiveEntryRepo.findAll(predicate, pageable)
+    fun getAll(
+        predicate: Predicate,
+        pageable: Pageable,
+    ): Page<ArchiveEntry> = archiveEntryRepo.findAll(predicate, pageable)
 }

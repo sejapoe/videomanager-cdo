@@ -14,21 +14,25 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/archive")
 class ArchiveController(
     private val archiveEntryService: ArchiveEntryService,
-    private val archiveEntryMapper: ArchiveEntryMapper
+    private val archiveEntryMapper: ArchiveEntryMapper,
 ) {
     @IsAdmin
     @GetMapping("/{id}")
-    fun getArchive(@PathVariable id: Long): ArchiveEntryRes =
-        archiveEntryService.get(id).let(archiveEntryMapper::toDto)
+    fun getArchive(
+        @PathVariable id: Long,
+    ): ArchiveEntryRes = archiveEntryService.get(id).let(archiveEntryMapper::toDto)
 
     @IsAdmin
     @PostMapping
-    fun createArchive(@RequestBody createArchiveEntryReq: CreateArchiveEntryReq): ArchiveEntryRes =
-        archiveEntryService.create(createArchiveEntryReq).let(archiveEntryMapper::toDto)
+    fun createArchive(
+        @RequestBody createArchiveEntryReq: CreateArchiveEntryReq,
+    ): ArchiveEntryRes = archiveEntryService.create(createArchiveEntryReq).let(archiveEntryMapper::toDto)
 
     @IsAdmin
     @GetMapping
-    fun getAllArchiveEntries(@ParameterObject filterArchiveReq: FilterArchiveReq): Page<ArchiveEntryRes> =
+    fun getAllArchiveEntries(
+        @ParameterObject filterArchiveReq: FilterArchiveReq,
+    ): Page<ArchiveEntryRes> =
         archiveEntryService
             .getAll(filterArchiveReq.toPredicate(), filterArchiveReq.toPageable())
             .map(archiveEntryMapper::toDto)

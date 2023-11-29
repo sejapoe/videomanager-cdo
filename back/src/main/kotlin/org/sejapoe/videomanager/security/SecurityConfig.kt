@@ -25,38 +25,37 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig(
     @Value("\${spring.security.cors.url}")
-    private val corsUrl: String
+    private val corsUrl: String,
 ) {
-
     @Bean
     fun filterChain(
         http: HttpSecurity,
         jwtAuthenticationFilter: JwtAuthenticationFilter,
-        authenticationProvider: AuthenticationProvider
-    ): SecurityFilterChain = http
-        .csrf { it.disable() }
-        .authorizeHttpRequests {
-            it
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .anyRequest().authenticated()
-        }
-        .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-        .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-        .logout {
-            it
-                .logoutUrl("/api/auth/logout")
-                .logoutSuccessHandler(HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-                .invalidateHttpSession(true)
-        }
-        .build()
+        authenticationProvider: AuthenticationProvider,
+    ): SecurityFilterChain =
+        http
+            .csrf { it.disable() }
+            .authorizeHttpRequests {
+                it
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                    .anyRequest().authenticated()
+            }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .logout {
+                it
+                    .logoutUrl("/api/auth/logout")
+                    .logoutSuccessHandler(HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+                    .invalidateHttpSession(true)
+            }
+            .build()
 
     @Bean
     fun corsConfigurer(): WebMvcConfigurer {
@@ -78,16 +77,19 @@ class SecurityConfig(
     fun userDetailsService(userRepo: UserRepo) = UserDetailsService { userRepo.findByEmail(it) }
 
     @Bean
-    fun authenticationProvider(userDetailsService: UserDetailsService, passwordEncoder: PasswordEncoder) =
-        DaoAuthenticationProvider().apply {
-            setUserDetailsService(userDetailsService)
-            setPasswordEncoder(passwordEncoder)
-        }
+    fun authenticationProvider(
+        userDetailsService: UserDetailsService,
+        passwordEncoder: PasswordEncoder,
+    ) = DaoAuthenticationProvider().apply {
+        setUserDetailsService(userDetailsService)
+        setPasswordEncoder(passwordEncoder)
+    }
 
     @Bean
-    fun roleHierarchy(): RoleHierarchy = RoleHierarchyImpl().apply {
-        setHierarchy(
-            "ROLE_ADMIN > ROLE_USER"
-        )
-    }
+    fun roleHierarchy(): RoleHierarchy =
+        RoleHierarchyImpl().apply {
+            setHierarchy(
+                "ROLE_ADMIN > ROLE_USER",
+            )
+        }
 }

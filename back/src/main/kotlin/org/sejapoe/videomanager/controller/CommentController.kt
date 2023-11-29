@@ -13,19 +13,24 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/comments")
 class CommentController(
-    private val commentService: CommentService, private val commentMapper: CommentMapper
+    private val commentService: CommentService,
+    private val commentMapper: CommentMapper,
 ) {
     @IsUser
     @GetMapping
-    fun getComments(@PathParam("correctionId") correctionId: Long, @AuthenticationPrincipal user: User) =
-        commentService.getAll(correctionId, user).map(commentMapper::toCommentRes)
+    fun getComments(
+        @PathParam("correctionId") correctionId: Long,
+        @AuthenticationPrincipal user: User,
+    ) = commentService.getAll(correctionId, user).map(commentMapper::toCommentRes)
 
     @IsUser
     @PostMapping
-    fun createComment(@Valid @RequestBody createCommentReq: CreateCommentReq, @AuthenticationPrincipal user: User) =
-        commentService.createComment(
-            createCommentReq.text,
-            createCommentReq.correctionId,
-            user
-        ).let(commentMapper::toCommentRes)
+    fun createComment(
+        @Valid @RequestBody createCommentReq: CreateCommentReq,
+        @AuthenticationPrincipal user: User,
+    ) = commentService.createComment(
+        createCommentReq.text,
+        createCommentReq.correctionId,
+        user,
+    ).let(commentMapper::toCommentRes)
 }

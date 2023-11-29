@@ -17,11 +17,13 @@ import java.util.*
 @RequestMapping("/api/auth")
 class AuthController(
     private val userService: UserService,
-    private val userMapper: UserMapper
+    private val userMapper: UserMapper,
 ) {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
-    fun login(@Valid @RequestBody loginReq: LoginReq): TokenUserRes {
+    fun login(
+        @Valid @RequestBody loginReq: LoginReq,
+    ): TokenUserRes {
         return userService.login(loginReq.email, loginReq.password).let {
             userMapper.toTokenUserRes(it.first, it.second)
         }
@@ -32,24 +34,24 @@ class AuthController(
         @PathVariable @Valid @Pattern(
             regexp = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}\$",
             flags = [Pattern.Flag.CASE_INSENSITIVE],
-            message = "Not a valid UUID"
-        ) uuid: UUID
-    ) =
-        userService.getUserByActivationUuid(uuid).let(userMapper::toUserRes)
-
+            message = "Not a valid UUID",
+        ) uuid: UUID,
+    ) = userService.getUserByActivationUuid(uuid).let(userMapper::toUserRes)
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/activate")
-    fun activate(@Valid @RequestBody activateUserReq: ActivateUserReq): TokenUserRes =
+    fun activate(
+        @Valid @RequestBody activateUserReq: ActivateUserReq,
+    ): TokenUserRes =
         userService.activateLecturer(activateUserReq.uuid, activateUserReq.password).let {
             userMapper.toTokenUserRes(it.first, it.second)
         }
 
-
     @ExceptionHandler(BadCredentialsException::class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    fun handleBadCredentialsException() = ProblemDetail.forStatusAndDetail(
-        HttpStatus.FORBIDDEN,
-        "Неверный логин или пароль"
-    )
+    fun handleBadCredentialsException() =
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.FORBIDDEN,
+            "Неверный логин или пароль",
+        )
 }

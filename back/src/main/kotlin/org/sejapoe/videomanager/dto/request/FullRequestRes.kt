@@ -15,5 +15,5 @@ data class FullRequestRes(
     val linkToMoodle: String,
     val linkToVideo: String,
     val status: RequestStatus,
-    val corrections: List<CorrectionRes>
+    val corrections: List<CorrectionRes>,
 )
