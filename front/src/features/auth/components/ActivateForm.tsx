@@ -35,7 +35,7 @@ export const ActivateForm = ({uuid, user, onSuccess}: ActivateFormProps) => {
 
 
     return <Form<ActivateValues, typeof schema>
-        onSubmit={({password}) => {
+        onSubmit={({password}, onError) => {
             mutate({
                 password,
                 uuid,
@@ -43,7 +43,8 @@ export const ActivateForm = ({uuid, user, onSuccess}: ActivateFormProps) => {
                 onSuccess: (response) => {
                     addUser(response.data)
                     onSuccess()
-                }
+                },
+                onError: err => onError(err.error.detail)
             })
         }} schema={schema}>
         {({register, formState}) => (

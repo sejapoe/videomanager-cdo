@@ -78,7 +78,7 @@ export const NewCorrectionForm = ({requestId, close}: NewCorrectionFormProps) =>
 
     return <Form<NewCorrectionValues, typeof schema>
         schema={schema}
-        onSubmit={(data) => {
+        onSubmit={(data, onError) => {
             mutate({
                 startTimeCode: parseTimeCode(data.startTimeCode),
                 endTimeCode: parseTimeCode(data.endTimeCode),
@@ -88,7 +88,8 @@ export const NewCorrectionForm = ({requestId, close}: NewCorrectionFormProps) =>
                 onSuccess: async () => {
                     await queryClient.invalidateQueries(requestsKeys.requests.byId(requestId))
                     close()
-                }
+                },
+                onError: err => onError(err.error.detail)
             })
         }}
         onReset={close}

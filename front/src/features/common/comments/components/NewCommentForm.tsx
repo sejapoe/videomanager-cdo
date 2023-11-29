@@ -25,22 +25,24 @@ export const NewCommentForm = ({correction}: NewCommentFormProps) => {
     const hiddenSubmitButton = useRef<HTMLButtonElement>(null);
 
     return <Form<NewCommentValues, typeof schema>
-        onSubmit={(data, {reset}) => {
+        onSubmit={(data, onError, {reset}) => {
             mutate(data.comment, {
                 onSuccess: async (_,) => {
                     await queryClient.invalidateQueries(commentsKeys.comments.byCorrection(correction.id))
                     reset()
-                }
+                },
+                onError: err => onError(err.error.detail)
             })
         }}
         schema={schema}
     >
-        {({register}) => (
+        {({register, formState}) => (
             <div className="relative">
                 <TextAreaField
                     className="bg-gray-200 resize-none scrollbar-hide pr-6"
                     registration={register("comment")}
                     rows={1}
+                    error={formState.errors["comment"] || formState.errors["root"]}
                     disabled={correction.closed || isLoading}
                     onKeyDown={event => {
                         if (event.key === "Enter" && event.ctrlKey) {

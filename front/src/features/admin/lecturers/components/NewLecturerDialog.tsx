@@ -3,6 +3,7 @@ import {z} from "zod";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
 import {useCreateLecturer} from "../api";
+import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),
@@ -24,13 +25,13 @@ export const NewLecturerDialog = ({defaultName, onSubmit, close}: NewLecturerDia
     const {mutate, isLoading} = useCreateLecturer()
 
     return <Form<NewLecturerValues, typeof schema>
-        onSubmit={(data) => {
-            // mutate data
+        onSubmit={(data, onError) => {
             mutate(data, {
                 onSuccess: ({data}) => {
                     onSubmit(data.id)
                     close()
-                }
+                },
+                onError: err => onError(err.error.detail)
             })
         }}
         schema={schema}
@@ -52,15 +53,11 @@ export const NewLecturerDialog = ({defaultName, onSubmit, close}: NewLecturerDia
                     registration={register("email")}
                 />
 
-                <div className="flex flex-row space-x-2">
+                <FieldWrapper error={formState.errors["root"]}>
                     <Button className="w-full" type="submit" isLoading={isLoading}>
                         Создать
                     </Button>
-                    <Button className="w-full" variant="inverse" onClick={() => close()}>
-                        Закрыть
-                    </Button>
-                </div>
-
+                </FieldWrapper>
             </>
         )}
     </Form>

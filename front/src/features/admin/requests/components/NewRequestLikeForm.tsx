@@ -10,6 +10,8 @@ import {Button} from "../../../../ui/button/Button.tsx";
 import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {UseMutationResult, useQueryClient} from "@tanstack/react-query";
 import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
+import {GenericErrorModel} from "../../../../api";
+import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),
@@ -32,7 +34,7 @@ type NewRequestLikeValues = {
 
 type NewRequestLikeFormProps = {
     onSuccess: () => void;
-    mutationRes: UseMutationResult
+    mutationRes: UseMutationResult<any, GenericErrorModel, any, any>
     invalidationKeys: unknown[]
 }
 
@@ -67,7 +69,7 @@ export const NewRequestLikeForm = ({
                 )}
             </Dialog>
             <Form<NewRequestLikeValues, typeof schema>
-                onSubmit={data => {
+                onSubmit={(data, onError) => {
                     mutate({
                         name: data.name,
                         lecturer_id: data.lecturer_id,
@@ -76,7 +78,8 @@ export const NewRequestLikeForm = ({
                         linkToMoodle: data.linkToMoodle,
                         linkToVideo: data.linkToVideo
                     }, {
-                        onSuccess
+                        onSuccess,
+                        onError: err => onError(err.error.detail)
                     })
                 }}
                 schema={schema}
@@ -156,8 +159,9 @@ export const NewRequestLikeForm = ({
                                     label="Ссылка на видео"
                                     error={formState.errors["linkToVideo"]}
                                     registration={register("linkToVideo")}/>
-
-                        <Button type="submit" isLoading={isLoading}>Создать</Button>
+                        <FieldWrapper error={formState.errors["root"]}>
+                            <Button type="submit" isLoading={isLoading}>Создать</Button>
+                        </FieldWrapper>
                     </>
                 )}
             </Form>
