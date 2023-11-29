@@ -26,17 +26,14 @@ data class FilterArchiveReq(
                 QArchiveEntry.archiveEntry.name.likeIgnoreCase("%$name%")
             },
 
-            if (!user.isNullOrEmpty()) {
-                QArchiveEntry.archiveEntry.lecturer.id.`in`(user)
-            } else null,
+            user?.takeIf { it.isNotEmpty() }
+                ?.let { QArchiveEntry.archiveEntry.lecturer.id.`in`(it) },
 
-            if (!institute.isNullOrEmpty()) {
-                QArchiveEntry.archiveEntry.institute.id.`in`(institute)
-            } else null,
+            institute?.takeIf { it.isNotEmpty() }
+                ?.let { QArchiveEntry.archiveEntry.institute.id.`in`(it) },
 
-            if (!department.isNullOrEmpty()) {
-                QArchiveEntry.archiveEntry.department.id.`in`(department)
-            } else null,
+            department?.takeIf { it.isNotEmpty() }
+                ?.let { QArchiveEntry.archiveEntry.department.id.`in`(it) }
         )
         return ExpressionUtils.allOf(list) ?: Expressions.TRUE
     }

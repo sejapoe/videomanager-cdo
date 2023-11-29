@@ -28,21 +28,25 @@ data class FilterRequestReq(
                 QRequest.request.name.likeIgnoreCase("%$name%")
             },
 
-            if (!user.isNullOrEmpty()) {
-                QRequest.request.lecturer.id.`in`(user)
-            } else null,
+            user?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    QRequest.request.lecturer.id.`in`(it)
+                },
 
-            if (!institute.isNullOrEmpty()) {
-                QRequest.request.institute.id.`in`(institute)
-            } else null,
+            institute?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    QRequest.request.institute.id.`in`(it)
+                },
 
-            if (!department.isNullOrEmpty()) {
-                QRequest.request.department.id.`in`(department)
-            } else null,
+            department?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    QRequest.request.department.id.`in`(it)
+                },
 
-            if (!status.isNullOrEmpty()) {
-                QRequest.request.status.`in`(status)
-            } else null
+            status?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    QRequest.request.status.`in`(it)
+                }
         )
 
         return ExpressionUtils.allOf(list) ?: Expressions.TRUE

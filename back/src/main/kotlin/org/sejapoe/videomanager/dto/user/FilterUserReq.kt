@@ -28,9 +28,10 @@ data class FilterUserReq(
                 QUser.user.email.likeIgnoreCase("%$name%")
             },
 
-            if (!enabled.isNullOrEmpty()) {
-                QUser.user.enabled.`in`(enabled)
-            } else null
+            enabled?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    QUser.user.enabled.`in`(it)
+                }
         )
         return ExpressionUtils.allOf(list) ?: Expressions.TRUE
     }
