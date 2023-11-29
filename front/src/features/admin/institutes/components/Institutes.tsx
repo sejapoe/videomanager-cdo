@@ -21,12 +21,12 @@ const SingleDepartment = ({department}: SingleDepartmentProps) => {
     const {
         Dialog: RenameDepartmentDialog,
         open: openRenameDepartment
-    } = useDialog<{}, void>({title: "Изменение кафедры"})
+    } = useDialog<{}, void>({title: `Изменение кафедры ${department.name}`})
 
     const {
         Dialog: DeleteDepartmentDialog,
         open: openDeleteDepartment
-    } = useDialog<{}, void>({title: "Удаление кафедры"})
+    } = useDialog<{}, void>({title: `Удаление кафедры ${department.name}`})
 
     return <p className="relative w-full text-gray-900 group hover:bg-gray-300 rounded py-1 transition-colors">
         <RenameDepartmentDialog>

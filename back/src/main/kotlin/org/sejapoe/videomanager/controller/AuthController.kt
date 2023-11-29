@@ -50,6 +50,6 @@ class AuthController(
     @ResponseStatus(HttpStatus.FORBIDDEN)
     fun handleBadCredentialsException() = ProblemDetail.forStatusAndDetail(
         HttpStatus.FORBIDDEN,
-        "Invalid email or password"
+        "Неверный логин или пароль"
     )
 }

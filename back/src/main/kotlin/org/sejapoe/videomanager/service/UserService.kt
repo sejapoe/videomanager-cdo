@@ -2,7 +2,6 @@ package org.sejapoe.videomanager.service
 
 import com.querydsl.core.types.Predicate
 import org.sejapoe.videomanager.exception.NotFoundException
-import org.sejapoe.videomanager.exception.UserActivationNotFoundException
 import org.sejapoe.videomanager.exception.auth.EmailAlreadyExitsRegistrationException
 import org.sejapoe.videomanager.exception.auth.EmailDoesntExistsLoginException
 import org.sejapoe.videomanager.model.QUser
@@ -63,7 +62,8 @@ class UserService(
         userActivationRepo.save(activator)
     }
 
-    fun getUserActivation(uuid: UUID) = userActivationRepo.findByUuid(uuid) ?: throw UserActivationNotFoundException()
+    fun getUserActivation(uuid: UUID) =
+        userActivationRepo.findByUuid(uuid) ?: throw NotFoundException("Неизвестный код активации")
 
     fun getUserByActivationUuid(uuid: UUID) = getUserActivation(uuid).user
     fun activateLecturer(uuid: UUID, password: String): Pair<User, String> {
@@ -79,5 +79,5 @@ class UserService(
         return userRepo.findAll(QUser.user.role.eq(Role.ROLE_USER).and(predicate), pageable)
     }
 
-    fun get(id: Long): User = userRepo.findById(id).orElseThrow { NotFoundException("User with $id is not found") }
+    fun get(id: Long): User = userRepo.findById(id).orElseThrow { NotFoundException("Пользователь с ID $id не найден") }
 }

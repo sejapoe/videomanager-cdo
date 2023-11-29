@@ -6,6 +6,7 @@ import {Department} from "../../../common/institutes/model";
 import {z} from "zod";
 import {useDeleteDepartment} from "../api";
 import {institutesKeys} from "../../../common/institutes/api";
+import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.record(
     z.string().regex(/(institute_id_)|(department_id_)\d+/),
@@ -29,11 +30,6 @@ export const DeleteDepartmentForm = ({department, onSubmit, close}: DeleteDepart
             const replacement =
                 Object.entries(data)
                     .find(v => v[0].startsWith("department_id_"))?.[1]
-
-            console.log({
-                id: department.id,
-                replacementId: replacement ? parseInt(replacement) : undefined
-            })
 
             mutate({
                 id: department.id,
@@ -67,12 +63,16 @@ export const DeleteDepartmentForm = ({department, onSubmit, close}: DeleteDepart
                     </p>
             }
 
-            <Button className="w-full mt-2"
-                    isLoading={isLoading}
-                    type="submit"
-            >
-                Подтвердить
-            </Button>
+            <FieldWrapper error={{
+                message: (error && error.status != 409) ? (error.error?.detail || "Неизвестная ошибка") : undefined
+            }}>
+                <Button className="w-full mt-2"
+                        isLoading={isLoading}
+                        type="submit"
+                >
+                    Подтвердить
+                </Button>
+            </FieldWrapper>
         </>}
     </Form>
 }

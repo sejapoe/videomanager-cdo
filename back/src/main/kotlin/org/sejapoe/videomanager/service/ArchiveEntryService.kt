@@ -17,8 +17,8 @@ class ArchiveEntryService(
     private val instituteService: InstituteService,
     private val departmentService: DepartmentService
 ) {
-    fun get(id: Long) =
-        archiveEntryRepo.findById(id).orElseThrow { NotFoundException("Archive Entry with id $id is not found!") }
+    fun get(id: Long): ArchiveEntry =
+        archiveEntryRepo.findById(id).orElseThrow { NotFoundException("Архивная запись с ID $id не найдена") }
 
     fun createFromRequest(request: Request) = ArchiveEntry(
         request.name,

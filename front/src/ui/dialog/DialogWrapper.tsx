@@ -22,11 +22,11 @@ export const DialogWrapper = ({isOpen, setOpen, children, title}: DialogWrapperP
             <Dialog.Panel className="mx-auto min-w-fit max-w-sm rounded bg-white p-4">
                 <Dialog.Title className="text-gray-500 text-xl font-bold mb-4 flex justify-between items-center">
                     {title}
-                    <FontAwesomeIcon icon={solid("xmark")} className="cursor-pointer" onClick={() => setOpen(false)}/>
+                    <FontAwesomeIcon icon={solid("xmark")} className="ml-4 cursor-pointer"
+                                     onClick={() => setOpen(false)}/>
                 </Dialog.Title>
                 {children}
             </Dialog.Panel>
-
         </div>
 
     </Dialog>

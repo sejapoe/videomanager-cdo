@@ -55,7 +55,7 @@ export const RenameDepartmentForm = ({onSubmit, close, department}: RenameDepart
             />
 
             <FieldWrapper error={{
-                message: error?.error.detail
+                message: error ? (error.error?.detail || "Неизвестная ошибка") : undefined
             }}>
                 <Button className="w-full" type="submit" isLoading={isLoading}>
                     Подтвердить

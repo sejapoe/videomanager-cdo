@@ -18,7 +18,7 @@ class CommentService(
         val correction = correctionService.get(correctionId)
 
         if (author.role == Role.ROLE_USER && correction.request.lecturer.id != author.id)
-            throw ForbiddenException("You have no access!")
+            throw ForbiddenException("У вас нет доступа!")
 
         val comment = Comment(
             text = text,
@@ -35,7 +35,7 @@ class CommentService(
         val correction = correctionService.get(correctionId)
 
         if (requester.role == Role.ROLE_USER && correction.request.lecturer.id != requester.id)
-            throw ForbiddenException("You have no access!")
+            throw ForbiddenException("У вас нет доступа!")
 
         return correction.comments.sortedBy { it.timestamp }
     }

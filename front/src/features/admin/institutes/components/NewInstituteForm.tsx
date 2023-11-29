@@ -5,6 +5,7 @@ import {Button} from "../../../../ui/button/Button.tsx";
 import {useCreateInstitute} from "../api";
 import {useQueryClient} from "@tanstack/react-query";
 import {institutesKeys} from "../../../common/institutes/api";
+import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.object({
     name: z.string().min(1, "Required")
@@ -18,7 +19,7 @@ type NewInstituteFormProps = { onSubmit: (data: void) => void, close: () => void
 
 export const NewInstituteForm = ({onSubmit, close}: NewInstituteFormProps) => {
     const queryClient = useQueryClient();
-    const {mutate, isLoading} = useCreateInstitute()
+    const {mutate, isLoading, error} = useCreateInstitute()
 
     return <Form<NewInstituteValues, typeof schema>
         onSubmit={data => {
@@ -40,15 +41,13 @@ export const NewInstituteForm = ({onSubmit, close}: NewInstituteFormProps) => {
                 error={formState.errors["name"]}
             />
 
-            <div className="flex flex-row space-x-2">
+            <FieldWrapper error={{
+                message: error ? (error.error?.detail || "Неизвестная ошибка") : undefined
+            }}>
                 <Button className="w-full" type="submit" isLoading={isLoading}>
                     Создать
                 </Button>
-                <Button className="w-full" variant="inverse" onClick={() => close()}>
-                    Закрыть
-                </Button>
-            </div>
-
+            </FieldWrapper>
         </>}
     </Form>
 };

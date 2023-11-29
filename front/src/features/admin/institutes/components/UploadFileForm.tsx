@@ -8,6 +8,7 @@ import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {useCreateInstitutes} from "../api";
 import {useQueryClient} from "@tanstack/react-query";
 import {institutesKeys} from "../../../common/institutes/api";
+import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
 type PreviewProps = {
     file: File
@@ -46,7 +47,7 @@ type UploadFileFormProps = {
 
 export const UploadFileForm = ({onSubmit, close}: UploadFileFormProps) => {
     const queryClient = useQueryClient();
-    const {mutate, isLoading} = useCreateInstitutes()
+    const {mutate, isLoading, error} = useCreateInstitutes()
 
     return <Form<UploadFileValues, typeof schema>
         onSubmit={({file}) => {
@@ -76,15 +77,19 @@ export const UploadFileForm = ({onSubmit, close}: UploadFileFormProps) => {
 
             {watch("file") && <Preview file={watch("file")!}/>}
 
-            <Button
-                startIcon={solid("check")}
-                className="w-full"
-                type="submit"
-                disabled={!watch("file")}
-                isLoading={isLoading}
-            >
-                Подтвердить
-            </Button>
+            <FieldWrapper error={{
+                message: error ? (error.error?.detail || "Неизвестная ошибка") : undefined
+            }}>
+                <Button
+                    startIcon={solid("check")}
+                    className="w-full"
+                    type="submit"
+                    disabled={!watch("file")}
+                    isLoading={isLoading}
+                >
+                    Подтвердить
+                </Button>
+            </FieldWrapper>
         </>
         }
     </Form>

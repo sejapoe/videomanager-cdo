@@ -31,7 +31,7 @@ class RequestService(
         val lecturer = userService.get(lecturerId)
         val institute = instituteService.get(instituteId)
         val department = departmentService.get(departmentId)
-        if (department.institute != institute) throw ConflictException("Department ${department.name} does not belong to institute ${institute.name}")
+        if (department.institute != institute) throw ConflictException("Кафедра \"${department.name}\" не принадлежит институту \"${institute.name}\"")
 
         val request =
             Request(

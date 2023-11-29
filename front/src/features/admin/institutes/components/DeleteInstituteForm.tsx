@@ -6,6 +6,7 @@ import {institutesKeys} from "../../../common/institutes/api";
 import {Form} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
 import {DeleteInstituteValues, DepartmentReplaceField} from "./DepartmentReplaceField.tsx";
+import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.record(
     z.string().regex(/(institute_id_)|(department_id_)\d+/),
@@ -72,13 +73,16 @@ export const DeleteInstituteForm = ({institute, onSubmit, close}: DeleteInstitut
                         className="font-bold text-blue-600 italic">{institute.name}</strong>
                     </p>
             }
-
-            <Button className="w-full mt-2"
-                    isLoading={isLoading}
-                    type="submit"
-            >
-                Подтвердить
-            </Button>
+            <FieldWrapper error={{
+                message: (error && error.status != 409) ? (error.error?.detail || "Неизвестная ошибка") : undefined
+            }}>
+                <Button className="w-full mt-2"
+                        isLoading={isLoading}
+                        type="submit"
+                >
+                    Подтвердить
+                </Button>
+            </FieldWrapper>
         </>}
     </Form>
 }

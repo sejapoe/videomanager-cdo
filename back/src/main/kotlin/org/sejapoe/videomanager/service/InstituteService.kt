@@ -2,8 +2,8 @@ package org.sejapoe.videomanager.service
 
 import jakarta.transaction.Transactional
 import org.sejapoe.videomanager.dto.institute.CreateInstituteWithDepartments
+import org.sejapoe.videomanager.exception.ConflictException
 import org.sejapoe.videomanager.exception.InstituteDeletionCascadeException
-import org.sejapoe.videomanager.exception.InstituteNotFoundException
 import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.model.Department
 import org.sejapoe.videomanager.model.Institute
@@ -24,8 +24,16 @@ class InstituteService(
 ) {
     fun getAll(): List<Institute> = instituteRepo.findAll()
 
-    fun create(name: String) = instituteRepo.save(Institute(name))
-    fun get(id: Long): Institute = instituteRepo.findById(id).orElseThrow { InstituteNotFoundException(id) }
+    fun create(name: String): Institute {
+        val institute = Institute(name)
+
+        checkDuplicate(institute, name)
+
+        return instituteRepo.save(institute)
+    }
+
+    fun get(id: Long): Institute =
+        instituteRepo.findById(id).orElseThrow { NotFoundException("Институт с ID $id не найден") }
 
     @Transactional
     fun create(names: List<CreateInstituteWithDepartments>): List<Institute> {
@@ -39,6 +47,8 @@ class InstituteService(
             }
         }
 
+        institutes.forEach { checkDuplicate(it, it.name) }
+
         return instituteRepo.saveAll(institutes)
     }
 
@@ -48,7 +58,7 @@ class InstituteService(
 
         val departmentReplacements = departmentReplacement.mapValues {
             departmentRepo.findById(it.value).orElseThrow {
-                NotFoundException("Department with id ${it.value} is not found")
+                NotFoundException("Кафедра с ID ${it.value} не найдена")
             }
         }
 
@@ -78,5 +88,12 @@ class InstituteService(
         }
 
         instituteRepo.deleteById(id)
+    }
+
+    private fun checkDuplicate(institute: Institute, name: String) {
+        val isDuplicate = getAll().any { it.name == name && it.id != institute.id }
+        if (isDuplicate) {
+            throw ConflictException("Институт с именем \"${name}\" уже существует")
+        }
     }
 }

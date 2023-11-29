@@ -35,5 +35,5 @@ class DepartmentController(
     @PatchMapping
     fun renameDepartment(@RequestBody @Valid renameDepartmentReq: RenameDepartmentReq) =
         departmentService.rename(renameDepartmentReq.id, renameDepartmentReq.name)
-
+            .let(departmentMapper::toDepartmentRes)
 }

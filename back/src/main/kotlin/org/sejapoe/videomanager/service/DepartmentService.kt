@@ -26,7 +26,7 @@ class DepartmentService(
     }
 
     fun get(id: Long): Department =
-        departmentRepo.findById(id).orElseThrow { NotFoundException("Department with $id is not found") }
+        departmentRepo.findById(id).orElseThrow { NotFoundException("Кафедра с ID $id не найдена") }
 
     fun delete(id: Long, replacementId: Long?) {
         val department = get(id)
@@ -66,7 +66,7 @@ class DepartmentService(
     private fun checkDuplicate(department: Department, name: String) {
         val isDuplicate = department.institute.departments.any { it.name == name && it.id != department.id }
         if (isDuplicate) {
-            throw ConflictException("Department with name `${name}` already exists in institute `${department.institute.name}`")
+            throw ConflictException("Кафедра с именем \"${name}\" уже существует в институте \"${department.institute.name}\"")
         }
     }
 }

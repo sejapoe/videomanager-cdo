@@ -69,7 +69,7 @@ export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentF
             />
 
             <FieldWrapper error={{
-                message: error?.error.detail
+                message: error ? (error.error?.detail || "Неизвестная ошибка") : undefined
             }}>
                 <Button className="w-full" type="submit" isLoading={isLoading}>
                     Создать

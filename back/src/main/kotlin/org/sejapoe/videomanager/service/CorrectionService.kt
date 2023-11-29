@@ -4,7 +4,6 @@ import org.sejapoe.videomanager.dto.correction.CreateCorrectionReq
 import org.sejapoe.videomanager.exception.ForbiddenException
 import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.model.*
-import org.sejapoe.videomanager.repo.CommentRepo
 import org.sejapoe.videomanager.repo.CorrectionRepo
 import org.sejapoe.videomanager.repo.RequestRepo
 import org.springframework.stereotype.Service
@@ -15,17 +14,16 @@ import kotlin.jvm.optionals.getOrNull
 class CorrectionService(
     private val correctionRepo: CorrectionRepo,
     private val requestRepo: RequestRepo,
-    private val commentRepo: CommentRepo,
     private val lastViewService: LastViewService
 ) {
     fun get(id: Long) =
-        correctionRepo.findById(id).getOrNull() ?: throw NotFoundException("Correction with id $id is not found")
+        correctionRepo.findById(id).getOrNull() ?: throw NotFoundException("Исправление с ID $id не найдено")
 
     fun get(id: Long, requester: User): Correction {
         val correction = get(id)
 
         if (requester.role === Role.ROLE_USER && correction.request.lecturer.id != requester.id)
-            throw ForbiddenException("You can't access other user's requests!")
+            throw ForbiddenException("У вас нет доступа!")
 
         return correction
     }
@@ -34,9 +32,9 @@ class CorrectionService(
         val request = requestRepo.findById(createCorrectionReq.requestId).getOrNull()
             ?: throw NotFoundException("Request with id ${createCorrectionReq.requestId} is not found")
 
-        if (request.lecturer.id != user.id) throw ForbiddenException("You have no access!")
+        if (request.lecturer.id != user.id) throw ForbiddenException("У вас нет доступа!")
         if (request.status != RequestStatus.CREATED && request.status != RequestStatus.WIP)
-            throw ForbiddenException("Request is unmodifiable")
+            throw ForbiddenException("Запрос нельзя редактировать")
 
         val correction = Correction(
             createCorrectionReq.startTimeCode,
