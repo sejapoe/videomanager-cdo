@@ -14,6 +14,7 @@ import {Page} from "../../model";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
 import {TableHeadItem} from "../../../../ui/table/TableHeadItem.tsx";
 import {ComboboxFilter} from "../../../../ui/table/ComboboxFilter.tsx";
+import {SearchFilter} from "../../../../ui/table/SearchFilter.tsx";
 
 export const statusL10n: Record<RequestStatus, string> = {
     "CREATED": "Создана",
@@ -43,7 +44,10 @@ const RequestTableHead = () => {
     return <thead className="text-left text-white">
     <tr className="bg-gray-700">
         <TableHeadItem title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
-        <TableHeadItem title={"Название"} field={"name"} className="w-[22.5rem]"/>
+        <TableHeadItem field={"name"} className="w-[22.5rem]"
+                       customTitle={
+                           <SearchFilter title={"Название"} name={"name"}/>
+                       }/>
         <TableHeadItem field={"lecturer"} className="w-[22.5rem]"
                        customTitle={
                            user?.role === "ROLE_ADMIN" &&

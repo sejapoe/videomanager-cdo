@@ -13,6 +13,7 @@ import {useInstitutes} from "../../../common/institutes/api";
 import {Department} from "../../../common/institutes/model";
 import {Page} from "../../../common/model";
 import {ArchiveEntry} from "../model";
+import {SearchFilter} from "../../../../ui/table/SearchFilter.tsx";
 
 
 const ArchiveTableHead = () => {
@@ -28,7 +29,11 @@ const ArchiveTableHead = () => {
     return <thead className="text-left text-white">
     <tr className="bg-gray-700">
         <TableHeadItem title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
-        <TableHeadItem title={"Название"} field={"name"} className="w-[27rem]"/>
+        <TableHeadItem field={"name"} className="w-[27rem]"
+                       customTitle={
+                           <SearchFilter title={"Название"} name={"name"}/>
+                       }
+        />
         <TableHeadItem field={"lecturer"} className="w-[27rem]"
                        customTitle={
                            <ComboboxFilter<ArchiveTableFilter> name="user"

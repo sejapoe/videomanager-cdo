@@ -1,11 +1,12 @@
 import {ArchiveFilter, useArchiveEntries} from "../api";
-import React from "react";
+import React, {useState} from "react";
 import Pageable from "../../../../ui/table/Pageable.tsx";
 import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import {FormContextProvider} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
-import {eIu} from "../../../../utils/undefineds.ts";
+import {bIu, eIu} from "../../../../utils/undefineds.ts";
 import {ArchiveTableContent} from "./ArchiveTableContent.tsx";
+import {debounce} from "lodash";
 
 type ArchiveProps = {
     filter?: ArchiveFilter
@@ -26,24 +27,32 @@ const ArchiveLoader: React.FC<ArchiveProps> = ({filter}) => {
 }
 
 const schema = z.object({
-    user: z.number().nullish(),
-    institute: z.number().nullish(),
-    department: z.number().nullish(),
+    name: z.string(),
+    user: z.number().array(),
+    institute: z.number().array(),
+    department: z.number().array(),
 })
 
 export type ArchiveTableFilter = {
+    name: string;
     user: number[];
     institute: number[];
     department: number[];
 }
 
 export const defaultValues = {
+    name: "",
     user: [],
     institute: [],
     department: [],
 };
 
 export const ArchiveTable: React.FC<ArchiveProps> = ({filter}) => {
+    const [debouncedName, setDebouncedName] = useState("")
+
+    const debounceName = debounce((args) => {
+        setDebouncedName(args)
+    }, 500)
 
     return <>
         <FormContextProvider<ArchiveTableFilter, typeof schema>
@@ -57,14 +66,18 @@ export const ArchiveTable: React.FC<ArchiveProps> = ({filter}) => {
             {({watch}) =>
                 <Pageable defaultPageSize={10}>
                     {({sort, page}) => (
-                        <ArchiveLoader filter={{
-                            user: eIu(watch("user")),
-                            institute: eIu(watch("institute")),
-                            department: eIu(watch("department")),
-                            ...filter,
-                            ...sort,
-                            ...page
-                        }}/>
+                        <>
+                            {debounceName(watch("name"))}
+                            <ArchiveLoader filter={{
+                                name: bIu(debouncedName),
+                                user: eIu(watch("user")),
+                                institute: eIu(watch("institute")),
+                                department: eIu(watch("department")),
+                                ...filter,
+                                ...sort,
+                                ...page
+                            }}/>
+                        </>
                     )}
                 </Pageable>
             }

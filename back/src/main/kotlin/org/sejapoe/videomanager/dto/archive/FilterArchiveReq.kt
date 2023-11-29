@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort
 data class FilterArchiveReq(
     override val page: Int? = 0,
     override val size: Int? = 50,
+    val name: String?,
     val user: List<Long>?,
     val institute: List<Long>?,
     val department: List<Long>?,
@@ -21,6 +22,10 @@ data class FilterArchiveReq(
 
     override fun toPredicate(): Predicate {
         val list = listOfNotNull(
+            name?.let {
+                QArchiveEntry.archiveEntry.name.likeIgnoreCase("%$name%")
+            },
+
             if (!user.isNullOrEmpty()) {
                 QArchiveEntry.archiveEntry.lecturer.id.`in`(user)
             } else null,

@@ -12,12 +12,22 @@ import org.springframework.data.domain.Sort
 data class FilterUserReq(
     override val page: Int? = 0,
     override val size: Int? = 50,
+    val name: String?,
+    val email: String?,
     val enabled: List<Boolean>?,
     override val sorting: String? = "id",
     override val direction: Sort.Direction? = Sort.Direction.ASC
 ) : PageableReq {
     override fun toPredicate(): Predicate {
         val list = listOfNotNull(
+            name?.let {
+                QUser.user.fullName.likeIgnoreCase("%$name%")
+            },
+
+            email?.let {
+                QUser.user.email.likeIgnoreCase("%$name%")
+            },
+
             if (!enabled.isNullOrEmpty()) {
                 QUser.user.enabled.`in`(enabled)
             } else null

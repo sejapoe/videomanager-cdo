@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort
 data class FilterRequestReq(
     override val page: Int? = 0,
     override val size: Int? = 50,
+    val name: String?,
     val user: List<Long>?,
     val institute: List<Long>?,
     val department: List<Long>?,
@@ -23,6 +24,10 @@ data class FilterRequestReq(
 
     override fun toPredicate(): Predicate {
         val list = listOfNotNull(
+            name?.let {
+                QRequest.request.name.likeIgnoreCase("%$name%")
+            },
+
             if (!user.isNullOrEmpty()) {
                 QRequest.request.lecturer.id.`in`(user)
             } else null,

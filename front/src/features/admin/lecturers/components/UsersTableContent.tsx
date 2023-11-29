@@ -8,6 +8,7 @@ import {statuses, usersFilterDefaultValues} from "./UsersTable.tsx";
 import {TableHeadItem} from "../../../../ui/table/TableHeadItem.tsx";
 import {ComboboxFilter} from "../../../../ui/table/ComboboxFilter.tsx";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
+import {SearchFilter} from "../../../../ui/table/SearchFilter.tsx";
 
 const statusL10n: Record<"false" | "true", string> = {
     "false": "Неактивен",
@@ -25,8 +26,14 @@ const UsersTableHead = () => {
     return <thead className="text-left text-white">
     <tr className="bg-gray-700">
         <TableHeadItem title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
-        <TableHeadItem title={"ФИО"} field={"fullName"} className="w-[31.5rem]"/>
-        <TableHeadItem title={"Электронная почта"} field={"email"} className="w-[31.5rem]"/>
+        <TableHeadItem field={"fullName"} className="w-[31.5rem]"
+                       customTitle={
+                           <SearchFilter title={"ФИО"} name={"name"}/>
+                       }/>
+        <TableHeadItem field={"email"} className="w-[31.5rem]"
+                       customTitle={
+                           <SearchFilter title={"Электронная почта"} name={"email"}/>
+                       }/>
         <TableHeadItem field={"enabled"} className="rounded-tr-lg w-36"
                        customTitle={
                            <ComboboxFilter

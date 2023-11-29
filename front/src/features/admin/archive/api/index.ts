@@ -37,6 +37,7 @@ export type ArchiveFilter = {
     page?: number;
     size?: number;
 
+    name?: string;
     user?: number[];
     institute?: number[];
     department?: number[];

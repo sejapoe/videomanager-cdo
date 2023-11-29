@@ -35,7 +35,11 @@ export const useCreateLecturer = (options?: UseCreateLecturerOptions) =>
 export type LecturersFilter = {
     page?: number;
     size?: number;
+
+    name?: string;
+    email?: string;
     enabled?: boolean[];
+
     sorting?: string;
     direction?: "ASC" | "DESC";
 }

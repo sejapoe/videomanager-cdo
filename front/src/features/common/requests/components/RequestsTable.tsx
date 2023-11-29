@@ -1,11 +1,13 @@
 import {RequestsFilter, useRequests} from "../api";
-import React from "react";
+import React, {useState} from "react";
 import {RequestsTableContent} from "./RequestsTableContent.tsx";
 import Pageable from "../../../../ui/table/Pageable.tsx";
 import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import {FormContextProvider} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
 import {RequestStatus} from "../model";
+import {bIu, eIu} from "../../../../utils/undefineds.ts";
+import {debounce} from "lodash"
 
 type RequestsProps = {
     filter?: RequestsFilter
@@ -33,6 +35,7 @@ const schema = z.object({
 })
 
 export type RequestsTableFilter = {
+    name: string,
     user: number[];
     institute: number[];
     department: number[];
@@ -40,6 +43,7 @@ export type RequestsTableFilter = {
 }
 
 export const defaultValues = {
+    name: "",
     user: [],
     institute: [],
     department: [],
@@ -54,6 +58,11 @@ export const statuses: { [p: number]: RequestStatus } = {
 }
 
 export const RequestsTable: React.FC<RequestsProps> = ({filter}) => {
+    const [debouncedName, setDebouncedName] = useState("")
+
+    const debounceName = debounce((args) => {
+        setDebouncedName(args)
+    }, 500)
 
     return <>
         <FormContextProvider<RequestsTableFilter, typeof schema>
@@ -67,15 +76,19 @@ export const RequestsTable: React.FC<RequestsProps> = ({filter}) => {
             {({watch}) =>
                 <Pageable defaultPageSize={15}>
                     {({sort, page}) => (
-                        <RequestsLoader filter={{
-                            user: watch("user"),
-                            institute: watch("institute"),
-                            department: watch("department"),
-                            status: watch("status").map(i => statuses[i]),
-                            ...filter,
-                            ...sort,
-                            ...page
-                        }}/>
+                        <>
+                            {debounceName(watch("name"))}
+                            <RequestsLoader filter={{
+                                name: bIu(debouncedName),
+                                user: eIu(watch("user")),
+                                institute: eIu(watch("institute")),
+                                department: eIu(watch("department")),
+                                status: eIu(watch("status").map(i => statuses[i])),
+                                ...filter,
+                                ...sort,
+                                ...page
+                            }}/>
+                        </>
                     )}
                 </Pageable>
             }
