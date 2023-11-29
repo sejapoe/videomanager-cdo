@@ -1,6 +1,7 @@
 package org.sejapoe.videomanager.service
 
 import com.querydsl.core.types.Predicate
+import org.sejapoe.videomanager.exception.ConflictException
 import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.exception.auth.EmailAlreadyExitsRegistrationException
 import org.sejapoe.videomanager.exception.auth.EmailDoesntExistsLoginException
@@ -50,6 +51,11 @@ class UserService(
 
     fun createLecturer(name: String, email: String): User {
         val user = User(email, "", name, Role.ROLE_USER, false)
+
+        if (userRepo.findByEmail(user.email) != null) {
+            throw ConflictException("Пользователь с таким Email уже существует")
+        }
+
         val activator = UserActivation(UUID.randomUUID(), user)
         userActivationRepo.save(activator)
         return user
