@@ -1,12 +1,12 @@
 import {useQueryClient} from "@tanstack/react-query";
-import {Form} from "../../../../ui/form/Form.tsx";
+import {Form} from "../../../../../ui/form/Form.tsx";
 import {DeleteInstituteValues, DepartmentReplaceField} from "./DepartmentReplaceField.tsx";
-import {Button} from "../../../../ui/button/Button.tsx";
-import {Department} from "../../../common/institutes/model";
+import {Button} from "../../../../../ui/button/Button.tsx";
+import {Department} from "../../../../common/institutes/model";
 import {z} from "zod";
-import {useDeleteDepartment} from "../api";
-import {institutesKeys} from "../../../common/institutes/api";
-import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
+import {useDeleteDepartment} from "../../api";
+import {institutesKeys} from "../../../../common/institutes/api";
+import {FieldWrapper} from "../../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.record(
     z.string().regex(/(institute_id_)|(department_id_)\d+/),

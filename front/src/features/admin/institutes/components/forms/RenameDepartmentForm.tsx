@@ -1,12 +1,12 @@
 import {z} from "zod";
-import {Form} from "../../../../ui/form/Form.tsx";
-import {InputField} from "../../../../ui/form/InputField.tsx";
-import {Button} from "../../../../ui/button/Button.tsx";
-import {useRenameDepartment} from "../api";
+import {Form} from "../../../../../ui/form/Form.tsx";
+import {InputField} from "../../../../../ui/form/InputField.tsx";
+import {Button} from "../../../../../ui/button/Button.tsx";
+import {useRenameDepartment} from "../../api";
 import {useQueryClient} from "@tanstack/react-query";
-import {institutesKeys} from "../../../common/institutes/api";
-import {Department} from "../../../common/institutes/model";
-import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
+import {institutesKeys} from "../../../../common/institutes/api";
+import {Department} from "../../../../common/institutes/model";
+import {FieldWrapper} from "../../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.object({
     name: z.string().min(1, "Required")

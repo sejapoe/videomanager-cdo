@@ -1,12 +1,12 @@
 import {z} from "zod";
-import {Form} from "../../../../ui/form/Form.tsx";
-import {InputField} from "../../../../ui/form/InputField.tsx";
-import {Button} from "../../../../ui/button/Button.tsx";
-import {useCreateDepartment} from "../api";
+import {Form} from "../../../../../ui/form/Form.tsx";
+import {InputField} from "../../../../../ui/form/InputField.tsx";
+import {Button} from "../../../../../ui/button/Button.tsx";
+import {useCreateDepartment} from "../../api";
 import {useQueryClient} from "@tanstack/react-query";
-import {institutesKeys, useInstitutes} from "../../../common/institutes/api";
-import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
-import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
+import {institutesKeys, useInstitutes} from "../../../../common/institutes/api";
+import {ComboboxField} from "../../../../../ui/form/ComboboxField.tsx";
+import {FieldWrapper} from "../../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.object({
     institute_id: z.number().positive(),

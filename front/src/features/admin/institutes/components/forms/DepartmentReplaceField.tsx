@@ -1,7 +1,7 @@
-import {Department, Institute} from "../../../common/institutes/model";
+import {Department, Institute} from "../../../../common/institutes/model";
 import {UseFormReturn} from "react-hook-form";
-import {useInstitutes} from "../../../common/institutes/api";
-import {SelectField} from "../../../../ui/form/SelectField.tsx";
+import {useInstitutes} from "../../../../common/institutes/api";
+import {SelectField} from "../../../../../ui/form/SelectField.tsx";
 
 export type DeleteInstituteValues = Record<string, string>
 

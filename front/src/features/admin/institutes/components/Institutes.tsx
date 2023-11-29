@@ -5,13 +5,14 @@ import {ContentLayout} from "../../../../ui/layout/ContentLayout.tsx";
 import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
-import {NewInstituteForm} from "./NewInstituteForm.tsx";
-import {NewDepartmentForm} from "./NewDepartmentForm.tsx";
-import {UploadFileForm} from "./UploadFileForm.tsx";
+import {NewInstituteForm} from "./forms/NewInstituteForm.tsx";
+import {NewDepartmentForm} from "./forms/NewDepartmentForm.tsx";
+import {UploadFileForm} from "./forms/UploadFileForm.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {DeleteInstituteForm} from "./DeleteInstituteForm.tsx";
-import {DeleteDepartmentForm} from "./DeleteDepartmentForm.tsx";
-import {RenameDepartmentForm} from "./RenameDepartmentForm.tsx";
+import {DeleteInstituteForm} from "./forms/DeleteInstituteForm.tsx";
+import {DeleteDepartmentForm} from "./forms/DeleteDepartmentForm.tsx";
+import {RenameDepartmentForm} from "./forms/RenameDepartmentForm.tsx";
+import {RenameInstituteForm} from "./forms/RenameInstituteForm.tsx";
 
 type SingleDepartmentProps = {
     department: Department
@@ -64,6 +65,12 @@ const SingleInstitute = ({institute}: SingleInstituteProps) => {
         open: openCreateDepartment
     } = useDialog<number, void>({title: "Создание кафедры"})
 
+    const {
+        Dialog: RenameInstituteDialog,
+        open: openRenameInstitute
+    } = useDialog<{}, void>({title: `Изменение института ${institute.name}`})
+
+
     const {Dialog: DeleteInstituteDialog, open: openDeleteInstitute} = useDialog<{
         institute: Institute
     }, void>({title: "Удаление института"})
@@ -75,6 +82,11 @@ const SingleInstitute = ({institute}: SingleInstituteProps) => {
                 <NewDepartmentForm instituteId={id} onSubmit={ok} close={close}/>
             }
         </CreateDepartmentDialog>
+        <RenameInstituteDialog>
+            {({ok, close}) => (
+                <RenameInstituteForm institute={institute} onSubmit={ok} close={close}/>
+            )}
+        </RenameInstituteDialog>
         <DeleteInstituteDialog>
             {({ok, close}) =>
                 <DeleteInstituteForm onSubmit={ok} close={close} institute={institute}/>
@@ -86,7 +98,9 @@ const SingleInstitute = ({institute}: SingleInstituteProps) => {
                 <h1 className="text-3xl text-gray-900">{institute.name}</h1>
                 <div className="absolute top-0 right-0 space-x-2">
                     <FontAwesomeIcon icon={solid("pen")}
-                                     className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"/>
+                                     className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"
+                                     onClick={() => openRenameInstitute({})}
+                    />
                     <FontAwesomeIcon icon={solid("trash")}
                                      className="text-gray-400 transition-colors hover:text-red-600 cursor-pointer"
                                      onClick={() => openDeleteInstitute({institute})}

@@ -1,14 +1,14 @@
-import {Form} from "../../../../ui/form/Form.tsx";
+import {Form} from "../../../../../ui/form/Form.tsx";
 import {z} from "zod";
-import {FileField} from "../../../../ui/form/FileField.tsx";
+import {FileField} from "../../../../../ui/form/FileField.tsx";
 import {useEffect, useState} from "react";
-import {InstitutesConfiguration, parseFile} from "../utils/configurationParser.ts";
-import {Button} from "../../../../ui/button/Button.tsx";
+import {InstitutesConfiguration, parseFile} from "../../utils/configurationParser.ts";
+import {Button} from "../../../../../ui/button/Button.tsx";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
-import {useCreateInstitutes} from "../api";
+import {useCreateInstitutes} from "../../api";
 import {useQueryClient} from "@tanstack/react-query";
-import {institutesKeys} from "../../../common/institutes/api";
-import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
+import {institutesKeys} from "../../../../common/institutes/api";
+import {FieldWrapper} from "../../../../../ui/form/FieldWrapper.tsx";
 
 type PreviewProps = {
     file: File
