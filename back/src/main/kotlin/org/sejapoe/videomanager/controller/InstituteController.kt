@@ -4,6 +4,7 @@ import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.institute.CreateInstituteReq
 import org.sejapoe.videomanager.dto.institute.CreateInstitutesWithDepartmentsReq
 import org.sejapoe.videomanager.dto.institute.DeleteInstituteReq
+import org.sejapoe.videomanager.dto.institute.RenameInstituteReq
 import org.sejapoe.videomanager.exception.InstituteDeletionCascadeException
 import org.sejapoe.videomanager.mapper.InstituteMapper
 import org.sejapoe.videomanager.security.annotations.IsAdmin
@@ -37,6 +38,11 @@ class InstituteController(
     @DeleteMapping
     fun deleteInstitute(@RequestBody @Valid deleteInstituteReq: DeleteInstituteReq) =
         instituteService.delete(deleteInstituteReq.id, deleteInstituteReq.departmentReplacement ?: mapOf())
+
+    @IsAdmin
+    @PatchMapping
+    fun renameInstitute(@RequestBody @Valid renameInstituteReq: RenameInstituteReq) =
+        instituteService.rename(renameInstituteReq.id, renameInstituteReq.name).let(instituteMapper::toInstituteRes)
 
     @ExceptionHandler(InstituteDeletionCascadeException::class)
     fun handleInstituteDeletionCascade(e: InstituteDeletionCascadeException) =

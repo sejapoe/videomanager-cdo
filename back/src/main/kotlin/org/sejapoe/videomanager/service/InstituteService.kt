@@ -13,6 +13,7 @@ import org.sejapoe.videomanager.repo.ArchiveEntryRepo
 import org.sejapoe.videomanager.repo.DepartmentRepo
 import org.sejapoe.videomanager.repo.InstituteRepo
 import org.sejapoe.videomanager.repo.RequestRepo
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,7 +23,7 @@ class InstituteService(
     private val requestRepo: RequestRepo,
     private val archiveEntryRepo: ArchiveEntryRepo,
 ) {
-    fun getAll(): List<Institute> = instituteRepo.findAll()
+    fun getAll(): List<Institute> = instituteRepo.findAll(Sort.by("id"))
 
     fun create(name: String): Institute {
         val institute = Institute(name)
@@ -88,6 +89,15 @@ class InstituteService(
         }
 
         instituteRepo.deleteById(id)
+    }
+
+    fun rename(id: Long, name: String): Institute {
+        val institute = get(id)
+
+        checkDuplicate(institute, name)
+
+        institute.name = name
+        return instituteRepo.save(institute)
     }
 
     private fun checkDuplicate(institute: Institute, name: String) {

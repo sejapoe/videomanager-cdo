@@ -10,15 +10,17 @@ import {
     InstituteWithDepartmentsResDto,
     ProblemDetailDto,
     RenameDepartmentReqDto,
+    RenameInstituteReqDto,
 } from "../../../../api/Api.ts";
 import {institutesKeys} from "../../../common/institutes/api";
-import {Department} from "../../../common/institutes/model";
+import {Department, Institute} from "../../../common/institutes/model";
 
 export const adminInstitutesKeys = {
     mutation: {
         create: () => [...institutesKeys.institutes.root, 'create'],
         createMultiple: () => [...institutesKeys.institutes.root, 'createMultiple'],
         delete: () => [...institutesKeys.institutes.root, 'delete'],
+        rename: () => [...institutesKeys.institutes.root, 'rename'],
 
         createDepartment: () => [...institutesKeys.departments.root(), 'create'],
         deleteDepartment: () => [...institutesKeys.departments.root(), 'delete'],
@@ -111,9 +113,22 @@ type UseRenameDepartmentOptions = Omit<UseRenameDepartmentMutation, 'mutationFn'
 
 export const useRenameDepartment = (options?: UseRenameDepartmentOptions) =>
     useMutation(
-        adminInstitutesKeys.mutation.deleteDepartment(),
+        adminInstitutesKeys.mutation.renameDepartment(),
         (dto) => {
             return api.renameDepartment(dto);
+        },
+        options
+    )
+
+type UseRenameInstituteMutation = UseMutationOptions<HttpResponse<Institute>, GenericErrorModel, RenameInstituteReqDto>
+
+type UseRenameInstituteOptions = Omit<UseRenameInstituteMutation, 'mutationFn' | 'mutationKey'>
+
+export const useRenameInstitute = (options?: UseRenameInstituteOptions) =>
+    useMutation(
+        adminInstitutesKeys.mutation.rename(),
+        (dto) => {
+            return api.renameInstitute(dto);
         },
         options
     )
