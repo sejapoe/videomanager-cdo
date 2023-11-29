@@ -33,7 +33,7 @@ export const useDialog = <TArgs, TOk>({title}: UseDialogProps): UseDialogReturn<
 
     return {
         Dialog: (({children}) => (<DialogWrapper isOpen={open} setOpen={setOpen} title={title}>
-            {props.args && children({
+            {(props.args !== undefined && props.args !== null) && children({
                 close: () => setOpen(false),
                 ...props
             })}
