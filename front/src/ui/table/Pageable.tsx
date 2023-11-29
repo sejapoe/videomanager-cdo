@@ -148,6 +148,30 @@ type PaginationMethods = {
     selectPage: (number: number) => void;
 }
 
+type FixPageProps = {
+    totalPages: number
+}
+
+const FixPage: React.FC<FixPageProps> = ({totalPages}) => {
+    const [{page}, dispatch] = useMenuContext("Pageable.FixPage")
+
+    if (totalPages == 0 && page.page != 0) {
+        dispatch({
+            type: ActionTypes.SelectPage,
+            number: 0,
+        })
+    }
+
+    if (totalPages != 0 && page.page >= totalPages) {
+        dispatch({
+            type: ActionTypes.SelectPage,
+            number: totalPages - 1,
+        })
+    }
+
+    return null
+}
+
 type PaginationProps = {
     children: (methods: PaginationMethods) => React.ReactNode
 }
@@ -190,4 +214,4 @@ const Pageable: React.FC<SortableProps> =
         </SortableContext.Provider>
     }
 
-export default Object.assign(Pageable, {SortButton, Pagination})
+export default Object.assign(Pageable, {SortButton, Pagination, FixPage})

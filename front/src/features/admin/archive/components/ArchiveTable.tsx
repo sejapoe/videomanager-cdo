@@ -17,6 +17,7 @@ const ArchiveLoader: React.FC<ArchiveProps> = ({filter}) => {
     return !entries
         ? <CenterSpinner/>
         : <div className="relative">
+            <Pageable.FixPage totalPages={entries.totalPages}/>
             <ArchiveTableContent entries={entries}/>
             {isFetching &&
                 <div className="absolute rounded top-0 w-full h-full cursor-wait"/>

@@ -17,6 +17,7 @@ const RequestsLoader: React.FC<RequestsProps> = ({filter}) => {
     return !requests
         ? <CenterSpinner/>
         : <div className="relative">
+            <Pageable.FixPage totalPages={requests.totalPages}/>
             <RequestsTableContent requests={requests}/>
             {isFetching &&
                 <div className="absolute rounded top-0 w-full h-full cursor-wait"/>

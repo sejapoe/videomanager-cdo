@@ -18,6 +18,7 @@ const UsersLoader = ({filter}: UsersLoaderProps) => {
     return !lecturers
         ? <CenterSpinner/>
         : <div className="relative">
+            <Pageable.FixPage totalPages={lecturers.totalPages}/>
             <UsersTableContent users={lecturers}/>
             {isFetching &&
                 <div className="absolute rounded top-0 w-full h-full cursor-wait"/>
