@@ -10,28 +10,28 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 
 data class FilterUserReq(
-        override val page: Int? = 0,
-        override val size: Int? = 50,
-        val enabled: Boolean?,
-        override val sorting: String? = "id",
-        override val direction: Sort.Direction? = Sort.Direction.ASC
+    override val page: Int? = 0,
+    override val size: Int? = 50,
+    val enabled: List<Boolean>?,
+    override val sorting: String? = "id",
+    override val direction: Sort.Direction? = Sort.Direction.ASC
 ) : PageableReq {
     override fun toPredicate(): Predicate {
         val list = listOfNotNull(
-                enabled?.let {
-                    QUser.user.enabled.eq(it)
-                }
+            if (!enabled.isNullOrEmpty()) {
+                QUser.user.enabled.`in`(enabled)
+            } else null
         )
         return ExpressionUtils.allOf(list) ?: Expressions.TRUE
     }
 
     override fun toPageable(): Pageable =
-            PageRequest.of(
-                    page ?: 0,
-                    size ?: 50,
-                    Sort.by(
-                            direction ?: Sort.Direction.ASC,
-                            sorting ?: "id"
-                    )
+        PageRequest.of(
+            page ?: 0,
+            size ?: 50,
+            Sort.by(
+                direction ?: Sort.Direction.ASC,
+                sorting ?: "id"
             )
+        )
 }

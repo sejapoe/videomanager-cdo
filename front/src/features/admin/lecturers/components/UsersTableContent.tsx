@@ -4,7 +4,7 @@ import {Page} from "../../../common/model";
 import {FormContextConsumer} from "../../../../ui/form/Form.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {regular} from "@fortawesome/fontawesome-svg-core/import.macro";
-import {statuses, usersFilterDefaultValues, UsersTableFilter} from "./UsersTable.tsx";
+import {statuses, usersFilterDefaultValues} from "./UsersTable.tsx";
 import {TableHeadItem} from "../../../../ui/table/TableHeadItem.tsx";
 import {ComboboxFilter} from "../../../../ui/table/ComboboxFilter.tsx";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
@@ -24,22 +24,22 @@ const booleanToString = (b: boolean): "false" | "true" => b ? "true" : "false"
 const UsersTableHead = () => {
     return <thead className="text-left text-white">
     <tr className="bg-gray-700">
-        <TableHeadItem<UsersTableFilter> title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
-        <TableHeadItem<UsersTableFilter> title={"ФИО"} field={"fullName"} className="w-[31.5rem]"/>
-        <TableHeadItem<UsersTableFilter> title={"Электронная почта"} field={"email"} className="w-[31.5rem]"/>
-        <TableHeadItem<UsersTableFilter> title={"Статус"} field={"enabled"} className="rounded-tr-lg w-36"
-                                         filterInput={
-                                             <ComboboxFilter
-                                                 name="status"
-                                                 options={Object.entries(statuses)
-                                                     .filter(value => value[0] != "-1")
-                                                     .map(value => ({
-                                                         value: parseInt(value[0]),
-                                                         label: statusL10n[booleanToString(value[1] as boolean)]
-                                                     })) || []}
-                                             />
-                                         }
-                                         filterName={"status"}
+        <TableHeadItem title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
+        <TableHeadItem title={"ФИО"} field={"fullName"} className="w-[31.5rem]"/>
+        <TableHeadItem title={"Электронная почта"} field={"email"} className="w-[31.5rem]"/>
+        <TableHeadItem field={"enabled"} className="rounded-tr-lg w-36"
+                       customTitle={
+                           <ComboboxFilter
+                               name="status"
+                               title="Статус"
+                               options={Object.entries(statuses)
+                                   .filter(value => value[0] != "-1")
+                                   .map(value => ({
+                                       value: parseInt(value[0]),
+                                       label: statusL10n[booleanToString(value[1] as boolean)]
+                                   })) || []}
+                           />
+                       }
         />
         <th className="bg-gray-100 w-12">
             <FormContextConsumer>

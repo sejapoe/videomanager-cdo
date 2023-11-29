@@ -46,7 +46,7 @@ class RequestController(
     ) =
         requestService.getAll(
             user,
-            filterRequestReq.user,
+            filterRequestReq.user ?: emptyList(),
             filterRequestReq.toPredicate(),
             filterRequestReq.toPageable()
         )

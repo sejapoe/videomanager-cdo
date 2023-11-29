@@ -5,7 +5,7 @@ import {FormContextConsumer} from "../../../../ui/form/Form.tsx";
 import {ArchiveTableFilter, defaultValues} from "./ArchiveTable.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {regular} from "@fortawesome/fontawesome-svg-core/import.macro";
-import {m1u} from "../../../../utils/undefineds.ts";
+import {eIu} from "../../../../utils/undefineds.ts";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
 import {TableHeadItem} from "../../../../ui/table/TableHeadItem.tsx";
 import {ComboboxFilter} from "../../../../ui/table/ComboboxFilter.tsx";
@@ -16,54 +16,54 @@ import {ArchiveEntry} from "../model";
 
 
 const ArchiveTableHead = () => {
-    const {data: lecturers} = useLecturers({});
     const {data: institutes} = useInstitutes()
+    const {data: lecturers} = useLecturers({});
 
-    const selectDepartments = (instituteId?: number): Department[] => {
+    const selectDepartments = (instituteIds: number[]): Department[] => {
         if (!institutes) return []
-        if (!m1u(instituteId)) return institutes.flatMap(value => value.departments)
-        return institutes.find(value => value.id === instituteId)?.departments || []
+        if (!eIu(instituteIds)) return institutes.flatMap(value => value.departments)
+        return institutes.find(value => instituteIds?.includes(value.id))?.departments || []
     }
 
     return <thead className="text-left text-white">
     <tr className="bg-gray-700">
-        <TableHeadItem<ArchiveTableFilter> title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
-        <TableHeadItem<ArchiveTableFilter> title={"Название"} field={"name"} className="w-[27rem]"/>
-        <TableHeadItem<ArchiveTableFilter> title={"Преподаватель"} field={"lecturer"} className="w-[27rem]"
-                                           filterInput={
-                                               <ComboboxFilter<ArchiveTableFilter> name="user"
-                                                                                   options={lecturers?.content?.map(value => ({
-                                                                                       value: value.id,
-                                                                                       label: value.fullName
-                                                                                   })) || []}/>
-                                           }
-                                           filterName={"user"}
+        <TableHeadItem title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
+        <TableHeadItem title={"Название"} field={"name"} className="w-[27rem]"/>
+        <TableHeadItem field={"lecturer"} className="w-[27rem]"
+                       customTitle={
+                           <ComboboxFilter<ArchiveTableFilter> name="user"
+                                                               title="Преподаватель"
+                                                               options={lecturers?.content?.map(value => ({
+                                                                   value: value.id,
+                                                                   label: value.fullName
+                                                               })) || []}/>
+                       }
         />
-        <TableHeadItem<ArchiveTableFilter> title={"Институт"} field={"institute"} className="w-36"
-                                           filterInput={<ComboboxFilter<ArchiveTableFilter>
-                                               name="institute"
-                                               options={institutes?.map(value => ({
-                                                   value: value.id,
-                                                   label: value.name
-                                               })) || []}
-                                           />}
-                                           filterName={"institute"}
+        <TableHeadItem field={"institute"} className="w-36"
+                       customTitle={<ComboboxFilter<ArchiveTableFilter>
+                           name="institute"
+                           title="Институт"
+                           options={institutes?.map(value => ({
+                               value: value.id,
+                               label: value.name
+                           })) || []}
+                       />}
         />
-        <TableHeadItem<ArchiveTableFilter> title={"Кафедра"} field={"department"} className="rounded-tr-lg w-36"
-                                           filterInput={
-                                               <FormContextConsumer<ArchiveTableFilter>>
-                                                   {({watch}) =>
-                                                       <ComboboxFilter<ArchiveTableFilter>
-                                                           name="department"
-                                                           options={selectDepartments(watch("institute")).map(value => ({
-                                                               value: value.id,
-                                                               label: value.name
-                                                           })) || []}
-                                                       />
-                                                   }
-                                               </FormContextConsumer>
-                                           }
-                                           filterName={"department"}
+        <TableHeadItem field={"department"} className="rounded-tr-lg w-36"
+                       customTitle={
+                           <FormContextConsumer<ArchiveTableFilter>>
+                               {({watch}) =>
+                                   <ComboboxFilter<ArchiveTableFilter>
+                                       name="department"
+                                       title="Кафедра"
+                                       options={selectDepartments(watch("institute")).map(value => ({
+                                           value: value.id,
+                                           label: value.name
+                                       })) || []}
+                                   />
+                               }
+                           </FormContextConsumer>
+                       }
         />
         <th className="bg-gray-100 w-12">
             <FormContextConsumer>

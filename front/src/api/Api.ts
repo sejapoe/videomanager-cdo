@@ -1,5 +1,7 @@
 /* eslint-disable */
 /* tslint:disable */
+// noinspection JSValidateJSDoc
+
 /*
  * ---------------------------------------------------------------
  * ## THIS FILE WAS GENERATED VIA SWAGGER-TYPESCRIPT-API        ##
@@ -238,14 +240,14 @@ export interface PageUserResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-    first?: boolean;
-    last?: boolean;
   /** @format int32 */
   size?: number;
   content?: UserResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+    first?: boolean;
+    last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -259,8 +261,8 @@ export interface PageableObjectDto {
   /** @format int64 */
   offset?: number;
   sort?: SortObjectDto;
-  unpaged?: boolean;
     paged?: boolean;
+    unpaged?: boolean;
 }
 
 export interface SortObjectDto {
@@ -275,14 +277,14 @@ export interface PageRequestResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-    first?: boolean;
-    last?: boolean;
   /** @format int32 */
   size?: number;
   content?: RequestResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+    first?: boolean;
+    last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -294,14 +296,14 @@ export interface PageArchiveEntryResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-    first?: boolean;
-    last?: boolean;
   /** @format int32 */
   size?: number;
   content?: ArchiveEntryResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+    first?: boolean;
+    last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -551,13 +553,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         page?: number;
         /** @format int32 */
         size?: number;
-        /** @format int64 */
-        user?: number;
-        /** @format int64 */
-        institute?: number;
-        /** @format int64 */
-        department?: number;
-        status?: "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
+          user?: number[];
+          institute?: number[];
+          department?: number[];
+          status?: ("CREATED" | "WIP" | "COMPLETED" | "ARCHIVED")[];
         sorting?: string;
         direction?: "ASC" | "DESC";
       },
@@ -621,7 +620,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
             page?: number;
             /** @format int32 */
             size?: number;
-            enabled?: boolean;
+            enabled?: boolean[];
             sorting?: string;
             direction?: "ASC" | "DESC";
         },
@@ -966,12 +965,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
             page?: number;
             /** @format int32 */
             size?: number;
-            /** @format int64 */
-            user?: number;
-            /** @format int64 */
-            institute?: number;
-            /** @format int64 */
-            department?: number;
+            user?: number[];
+            institute?: number[];
+            department?: number[];
             sorting?: string;
             direction?: "ASC" | "DESC";
         },

@@ -8,7 +8,7 @@ export const Requests = () => {
 
     return <ContentLayout title="Запросы">
         <RequestsTable filter={{
-            user: user?.id
+            user: [user!.id]
         }}/>
     </ContentLayout>
 }

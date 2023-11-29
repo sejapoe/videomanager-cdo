@@ -9,7 +9,7 @@ import {regular} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {useCurrentUser} from "../../../auth/authModel.ts";
 import {useInstitutes} from "../../institutes/api";
 import {Department} from "../../institutes/model";
-import {m1u} from "../../../../utils/undefineds.ts";
+import {eIu} from "../../../../utils/undefineds.ts";
 import {Page} from "../../model";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
 import {TableHeadItem} from "../../../../ui/table/TableHeadItem.tsx";
@@ -34,67 +34,67 @@ const RequestTableHead = () => {
     const {data: lecturers} = useLecturers({});
     const {data: institutes} = useInstitutes()
 
-    const selectDepartments = (instituteId?: number): Department[] => {
+    const selectDepartments = (instituteIds: number[]): Department[] => {
         if (!institutes) return []
-        if (!m1u(instituteId)) return institutes.flatMap(value => value.departments)
-        return institutes.find(value => value.id === instituteId)?.departments || []
+        if (!eIu(instituteIds)) return institutes.flatMap(value => value.departments)
+        return institutes.find(value => instituteIds?.includes(value.id))?.departments || []
     }
 
     return <thead className="text-left text-white">
     <tr className="bg-gray-700">
-        <TableHeadItem<RequestsTableFilter> title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
-        <TableHeadItem<RequestsTableFilter> title={"Название"} field={"name"} className="w-[22.5rem]"/>
-        <TableHeadItem<RequestsTableFilter> title={"Преподаватель"} field={"lecturer"} className="w-[22.5rem]"
-                                            filterInput={
-                                                user?.role === "ROLE_ADMIN" &&
-                                                <ComboboxFilter<RequestsTableFilter> name="user"
-                                                                                     options={lecturers?.content?.map(value => ({
-                                                                                         value: value.id,
-                                                                                         label: value.fullName
-                                                                                     })) || []}/>
-                                            }
-                                            filterName={"user"}
+        <TableHeadItem title={"#"} field={"id"} className="rounded-tl-lg w-16"/>
+        <TableHeadItem title={"Название"} field={"name"} className="w-[22.5rem]"/>
+        <TableHeadItem field={"lecturer"} className="w-[22.5rem]"
+                       customTitle={
+                           user?.role === "ROLE_ADMIN" &&
+                           <ComboboxFilter<RequestsTableFilter> name="user"
+                                                                title="Преподаватель"
+                                                                options={lecturers?.content?.map(value => ({
+                                                                    value: value.id,
+                                                                    label: value.fullName
+                                                                })) || []}/>
+                       }
         />
-        <TableHeadItem<RequestsTableFilter> title={"Институт"} field={"institute"} className="w-36"
-                                            filterInput={<ComboboxFilter<RequestsTableFilter>
-                                                name="institute"
-                                                options={institutes?.map(value => ({
-                                                    value: value.id,
-                                                    label: value.name
-                                                })) || []}
-                                            />}
-                                            filterName={"institute"}
+        <TableHeadItem field={"institute"} className="w-36"
+                       customTitle={<ComboboxFilter<RequestsTableFilter>
+                           name="institute"
+                           title="Институт"
+                           options={institutes?.map(value => ({
+                               value: value.id,
+                               label: value.name
+                           })) || []}
+                       />}
         />
-        <TableHeadItem<RequestsTableFilter> title={"Кафедра"} field={"department"} className="w-36"
-                                            filterInput={
-                                                <FormContextConsumer<RequestsTableFilter>>
-                                                    {({watch}) =>
-                                                        <ComboboxFilter<RequestsTableFilter>
-                                                            name="department"
-                                                            options={selectDepartments(watch("institute")).map(value => ({
-                                                                value: value.id,
-                                                                label: value.name
-                                                            })) || []}
-                                                        />
-                                                    }
-                                                </FormContextConsumer>
-                                            }
-                                            filterName={"department"}
+        <TableHeadItem field={"department"} className="w-36"
+                       customTitle={
+                           <FormContextConsumer<RequestsTableFilter>>
+                               {({watch}) =>
+                                   <ComboboxFilter<RequestsTableFilter>
+                                       name="department"
+                                       title="Кафедра"
+                                       options={selectDepartments(watch("institute")).map(value => ({
+                                           value: value.id,
+                                           label: value.name
+                                       })) || []}
+                                   />
+                               }
+                           </FormContextConsumer>
+                       }
         />
-        <TableHeadItem<RequestsTableFilter> title={"Статус"} field={"status"} className="rounded-tr-lg w-36"
-                                            filterInput={
-                                                <ComboboxFilter<RequestsTableFilter>
-                                                    name="status"
-                                                    options={Object.entries(statuses)
-                                                        .filter(value => !!value[1])
-                                                        .filter(value => user?.role === "ROLE_ADMIN" || value[1] !== "ARCHIVED")
-                                                        .map(value => ({
-                                                            value: parseInt(value[0]),
-                                                            label: statusL10n[value[1] as RequestStatus]
-                                                        })) || []}
-                                                />
-                                            }
-                                            filterName={"status"}
+        <TableHeadItem field={"status"} className="rounded-tr-lg w-36"
+                       customTitle={
+                           <ComboboxFilter<RequestsTableFilter>
+                               name="status"
+                               title="Статус"
+                               options={Object.entries(statuses)
+                                   .filter(value => !!value[1])
+                                   .filter(value => user?.role === "ROLE_ADMIN" || value[1] !== "ARCHIVED")
+                                   .map(value => ({
+                                       value: parseInt(value[0]),
+                                       label: statusL10n[value[1] as RequestStatus]
+                                   })) || []}
+                           />
+                       }
         />
         <th className="bg-gray-100 w-12">
             <FormContextConsumer>

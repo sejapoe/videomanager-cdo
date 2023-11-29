@@ -5,7 +5,6 @@ import Pageable from "../../../../ui/table/Pageable.tsx";
 import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import {FormContextProvider} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
-import {m1u} from "../../../../utils/undefineds.ts";
 import {RequestStatus} from "../model";
 
 type RequestsProps = {
@@ -33,21 +32,20 @@ const schema = z.object({
 })
 
 export type RequestsTableFilter = {
-    user: number;
-    institute: number;
-    department: number;
-    status: number;
+    user: number[];
+    institute: number[];
+    department: number[];
+    status: number[];
 }
 
 export const defaultValues = {
-    user: -1,
-    institute: -1,
-    department: -1,
-    status: -1
+    user: [],
+    institute: [],
+    department: [],
+    status: []
 };
 
-export const statuses: { [p: number]: RequestStatus | undefined } = {
-    [-1]: undefined,
+export const statuses: { [p: number]: RequestStatus } = {
     [1]: "CREATED",
     [2]: "WIP",
     [3]: "COMPLETED",
@@ -69,10 +67,10 @@ export const RequestsTable: React.FC<RequestsProps> = ({filter}) => {
                 <Pageable defaultPageSize={15}>
                     {({sort, page}) => (
                         <RequestsLoader filter={{
-                            user: m1u(watch("user")),
-                            institute: m1u(watch("institute")),
-                            department: m1u(watch("department")),
-                            status: statuses[watch("status")],
+                            user: watch("user"),
+                            institute: watch("institute"),
+                            department: watch("department"),
+                            status: watch("status").map(i => statuses[i]),
                             ...filter,
                             ...sort,
                             ...page

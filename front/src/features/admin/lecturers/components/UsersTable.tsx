@@ -30,15 +30,14 @@ const schema = z.object({
 })
 
 export type UsersTableFilter = {
-    status: number;
+    status: number[];
 }
 
 export const usersFilterDefaultValues = {
-    status: -1,
+    status: [],
 }
 
-export const statuses: { [p: number]: boolean | undefined } = {
-    [-1]: undefined,
+export const statuses: { [p: number]: boolean } = {
     [1]: true,
     [2]: false,
 }
@@ -54,7 +53,7 @@ export const UsersTable: React.FC = () => {
                 <Pageable defaultPageSize={10}>
                     {({sort, page}) =>
                         <UsersLoader filter={{
-                            enabled: statuses[watch("status") || -1],
+                            enabled: watch("status").map(i => statuses[i]),
                             ...sort,
                             ...page
                         }}/>

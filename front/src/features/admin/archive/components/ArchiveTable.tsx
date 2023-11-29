@@ -4,7 +4,7 @@ import Pageable from "../../../../ui/table/Pageable.tsx";
 import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import {FormContextProvider} from "../../../../ui/form/Form.tsx";
 import {z} from "zod";
-import {m1u} from "../../../../utils/undefineds.ts";
+import {eIu} from "../../../../utils/undefineds.ts";
 import {ArchiveTableContent} from "./ArchiveTableContent.tsx";
 
 type ArchiveProps = {
@@ -31,15 +31,15 @@ const schema = z.object({
 })
 
 export type ArchiveTableFilter = {
-    user: number;
-    institute: number;
-    department: number;
+    user: number[];
+    institute: number[];
+    department: number[];
 }
 
 export const defaultValues = {
-    user: -1,
-    institute: -1,
-    department: -1,
+    user: [],
+    institute: [],
+    department: [],
 };
 
 export const ArchiveTable: React.FC<ArchiveProps> = ({filter}) => {
@@ -57,9 +57,9 @@ export const ArchiveTable: React.FC<ArchiveProps> = ({filter}) => {
                 <Pageable defaultPageSize={10}>
                     {({sort, page}) => (
                         <ArchiveLoader filter={{
-                            user: m1u(watch("user")),
-                            institute: m1u(watch("institute")),
-                            department: m1u(watch("department")),
+                            user: eIu(watch("user")),
+                            institute: eIu(watch("institute")),
+                            department: eIu(watch("department")),
                             ...filter,
                             ...sort,
                             ...page

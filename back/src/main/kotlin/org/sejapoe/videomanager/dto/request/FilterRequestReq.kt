@@ -11,41 +11,45 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 
 data class FilterRequestReq(
-        override val page: Int? = 0,
-        override val size: Int? = 50,
-        val user: Long?,
-        val institute: Long?,
-        val department: Long?,
-        val status: RequestStatus?,
-        override val sorting: String? = "id",
-        override val direction: Sort.Direction? = Sort.Direction.ASC
+    override val page: Int? = 0,
+    override val size: Int? = 50,
+    val user: List<Long>?,
+    val institute: List<Long>?,
+    val department: List<Long>?,
+    val status: List<RequestStatus>?,
+    override val sorting: String? = "id",
+    override val direction: Sort.Direction? = Sort.Direction.ASC
 ) : PageableReq {
 
     override fun toPredicate(): Predicate {
         val list = listOfNotNull(
-                user?.let {
-                    QRequest.request.lecturer.id.eq(it)
-                },
-                institute?.let {
-                    QRequest.request.institute.id.eq(it)
-                },
-                department?.let {
-                    QRequest.request.department.id.eq(it)
-                },
-                status?.let {
-                    QRequest.request.status.eq(it)
-                }
+            if (!user.isNullOrEmpty()) {
+                QRequest.request.lecturer.id.`in`(user)
+            } else null,
+
+            if (!institute.isNullOrEmpty()) {
+                QRequest.request.institute.id.`in`(institute)
+            } else null,
+
+            if (!department.isNullOrEmpty()) {
+                QRequest.request.department.id.`in`(department)
+            } else null,
+
+            if (!status.isNullOrEmpty()) {
+                QRequest.request.status.`in`(status)
+            } else null
         )
+
         return ExpressionUtils.allOf(list) ?: Expressions.TRUE
     }
 
     override fun toPageable(): Pageable =
-            PageRequest.of(
-                    page ?: 0,
-                    size ?: 50,
-                    Sort.by(
-                            direction ?: Sort.Direction.ASC,
-                            sorting ?: "id"
-                    )
+        PageRequest.of(
+            page ?: 0,
+            size ?: 50,
+            Sort.by(
+                direction ?: Sort.Direction.ASC,
+                sorting ?: "id"
             )
+        )
 }

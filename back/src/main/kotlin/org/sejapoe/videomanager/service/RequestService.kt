@@ -52,8 +52,10 @@ class RequestService(
         return request
     }
 
-    fun getAll(requester: User, filterUserId: Long?, predicate: Predicate, pageable: Pageable): Page<Request> {
-        if (requester.role == Role.ROLE_USER && requester.id != filterUserId) throw ForbiddenException("You cannot get other user's requests!")
+    fun getAll(requester: User, filterUserId: List<Long>, predicate: Predicate, pageable: Pageable): Page<Request> {
+        if (requester.role == Role.ROLE_USER && (filterUserId.size != 1 || requester.id != filterUserId.first())) {
+            throw ForbiddenException("You cannot get other user's requests!")
+        }
         return requestRepo.findAll(predicate.let {
             if (requester.role == Role.ROLE_USER) QRequest.request.status.ne(RequestStatus.ARCHIVED).and(it) else it
         }, pageable)

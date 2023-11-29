@@ -1,4 +1,4 @@
-import {FullRequest, Request} from "../model";
+import {FullRequest, Request, RequestStatus} from "../model";
 import {FullRequestResDto, RequestParams, RequestResDto} from "../../../../api/Api.ts";
 import {useQuery} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
@@ -26,20 +26,21 @@ export type RequestsFilter = {
     page?: number;
     size?: number;
 
-    user?: number;
-    institute?: number;
-    department?: number;
-    status?: "CREATED" | "WIP" | "COMPLETED" | "ARCHIVED";
+    user?: number[];
+    institute?: number[];
+    department?: number[];
+    status?: RequestStatus[];
 
     sorting?: string;
     direction?: "ASC" | "DESC";
 }
 
-export const useRequests = (filter?: RequestsFilter, params?: RequestParams) =>
-    useQuery<Page<Request>, GenericErrorModel, Page<Request>, unknown[]>(
-        requestsKeys.requests.byFilter(filter || {}),
+export const useRequests = (filter?: RequestsFilter, params?: RequestParams) => {
+    filter = filter || {};
+    return useQuery<Page<Request>, GenericErrorModel, Page<Request>, unknown[]>(
+        requestsKeys.requests.byFilter(filter),
         async ({signal}) => {
-            const response = await api.getRequests(filter || {}, {
+            const response = await api.getRequests(filter, {
                 signal,
                 ...params
             })
@@ -48,7 +49,8 @@ export const useRequests = (filter?: RequestsFilter, params?: RequestParams) =>
         {
             keepPreviousData: true
         }
-    )
+    );
+}
 
 export const useRequest = (id: number, params?: RequestParams) =>
     useQuery<FullRequest, GenericErrorModel, FullRequest, unknown[]>(
