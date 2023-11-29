@@ -24,7 +24,7 @@ export const DeleteDepartmentForm = ({department, onSubmit, close}: DeleteDepart
     const {mutate, isLoading, error} = useDeleteDepartment()
 
     return <Form<DeleteInstituteValues, typeof schema>
-        onSubmit={(data) => {
+        onSubmit={(data, onError) => {
             console.log(data)
 
             const replacement =
@@ -39,6 +39,11 @@ export const DeleteDepartmentForm = ({department, onSubmit, close}: DeleteDepart
                     await queryClient.invalidateQueries(institutesKeys.institutes.root)
                     onSubmit()
                     close()
+                },
+                onError: err => {
+                    if (err.error.status != 409) {
+                        onError(err.error.detail)
+                    }
                 }
             })
         }}
@@ -63,9 +68,7 @@ export const DeleteDepartmentForm = ({department, onSubmit, close}: DeleteDepart
                     </p>
             }
 
-            <FieldWrapper error={{
-                message: (error && error.status != 409) ? (error.error?.detail || "Неизвестная ошибка") : undefined
-            }}>
+            <FieldWrapper error={methods.formState.errors["root"]}>
                 <Button className="w-full mt-2"
                         isLoading={isLoading}
                         type="submit"

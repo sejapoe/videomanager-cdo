@@ -26,17 +26,18 @@ type NewDepartmentFormProps = {
 
 export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentFormProps) => {
     const queryClient = useQueryClient();
-    const {mutate, isLoading, error} = useCreateDepartment()
+    const {mutate, isLoading} = useCreateDepartment()
     const {data: institutes} = useInstitutes()
 
     return <Form<NewDepartmentValues, typeof schema>
-        onSubmit={data => {
+        onSubmit={(data, onError) => {
             mutate(data, {
                 onSuccess: async () => {
                     await queryClient.invalidateQueries(institutesKeys.institutes.root);
                     onSubmit();
                     close();
-                }
+                },
+                onError: (err) => onError(err.error.detail)
             })
         }}
         schema={schema}
@@ -68,9 +69,7 @@ export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentF
                 error={formState.errors["name"]}
             />
 
-            <FieldWrapper error={{
-                message: error ? (error.error?.detail || "Неизвестная ошибка") : undefined
-            }}>
+            <FieldWrapper error={formState.errors["root"]}>
                 <Button className="w-full" type="submit" isLoading={isLoading}>
                     Создать
                 </Button>

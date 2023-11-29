@@ -25,16 +25,13 @@ export const LoginForm = ({onSuccess}: LoginFormProps) => {
     return (
         <div>
             <Form<LoginValues, typeof schema>
-                onSubmit={(data, {setError}) => {
+                onSubmit={(data, onError) => {
                     mutate(data, {
                         onSuccess: (response) => {
                             addUser(response.data)
                             onSuccess()
                         },
-                        onError: data => {
-                            console.log(data)
-                            setError("root", {message: data.error.detail})
-                        }
+                        onError: err => onError(err.error.detail)
                     })
                 }}
                 schema={schema}

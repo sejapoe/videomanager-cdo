@@ -7,7 +7,7 @@ import {ZodType, ZodTypeDef} from "zod";
 type FormProps<TFormValues extends FieldValues, Schema> = {
     className?: string;
     defaultValue?: TFormValues;
-    onSubmit: (data: TFormValues, methods: UseFormReturn<TFormValues>) => void;
+    onSubmit: (data: TFormValues, onError: (error?: string) => void, methods: UseFormReturn<TFormValues>) => void;
     onReset?: FormEventHandler;
     children: (methods: UseFormReturn<TFormValues>) => React.ReactNode;
     options?: UseFormProps<TFormValues>;
@@ -35,7 +35,11 @@ export const Form = <
     return (
         <form
             className={clsx("space-y-6", className)}
-            onSubmit={methods.handleSubmit((data) => onSubmit(data, methods))}
+            onSubmit={methods.handleSubmit((data) => onSubmit(data, error => {
+                methods.setError("root", {
+                    message: error || "Непредвиденная ошибка"
+                })
+            }, methods))}
             onReset={onReset}
             id={id}
         >

@@ -24,10 +24,10 @@ type RenameDepartmentFormProps = {
 
 export const RenameDepartmentForm = ({onSubmit, close, department}: RenameDepartmentFormProps) => {
     const queryClient = useQueryClient();
-    const {mutate, isLoading, error} = useRenameDepartment()
+    const {mutate, isLoading} = useRenameDepartment()
 
     return <Form<RenameDepartmentValues, typeof schema>
-        onSubmit={data => {
+        onSubmit={(data, onError) => {
             mutate({
                 id: department.id,
                 name: data.name
@@ -36,7 +36,8 @@ export const RenameDepartmentForm = ({onSubmit, close, department}: RenameDepart
                     await queryClient.invalidateQueries(institutesKeys.institutes.root);
                     onSubmit();
                     close();
-                }
+                },
+                onError: (err) => onError(err.error.detail)
             })
         }}
         schema={schema}
@@ -54,9 +55,7 @@ export const RenameDepartmentForm = ({onSubmit, close, department}: RenameDepart
                 error={formState.errors["name"]}
             />
 
-            <FieldWrapper error={{
-                message: error ? (error.error?.detail || "Неизвестная ошибка") : undefined
-            }}>
+            <FieldWrapper error={formState.errors["root"]}>
                 <Button className="w-full" type="submit" isLoading={isLoading}>
                     Подтвердить
                 </Button>

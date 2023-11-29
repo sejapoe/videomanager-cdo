@@ -37,7 +37,7 @@ const schema = z.object({
 })
 
 type UploadFileValues = {
-    file?: File;
+    file: File;
 }
 
 type UploadFileFormProps = {
@@ -47,10 +47,10 @@ type UploadFileFormProps = {
 
 export const UploadFileForm = ({onSubmit, close}: UploadFileFormProps) => {
     const queryClient = useQueryClient();
-    const {mutate, isLoading, error} = useCreateInstitutes()
+    const {mutate, isLoading} = useCreateInstitutes()
 
     return <Form<UploadFileValues, typeof schema>
-        onSubmit={({file}) => {
+        onSubmit={({file}, onError) => {
             if (!file) return;
             parseFile(file).then(data => {
                 mutate(data, {
@@ -58,7 +58,8 @@ export const UploadFileForm = ({onSubmit, close}: UploadFileFormProps) => {
                         await queryClient.invalidateQueries(institutesKeys.institutes.root)
                         onSubmit()
                         close()
-                    }
+                    },
+                    onError: (err) => onError(err.error.detail)
                 })
             })
         }}
@@ -77,9 +78,7 @@ export const UploadFileForm = ({onSubmit, close}: UploadFileFormProps) => {
 
             {watch("file") && <Preview file={watch("file")!}/>}
 
-            <FieldWrapper error={{
-                message: error ? (error.error?.detail || "Неизвестная ошибка") : undefined
-            }}>
+            <FieldWrapper error={formState.errors["root"]}>
                 <Button
                     startIcon={solid("check")}
                     className="w-full"
