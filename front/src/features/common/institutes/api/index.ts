@@ -17,6 +17,10 @@ export const institutesKeys = {
         root: ['institutes'],
     },
 
+    departments: {
+        root: () => [...institutesKeys.institutes.root, 'departments'],
+    },
+
     mutation: {
         create: () => [...institutesKeys.institutes.root, 'create'],
         delete: () => [...institutesKeys.institutes.root, 'delete'],

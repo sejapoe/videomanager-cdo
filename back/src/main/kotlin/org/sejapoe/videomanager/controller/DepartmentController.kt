@@ -3,6 +3,7 @@ package org.sejapoe.videomanager.controller
 import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.department.CreateDepartmentReq
 import org.sejapoe.videomanager.dto.department.DeleteDepartmentReq
+import org.sejapoe.videomanager.dto.department.RenameDepartmentReq
 import org.sejapoe.videomanager.mapper.DepartmentMapper
 import org.sejapoe.videomanager.security.annotations.IsAdmin
 import org.sejapoe.videomanager.security.annotations.IsUser
@@ -29,4 +30,10 @@ class DepartmentController(
     @DeleteMapping
     fun deleteDepartment(@RequestBody @Valid deleteDepartmentReq: DeleteDepartmentReq) =
         departmentService.delete(deleteDepartmentReq.id, deleteDepartmentReq.replacementId)
+
+    @IsAdmin
+    @PatchMapping
+    fun renameDepartment(@RequestBody @Valid renameDepartmentReq: RenameDepartmentReq) =
+        departmentService.rename(renameDepartmentReq.id, renameDepartmentReq.name)
+
 }

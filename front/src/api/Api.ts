@@ -214,6 +214,27 @@ export interface CreateArchiveEntryReqDto {
   linkToVideo: string;
 }
 
+export interface RenameDepartmentReqDto {
+  /** @format int64 */
+  id: number;
+  name: string;
+}
+
+export interface DepartmentDto {
+  name: string;
+  institute: InstituteDto;
+  /** @format int64 */
+  id: number;
+}
+
+export interface InstituteDto {
+  name: string;
+  /** @uniqueItems true */
+  departments: DepartmentDto[];
+  /** @format int64 */
+  id: number;
+}
+
 export interface UpdateCorrectionStatusReqDto {
   /** @format int64 */
   id: number;
@@ -226,14 +247,14 @@ export interface PageUserResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: UserResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -263,14 +284,14 @@ export interface PageRequestResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: RequestResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -282,14 +303,14 @@ export interface PageArchiveEntryResDto {
   /** @format int64 */
   totalElements?: number;
   pageable?: PageableObjectDto;
-  first?: boolean;
-  last?: boolean;
   /** @format int32 */
   size?: number;
   content?: ArchiveEntryResDto[];
   /** @format int32 */
   number?: number;
   sort?: SortObjectDto;
+  first?: boolean;
+  last?: boolean;
   /** @format int32 */
   numberOfElements?: number;
   empty?: boolean;
@@ -773,6 +794,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         this.request<void, any>({
           path: `/api/departments`,
           method: "DELETE",
+          body: data,
+          secure: true,
+          type: ContentType.Json,
+          ...params,
+        }),
+
+    /**
+     * No description
+     *
+     * @tags department-controller
+     * @name RenameDepartment
+     * @request PATCH:/api/departments
+     * @secure
+     */
+    renameDepartment: (data: RenameDepartmentReqDto, params: RequestParams = {}) =>
+        this.request<DepartmentDto, any>({
+          path: `/api/departments`,
+          method: "PATCH",
           body: data,
           secure: true,
           type: ContentType.Json,

@@ -17,8 +17,13 @@ class DepartmentService(
 ) {
     fun getAll(): List<Department> = departmentRepo.findAll()
 
-    fun create(name: String, instituteId: Long) =
-        departmentRepo.save(Department(name, instituteService.get(instituteId)))
+    fun create(name: String, instituteId: Long): Department {
+        val department = Department(name, instituteService.get(instituteId))
+
+        checkDuplicate(department, name)
+
+        return departmentRepo.save(department)
+    }
 
     fun get(id: Long): Department =
         departmentRepo.findById(id).orElseThrow { NotFoundException("Department with $id is not found") }
@@ -47,5 +52,21 @@ class DepartmentService(
         }
 
         departmentRepo.delete(department)
+    }
+
+    fun rename(id: Long, name: String): Department {
+        val department = get(id)
+
+        checkDuplicate(department, name)
+
+        department.name = name
+        return departmentRepo.save(department)
+    }
+
+    private fun checkDuplicate(department: Department, name: String) {
+        val isDuplicate = department.institute.departments.any { it.name == name && it.id != department.id }
+        if (isDuplicate) {
+            throw ConflictException("Department with name `${name}` already exists in institute `${department.institute.name}`")
+        }
     }
 }

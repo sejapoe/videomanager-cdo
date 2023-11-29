@@ -66,7 +66,7 @@ export const RequestsTable: React.FC<RequestsProps> = ({filter}) => {
             }}
         >
             {({watch}) =>
-                <Pageable defaultPageSize={10}>
+                <Pageable defaultPageSize={15}>
                     {({sort, page}) => (
                         <RequestsLoader filter={{
                             user: m1u(watch("user")),

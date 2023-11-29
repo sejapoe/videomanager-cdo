@@ -2,36 +2,36 @@ import {z} from "zod";
 import {Form} from "../../../../ui/form/Form.tsx";
 import {InputField} from "../../../../ui/form/InputField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
-import {useCreateDepartment} from "../api";
+import {useRenameDepartment} from "../api";
 import {useQueryClient} from "@tanstack/react-query";
-import {institutesKeys, useInstitutes} from "../../../common/institutes/api";
-import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
+import {institutesKeys} from "../../../common/institutes/api";
+import {Department} from "../../../common/institutes/model";
 import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.object({
-    institute_id: z.number().positive(),
     name: z.string().min(1, "Required")
 })
 
-type NewDepartmentValues = {
-    institute_id: number;
+type RenameDepartmentValues = {
     name: string;
 }
 
-type NewDepartmentFormProps = {
-    instituteId: number;
+type RenameDepartmentFormProps = {
+    department: Department;
     onSubmit: (data: void) => void;
     close: () => void
 };
 
-export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentFormProps) => {
+export const RenameDepartmentForm = ({onSubmit, close, department}: RenameDepartmentFormProps) => {
     const queryClient = useQueryClient();
-    const {mutate, isLoading, error} = useCreateDepartment()
-    const {data: institutes} = useInstitutes()
+    const {mutate, isLoading, error} = useRenameDepartment()
 
-    return <Form<NewDepartmentValues, typeof schema>
+    return <Form<RenameDepartmentValues, typeof schema>
         onSubmit={data => {
-            mutate(data, {
+            mutate({
+                id: department.id,
+                name: data.name
+            }, {
                 onSuccess: async () => {
                     await queryClient.invalidateQueries(institutesKeys.institutes.root);
                     onSubmit();
@@ -42,27 +42,13 @@ export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentF
         schema={schema}
         options={{
             defaultValues: {
-                institute_id: instituteId,
+                name: department.name
             }
         }}
     >
-        {({register, formState, control}) => <>
-            <ComboboxField
-                label="Институт"
-                defaultValue={instituteId}
-                options={
-                    institutes?.map(value => ({
-                        value: value.id,
-                        label: value.name
-                    })) || []
-                }
-                error={formState.errors["institute_id"]}
-                name={"institute_id"}
-                control={control}
-            />
-
+        {({register, formState}) => <>
             <InputField
-                label="Название кафедры"
+                label="Новое название кафедры"
                 registration={register("name")}
                 noAutocomplete
                 error={formState.errors["name"]}
@@ -72,10 +58,9 @@ export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentF
                 message: error?.error.detail
             }}>
                 <Button className="w-full" type="submit" isLoading={isLoading}>
-                    Создать
+                    Подтвердить
                 </Button>
             </FieldWrapper>
-
         </>}
     </Form>
 };

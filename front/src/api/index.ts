@@ -3,13 +3,13 @@ import {Api, ContentType, ProblemDetailDto} from "./Api.ts";
 
 type GenericErrorModel = HttpResponse<unknown, ProblemDetailDto>
 
-const timeoutFetch = (...args: Parameters<typeof fetch>) => {
-    return new Promise<Response>((resolve) => {
-        setTimeout(() => {
-            resolve(fetch(...args));
-        }, 500);
-    });
-};
+// const timeoutFetch = (...args: Parameters<typeof fetch>) => {
+//     return new Promise<Response>((resolve) => {
+//         setTimeout(() => {
+//             resolve(fetch(...args));
+//         }, 500);
+//     });
+// };
 
 const api = new Api<string>({
     baseUrl: import.meta.env.VITE_SERVER_URL, // "http://localhost:8080"
@@ -22,7 +22,7 @@ const api = new Api<string>({
     securityWorker: (token) => {
         return token ? {headers: {Authorization: `Bearer ${token}`}} : {};
     },
-    customFetch: timeoutFetch
+    // customFetch: timeoutFetch
 })
 
 export default api.api

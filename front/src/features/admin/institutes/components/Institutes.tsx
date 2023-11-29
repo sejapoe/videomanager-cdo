@@ -11,6 +11,7 @@ import {UploadFileForm} from "./UploadFileForm.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {DeleteInstituteForm} from "./DeleteInstituteForm.tsx";
 import {DeleteDepartmentForm} from "./DeleteDepartmentForm.tsx";
+import {RenameDepartmentForm} from "./RenameDepartmentForm.tsx";
 
 type SingleDepartmentProps = {
     department: Department
@@ -18,12 +19,21 @@ type SingleDepartmentProps = {
 
 const SingleDepartment = ({department}: SingleDepartmentProps) => {
     const {
+        Dialog: RenameDepartmentDialog,
+        open: openRenameDepartment
+    } = useDialog<{}, void>({title: "Изменение кафедры"})
+
+    const {
         Dialog: DeleteDepartmentDialog,
         open: openDeleteDepartment
     } = useDialog<{}, void>({title: "Удаление кафедры"})
 
-    return <p className="relative w-full text-gray-900 group hover:bg-gray-300 rounded py-1 transition-colors"
-              key={`department-${department.id}`}>
+    return <p className="relative w-full text-gray-900 group hover:bg-gray-300 rounded py-1 transition-colors">
+        <RenameDepartmentDialog>
+            {({ok, close}) => (
+                <RenameDepartmentForm department={department} onSubmit={ok} close={close}/>
+            )}
+        </RenameDepartmentDialog>
         <DeleteDepartmentDialog>
             {({ok, close}) => (
                 <DeleteDepartmentForm department={department} onSubmit={ok} close={close}/>
@@ -33,7 +43,9 @@ const SingleDepartment = ({department}: SingleDepartmentProps) => {
         {department.name}
         <div className="absolute top-1 right-2 space-x-2 hidden group-hover:block">
             <FontAwesomeIcon icon={solid("pen")}
-                             className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"/>
+                             className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"
+                             onClick={() => openRenameDepartment({})}
+            />
             <FontAwesomeIcon icon={solid("trash")}
                              className="text-gray-400 transition-colors hover:text-red-600 cursor-pointer"
                              onClick={() => openDeleteDepartment({})}
@@ -50,7 +62,7 @@ const SingleInstitute = ({institute}: SingleInstituteProps) => {
     const {
         Dialog: CreateDepartmentDialog,
         open: openCreateDepartment
-    } = useDialog<number, void>({title: "Создание института"})
+    } = useDialog<number, void>({title: "Создание кафедры"})
 
     const {Dialog: DeleteInstituteDialog, open: openDeleteInstitute} = useDialog<{
         institute: Institute
@@ -83,7 +95,7 @@ const SingleInstitute = ({institute}: SingleInstituteProps) => {
             </div>
 
             {institute.departments.map(department => (
-                <SingleDepartment department={department}/>
+                <SingleDepartment key={`department-${department.id}`} department={department}/>
             ))}
         </div>
 

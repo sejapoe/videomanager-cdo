@@ -9,16 +9,20 @@ import {
     DepartmentResDto,
     InstituteWithDepartmentsResDto,
     ProblemDetailDto,
+    RenameDepartmentReqDto,
 } from "../../../../api/Api.ts";
 import {institutesKeys} from "../../../common/institutes/api";
+import {Department} from "../../../common/institutes/model";
 
 export const adminInstitutesKeys = {
     mutation: {
         create: () => [...institutesKeys.institutes.root, 'create'],
-        createDepartment: () => [...institutesKeys.institutes.root, 'createDepartment'],
         createMultiple: () => [...institutesKeys.institutes.root, 'createMultiple'],
         delete: () => [...institutesKeys.institutes.root, 'delete'],
-        deleteDepartment: () => [...institutesKeys.institutes.root, 'deleteDepartment'],
+
+        createDepartment: () => [...institutesKeys.departments.root(), 'create'],
+        deleteDepartment: () => [...institutesKeys.departments.root(), 'delete'],
+        renameDepartment: () => [...institutesKeys.departments.root(), 'rename'],
     }
 }
 
@@ -88,7 +92,7 @@ export const useDeleteInstitute = (options?: UseDeleteInstituteOptions) =>
         options
     )
 
-type UseDeleteDepartmentMutation = UseMutationOptions<HttpResponse<void>, HttpResponse<unknown, ProblemDetailDto>, DeleteDepartmentReqDto>
+type UseDeleteDepartmentMutation = UseMutationOptions<HttpResponse<void>, GenericErrorModel, DeleteDepartmentReqDto>
 
 type UseDeleteDepartmentOptions = Omit<UseDeleteDepartmentMutation, 'mutationFn' | 'mutationKey'>
 
@@ -97,6 +101,19 @@ export const useDeleteDepartment = (options?: UseDeleteDepartmentOptions) =>
         adminInstitutesKeys.mutation.deleteDepartment(),
         (dto) => {
             return api.deleteDepartment(dto);
+        },
+        options
+    )
+
+type UseRenameDepartmentMutation = UseMutationOptions<HttpResponse<Department>, GenericErrorModel, RenameDepartmentReqDto>
+
+type UseRenameDepartmentOptions = Omit<UseRenameDepartmentMutation, 'mutationFn' | 'mutationKey'>
+
+export const useRenameDepartment = (options?: UseRenameDepartmentOptions) =>
+    useMutation(
+        adminInstitutesKeys.mutation.deleteDepartment(),
+        (dto) => {
+            return api.renameDepartment(dto);
         },
         options
     )
