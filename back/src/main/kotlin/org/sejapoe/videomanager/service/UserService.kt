@@ -3,7 +3,6 @@ package org.sejapoe.videomanager.service
 import com.querydsl.core.types.Predicate
 import org.sejapoe.videomanager.exception.ConflictException
 import org.sejapoe.videomanager.exception.NotFoundException
-import org.sejapoe.videomanager.exception.auth.EmailAlreadyExitsRegistrationException
 import org.sejapoe.videomanager.exception.auth.EmailDoesntExistsLoginException
 import org.sejapoe.videomanager.model.QUser
 import org.sejapoe.videomanager.model.Role
@@ -28,16 +27,6 @@ class UserService(
     private val passwordEncoder: PasswordEncoder,
     private val userActivationRepo: UserActivationRepo
 ) {
-
-    fun register(email: String, password: String, fullName: String): Pair<String, User> {
-        if (userRepo.findByEmail(email) != null) {
-            throw EmailAlreadyExitsRegistrationException()
-        }
-
-        val user = User(email, passwordEncoder.encode(password), fullName, Role.ROLE_USER, true)
-        userRepo.save(user)
-        return jwtService.generateToken(user) to user
-    }
 
     fun login(email: String, password: String): Pair<User, String> {
         authenticationManager.authenticate(

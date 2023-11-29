@@ -6,7 +6,6 @@ import org.sejapoe.videomanager.dto.institute.CreateInstitutesWithDepartmentsReq
 import org.sejapoe.videomanager.dto.institute.DeleteInstituteReq
 import org.sejapoe.videomanager.exception.InstituteDeletionCascadeException
 import org.sejapoe.videomanager.mapper.InstituteMapper
-import org.sejapoe.videomanager.mapper.RequestMapper
 import org.sejapoe.videomanager.security.annotations.IsAdmin
 import org.sejapoe.videomanager.security.annotations.IsUser
 import org.sejapoe.videomanager.service.InstituteService
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/institutes")
 class InstituteController(
     private val instituteService: InstituteService,
-    private val instituteMapper: InstituteMapper, private val requestMapper: RequestMapper,
+    private val instituteMapper: InstituteMapper,
 ) {
     @IsUser
     @GetMapping
@@ -35,7 +34,7 @@ class InstituteController(
         instituteService.create(createInstitutesReq.institutes).map(instituteMapper::toInstituteWithDepartmentsRes)
 
     @IsAdmin
-    @DeleteMapping()
+    @DeleteMapping
     fun deleteInstitute(@RequestBody @Valid deleteInstituteReq: DeleteInstituteReq) =
         instituteService.delete(deleteInstituteReq.id, deleteInstituteReq.departmentReplacement ?: mapOf())
 

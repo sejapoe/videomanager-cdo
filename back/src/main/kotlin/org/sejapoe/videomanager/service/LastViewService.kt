@@ -9,9 +9,6 @@ import kotlin.jvm.optionals.getOrElse
 class LastViewService(
     private val lastViewRepo: LastViewRepo
 ) {
-    fun isUnread(user: User, request: Request) = request.corrections.any {
-        isUnread(user, it)
-    }
 
     fun countUnread(user: User, request: Request): Int = request.corrections.count {
         isUnread(user, it)
