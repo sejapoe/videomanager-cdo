@@ -25,7 +25,7 @@ class Comment(
         cascade = [CascadeType.PERSIST, CascadeType.MERGE],
         orphanRemoval = true
     )
-    val lastViews: List<LastView> = mutableListOf(),
+    val lastViews: List<LastView> = emptyList(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

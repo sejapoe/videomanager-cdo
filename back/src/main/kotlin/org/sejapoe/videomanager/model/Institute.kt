@@ -7,6 +7,7 @@ import jakarta.persistence.*
 class Institute(
     @Column(name = "name")
     var name: String,
+
     @OneToMany(
         mappedBy = "institute",
         cascade = [CascadeType.PERSIST, CascadeType.MERGE],
@@ -14,7 +15,8 @@ class Institute(
         fetch = FetchType.LAZY,
     )
     @OrderBy("id asc")
-    var departments: Set<Department> = emptySet(),
+    var departments: List<Department> = emptyList(),
+
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institutes_seq")
     @SequenceGenerator(name = "institutes_seq", sequenceName = "institutes_seq", allocationSize = 1)
     var id: Long = -1,
