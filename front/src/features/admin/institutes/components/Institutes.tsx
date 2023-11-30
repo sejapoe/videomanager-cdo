@@ -126,14 +126,16 @@ const InstitutesContent = ({institutes}: InstitutesContentProps) => {
                 <Button
                     startIcon={solid("upload")}
                     onClick={() => openUploadFile()}
-                    className={"pr-2.5 md:px-6"}
+                    className={"pr-2 md:px-4"}
+                    size="sm"
                 >
                     <span className="hidden md:block">Загрузить файл</span>
                 </Button>
                 <Button
                     startIcon={solid("plus")}
                     onClick={() => openCreateInstitute()}
-                    className={"pr-2.5 md:px-6"}
+                    className={"pr-2 md:px-4"}
+                    size="sm"
                 >
                     <span className="hidden md:block">Создать</span>
                 </Button>
