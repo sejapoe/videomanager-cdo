@@ -36,7 +36,7 @@ export function LabeledTimeCode({label, timeCode, className}: LabeledTimeCodePro
     return <div className="flex flex-col justify-center items-center w-fit">
         <span className="text-xs">{label}</span>
         <div className={clsx(
-            "flex text-xl font-['Open_Sans'] py-1 px-4 rounded-md justify-center",
+            "flex text-xl font-['Open_Sans'] py-1 px-2 sm:px-4 rounded-md justify-center",
             className
         )}>
             {formatTimeCode(timeCode)}

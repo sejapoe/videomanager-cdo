@@ -13,6 +13,7 @@ import {RenameDepartmentForm} from "./forms/RenameDepartmentForm.tsx";
 import {RenameInstituteForm} from "./forms/RenameInstituteForm.tsx";
 import {useDialog} from "../../../../providers/DialogProvider.tsx";
 import {NewInstituteForm} from "./forms/NewInstituteForm.tsx";
+import clsx from "clsx";
 
 type SingleDepartmentProps = {
     department: Department
@@ -66,10 +67,13 @@ const SingleInstitute = ({institute}: SingleInstituteProps) => {
     })
 
     return <div
-        className="shadow bg-gray-200 border border-gray-300 flex flex-col items-center p-2 rounded-xl justify-between">
+        className={clsx(
+            "shadow bg-gray-200 border border-gray-300 flex flex-col items-center p-2 rounded-xl justify-between",
+            "mx-12 min-[400px]:mx-0"
+        )}>
         <div className="w-full text-center">
             <div className="w-full border-b-2 border-b-gray-600 pb-1 mb-1 relative">
-                <h1 className="text-3xl text-gray-900">{institute.name}</h1>
+                <h1 className="text-lg md:text-2xl text-gray-900">{institute.name}</h1>
                 <div className="absolute top-0 right-0 space-x-2">
                     <FontAwesomeIcon icon={solid("pen")}
                                      className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"
@@ -121,17 +125,21 @@ const InstitutesContent = ({institutes}: InstitutesContentProps) => {
             <div className="flex space-x-4">
                 <Button
                     startIcon={solid("upload")}
-                    onClick={() => openUploadFile()}>
-                    Загрузить файл
+                    onClick={() => openUploadFile()}
+                    className={"pr-2.5 md:px-6"}
+                >
+                    <span className="hidden md:block">Загрузить файл</span>
                 </Button>
                 <Button
                     startIcon={solid("plus")}
-                    onClick={() => openCreateInstitute()}>
-                    Создать
+                    onClick={() => openCreateInstitute()}
+                    className={"pr-2.5 md:px-6"}
+                >
+                    <span className="hidden md:block">Создать</span>
                 </Button>
             </div>
         </div>}>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+            <div className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2">
                 {institutes.map(institute => (
                     <SingleInstitute key={`institute-${institute.id}`} institute={institute}/>
                 ))}

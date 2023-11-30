@@ -26,7 +26,7 @@ const ArchiveEntryContent = ({entry}: ArchiveEntryContentProps) => {
                                       </span>
                               </div>
                           }>
-        <div className="w-full mt-2 grid grid-rows-2 md:grid-rows-none md:grid-cols-2">
+        <div className="w-full mt-2 grid md:grid-cols-2">
             <div className="text-gray-700 text-lg">
                 <p>Преподаватель: {entry.lecturer.fullName}</p>
                 <p>
@@ -38,7 +38,7 @@ const ArchiveEntryContent = ({entry}: ArchiveEntryContentProps) => {
             </div>
             <div className="flex justify-end">
                 <a className={clsx(
-                    "w-3/5 aspect-video rounded-xl flex items-center justify-center",
+                    "w-full md:w-3/4 lg:w-3/5 aspect-video rounded-xl flex items-center justify-center",
                     "bg-[url('/blurred.jpg')] bg-contain",
                     "text-gray-500/80 hover:text-red-500/80 hover:scale-105 cursor-pointer transition-all"
                 )} href={entry.linkToVideo} target="_blank">

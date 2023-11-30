@@ -7,6 +7,8 @@ import {CenterSpinner} from "../../../../ui/layout/CenterSpinner.tsx";
 import {UsersTableContent} from "./UsersTableContent.tsx";
 import {debounce} from "lodash";
 import {bIu, eIu} from "../../../../utils/undefineds.ts";
+import {useMediaQuery} from "react-responsive";
+import {UsersTableContentMobile} from "./UsersTableContentMobile.tsx";
 
 type UsersLoaderProps = {
     filter: LecturersFilter
@@ -16,12 +18,17 @@ const UsersLoader = ({filter}: UsersLoaderProps) => {
     const {data: lecturers, isFetching} = useLecturers(filter, undefined, {
         keepPreviousData: true
     })
+    const isMobile = useMediaQuery({
+        query: '(max-width: 1280px)'
+    })
 
     return !lecturers
         ? <CenterSpinner/>
         : <div className="relative">
             <Pageable.FixPage totalPages={lecturers.totalPages}/>
-            <UsersTableContent users={lecturers}/>
+            {isMobile
+                ? <UsersTableContentMobile users={lecturers}/>
+                : <UsersTableContent users={lecturers}/>}
             {isFetching &&
                 <div className="absolute rounded top-0 w-full h-full cursor-wait"/>
             }

@@ -7,6 +7,8 @@ import {z} from "zod";
 import {bIu, eIu} from "../../../../utils/undefineds.ts";
 import {ArchiveTableContent} from "./ArchiveTableContent.tsx";
 import {debounce} from "lodash";
+import {useMediaQuery} from "react-responsive";
+import {ArchiveTableContentMobile} from "./ArchiveTableContentMobile.tsx";
 
 type ArchiveProps = {
     filter?: ArchiveFilter
@@ -14,12 +16,18 @@ type ArchiveProps = {
 
 const ArchiveLoader: React.FC<ArchiveProps> = ({filter}) => {
     const {data: entries, isFetching} = useArchiveEntries(filter || {});
+    const isMobile = useMediaQuery({
+        query: '(max-width: 1280px)'
+    })
 
     return !entries
         ? <CenterSpinner/>
         : <div className="relative">
             <Pageable.FixPage totalPages={entries.totalPages}/>
-            <ArchiveTableContent entries={entries}/>
+            {isMobile
+                ? <ArchiveTableContentMobile entries={entries}/>
+                : <ArchiveTableContent entries={entries}/>
+            }
             {isFetching &&
                 <div className="absolute rounded top-0 w-full h-full cursor-wait"/>
             }

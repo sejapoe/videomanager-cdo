@@ -8,6 +8,8 @@ import {z} from "zod";
 import {RequestStatus} from "../model";
 import {bIu, eIu} from "../../../../utils/undefineds.ts";
 import {debounce} from "lodash"
+import {useMediaQuery} from "react-responsive";
+import {RequestsTableContentMobile} from "./RequestsTableContentMobile.tsx";
 
 type RequestsProps = {
     filter?: RequestsFilter
@@ -15,12 +17,18 @@ type RequestsProps = {
 
 const RequestsLoader: React.FC<RequestsProps> = ({filter}) => {
     const {data: requests, isFetching} = useRequests(filter);
+    const isMobile = useMediaQuery({
+        query: '(max-width: 1280px)'
+    })
 
     return !requests
         ? <CenterSpinner/>
         : <div className="relative">
             <Pageable.FixPage totalPages={requests.totalPages}/>
-            <RequestsTableContent requests={requests}/>
+            {isMobile
+                ? <RequestsTableContentMobile requests={requests}/>
+                : <RequestsTableContent requests={requests}/>
+            }
             {isFetching &&
                 <div className="absolute rounded top-0 w-full h-full cursor-wait"/>
             }

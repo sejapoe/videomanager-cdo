@@ -5,15 +5,18 @@ import {queryClient} from "../../../../lib/react-query";
 import {requestsKeys} from "../../../common/requests/api";
 import {useNavigate} from "react-router-dom";
 import {PATH_PAGE} from "../../../../lib/react-router";
+import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 
 export const AdminRequestActions = ({request}: ActionProps) => {
     const nav = useNavigate()
     const {mutate} = useArchiveRequest()
 
     const disabled = request.status !== "COMPLETED";
-    return <div className="w-full flex pt-2">
+    return <>
         <Button
+            startIcon={solid("box-archive")}
             variant="inverse"
+            className="w-full md:w-fit"
             disabled={disabled}
             title={disabled ? "Заявка должна быть решена" : ""}
             onClick={() => {
@@ -27,5 +30,13 @@ export const AdminRequestActions = ({request}: ActionProps) => {
         >
             В архив
         </Button>
-    </div>;
+
+        <Button
+            startIcon={solid("trash")}
+            className="w-full md:w-fit"
+            variant="danger"
+        >
+            Удалить
+        </Button>
+    </>;
 }

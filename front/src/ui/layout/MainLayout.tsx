@@ -66,7 +66,7 @@ const UserNavigation = () => {
                             "text-gray-700 text-lg",
                             "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")}>
                         <FontAwesomeIcon icon={solid("user")}/><span
-                        className="hidden md:block ml-2">{user.fullName}</span>
+                        className="hidden lg:block ml-2">{user.fullName}</span>
                     </Menu.Button>
                 </div>
                 <Transition
@@ -83,7 +83,7 @@ const UserNavigation = () => {
                                 className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <Menu.Item>
                             {() => (
-                                <span className="block md:hidden px-4 py-2 text-sm text-gray-500 cursor-default ">
+                                <span className="block lg:hidden px-4 py-2 text-sm text-gray-500 cursor-default ">
                                     {user.fullName}
                                 </span>
                             )}
@@ -124,7 +124,7 @@ const AppNavigationItem = (nav: NavigationItem) => {
 }
 
 const MobileAppNavigation = ({navigation}: AppNavigationProps) => {
-    return <Menu as="div" className="md:hidden relative">
+    return <Menu as="div" className="lg:hidden relative">
         {({open}) => (
             <>
                 <div>
@@ -160,7 +160,7 @@ const MobileAppNavigation = ({navigation}: AppNavigationProps) => {
 }
 
 const AppNavigation = ({navigation}: AppNavigationProps) => {
-    return <div className="hidden md:flex items-center space-x-3">
+    return <div className="hidden lg:flex items-center space-x-3">
         {navigation.map(nav => (<AppNavigationItem key={nav.name} name={nav.name} to={nav.to} icon={nav.icon}/>))}
     </div>;
 }
@@ -174,7 +174,7 @@ export const MainLayout = ({children, navigation}: MainLayoutProps) => {
     return <div className="h-screen flex overflow-hidden bg-gray-100">
         <div className="flex flex-col w-screen flex-1 overflow-hidden">
             <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
-                <div className="flex items-center ml-2 md:ml-4">
+                <div className="flex items-center ml-2 lg:ml-4">
                     <MobileAppNavigation navigation={navigation}/>
                 </div>
                 <Link className="flex ml-4 items-center" to=".">
@@ -186,7 +186,7 @@ export const MainLayout = ({children, navigation}: MainLayoutProps) => {
                 </div>
 
                 <div className="flex-1 px-4 flex justify-end">
-                    <div className="ml-4 flex items-center md:ml-6">
+                    <div className="ml-4 flex items-center lg:ml-6">
                         <UserNavigation/>
                     </div>
                 </div>
