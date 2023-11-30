@@ -1,13 +1,17 @@
 package org.sejapoe.videomanager.utils;
 
-import org.apache.commons.io.FileUtils;
-import org.springframework.util.ResourceUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class ResourceReader {
     public static String readFileToString(String path) throws IOException {
-        return FileUtils.readFileToString(ResourceUtils.getFile(path), StandardCharsets.UTF_8);
+        ClassPathResource classPathResource = new ClassPathResource(path);
+        try (InputStreamReader reader = new InputStreamReader(classPathResource.getInputStream(), StandardCharsets.UTF_8)) {
+            return FileCopyUtils.copyToString(reader);
+        }
     }
 }
