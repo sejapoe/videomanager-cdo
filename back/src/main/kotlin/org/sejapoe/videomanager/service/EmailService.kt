@@ -16,7 +16,7 @@ class EmailService(
     private val frontUrl: String,
     private val userActivationRepo: UserActivationRepo,
     @Value(
-        "#{T(org.sejapoe.videomanager.utils.ResourceReader).readFileToString('classpath:mail_template.html')}",
+        "#{T(org.sejapoe.videomanager.utils.ResourceReader).readFileToString('mail_template.html')}",
     )
     private val html: String,
 ) {

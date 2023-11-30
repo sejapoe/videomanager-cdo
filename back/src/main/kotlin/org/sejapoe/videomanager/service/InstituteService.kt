@@ -46,7 +46,7 @@ class InstituteService(
                     this.departments =
                         it.departments.map { name ->
                             Department(name, this)
-                        }.toSet()
+                        }
                 }
             }
 
