@@ -77,12 +77,17 @@ class RequestService(
         requester: User,
         id: Long,
     ): Request {
-        val request = requestRepo.findById(id).getOrNull() ?: throw NotFoundException("Request with $id is not found")
+        val request = get(id)
         if (requester.role == Role.ROLE_USER && requester.id != request.lecturer.id) {
             throw ForbiddenException(
                 "You cannot get other user's requests!",
             )
         }
+        return request
+    }
+
+    private fun get(id: Long): Request {
+        val request = requestRepo.findById(id).getOrNull() ?: throw NotFoundException("Request with $id is not found")
         return request
     }
 
@@ -104,5 +109,13 @@ class RequestService(
         request.status = RequestStatus.ARCHIVED
         requestRepo.save(request)
         return archiveEntryService.createFromRequest(request)
+    }
+
+    fun delete(id: Long) {
+        val request = get(id)
+
+        archiveEntryService.detach(request)
+
+        requestRepo.delete(request)
     }
 }

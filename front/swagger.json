@@ -1092,6 +1092,33 @@
             "bearerToken": []
           }
         ]
+      },
+      "delete": {
+        "tags": [
+          "request-controller"
+        ],
+        "operationId": "deleteRequest",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
       }
     },
     "/api/corrections/{id}": {

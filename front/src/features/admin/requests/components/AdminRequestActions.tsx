@@ -6,10 +6,19 @@ import {requestsKeys} from "../../../common/requests/api";
 import {useNavigate} from "react-router-dom";
 import {PATH_PAGE} from "../../../../lib/react-router";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
+import {useDialog} from "../../../../providers/DialogProvider.tsx";
+import {ConfirmDeleteRequestForm} from "./ConfirmDeleteRequestForm.tsx";
 
 export const AdminRequestActions = ({request}: ActionProps) => {
     const nav = useNavigate()
     const {mutate} = useArchiveRequest()
+    const openConfirmDeleteRequest = useDialog({
+        title: "Подтвердите удаление запроса",
+        children: (close) => <ConfirmDeleteRequestForm request={request} onSubmit={() => {
+            nav(PATH_PAGE.app.requests)
+            close()
+        }}/>
+    })
 
     const disabled = request.status !== "COMPLETED";
     return <>
@@ -35,6 +44,7 @@ export const AdminRequestActions = ({request}: ActionProps) => {
             startIcon={solid("trash")}
             className="w-full md:w-fit"
             variant="danger"
+            onClick={() => openConfirmDeleteRequest()}
         >
             Удалить
         </Button>

@@ -4,6 +4,7 @@ import com.querydsl.core.types.Predicate
 import org.sejapoe.videomanager.dto.archive.CreateArchiveEntryReq
 import org.sejapoe.videomanager.exception.NotFoundException
 import org.sejapoe.videomanager.model.ArchiveEntry
+import org.sejapoe.videomanager.model.QArchiveEntry
 import org.sejapoe.videomanager.model.Request
 import org.sejapoe.videomanager.repo.ArchiveEntryRepo
 import org.springframework.data.domain.Page
@@ -46,4 +47,11 @@ class ArchiveEntryService(
         predicate: Predicate,
         pageable: Pageable,
     ): Page<ArchiveEntry> = archiveEntryRepo.findAll(predicate, pageable)
+
+    fun detach(request: Request) {
+        archiveEntryRepo.findOne(QArchiveEntry.archiveEntry.request.id.eq(request.id)).ifPresent {
+            it.request = null
+            archiveEntryRepo.save(it)
+        }
+    }
 }

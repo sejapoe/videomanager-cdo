@@ -92,4 +92,9 @@ class RequestController(
         @PathVariable id: Long,
         @AuthenticationPrincipal user: User,
     ) = requestService.archive(id, user).let(archiveEntryMapper::toDto)
+
+    @IsAdmin
+    @DeleteMapping("/{id}")
+    fun deleteRequest(@PathVariable id: Long) =
+        requestService.delete(id)
 }

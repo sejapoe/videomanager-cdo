@@ -13,7 +13,8 @@ export function mapRequest(requestDto: RequestResDto): Request {
 export const adminRequestsKeys = {
     mutation: {
         create: () => [...requestsKeys.requests.root, 'create'],
-        archive: () => [...requestsKeys.requests.root, 'archive']
+        archive: () => [...requestsKeys.requests.root, 'archive'],
+        delete: () => [...requestsKeys.requests.root, 'delete']
     }
 }
 
@@ -49,6 +50,23 @@ export const useArchiveRequest = (options?: UseArchiveRequestOptions) =>
             const response = await api.archiveRequest(id);
 
             return mapArchiveEntry(response.data)
+        },
+        options
+    )
+
+type UseDeleteRequestMutation = UseMutationOptions<
+    void,
+    GenericErrorModel,
+    number
+>
+
+type UseDeleteRequestOptions = Omit<UseDeleteRequestMutation, 'mutationFn' | 'mutationKey'>
+
+export const useDeleteRequest = (options?: UseDeleteRequestOptions) =>
+    useMutation(
+        adminRequestsKeys.mutation.archive(),
+        async (id: number) => {
+            await api.deleteRequest(id);
         },
         options
     )
