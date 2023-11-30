@@ -18,10 +18,9 @@ type NewLecturerValues = {
 type NewLecturerDialogProps = {
     defaultName: string;
     onSubmit: (id: number) => void;
-    close: () => void;
 }
 
-export const NewLecturerDialog = ({defaultName, onSubmit, close}: NewLecturerDialogProps) => {
+export const NewLecturerDialog = ({defaultName, onSubmit}: NewLecturerDialogProps) => {
     const {mutate, isLoading} = useCreateLecturer()
 
     return <Form<NewLecturerValues, typeof schema>
@@ -29,7 +28,6 @@ export const NewLecturerDialog = ({defaultName, onSubmit, close}: NewLecturerDia
             mutate(data, {
                 onSuccess: ({data}) => {
                     onSubmit(data.id)
-                    close()
                 },
                 onError: err => onError(err.error.detail)
             })

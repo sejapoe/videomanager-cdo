@@ -7,11 +7,11 @@ import {NewLecturerDialog} from "../../lecturers/components/NewLecturerDialog.ts
 import {useLecturers} from "../../lecturers/api";
 import {ComboboxField} from "../../../../ui/form/ComboboxField.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
-import {useDialog} from "../../../../hooks/useDialog.tsx";
 import {UseMutationResult, useQueryClient} from "@tanstack/react-query";
 import {ErrorLoadLayout} from "../../../../ui/layout/ErrorLoadLayout.tsx";
 import {GenericErrorModel} from "../../../../api";
 import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
+import {useDialog} from "../../../../providers/DialogProvider.tsx";
 
 const schema = z.object({
     name: z.string().min(1, "Required"),
@@ -57,17 +57,12 @@ export const NewRequestLikeForm = ({
         isLoading: isLoadingLecturers
     } = useLecturers({})
 
-    const {Dialog, open} = useDialog<string, number>({
+    const open = useDialog({
         title: "Создание преподавателя",
     })
 
     return (
         <ErrorLoadLayout isLoading={isLoadingLecturers || isLoadingInstitutes}>
-            <Dialog>
-                {({args: name, ok, close}) => (
-                    <NewLecturerDialog onSubmit={ok} defaultName={name} close={close}/>
-                )}
-            </Dialog>
             <Form<NewRequestLikeValues, typeof schema>
                 onSubmit={(data, onError) => {
                     mutate({
@@ -107,10 +102,14 @@ export const NewRequestLikeForm = ({
                                 <span
                                     className="cursor-pointer"
                                     onClick={() => {
-                                        open(query, async (data) => {
-                                            await queryClient.invalidateQueries(invalidationKeys)
-                                            // @ts-ignore
-                                            setValue("lecturer_id", data)
+                                        open({
+                                            children: (close) =>
+                                                <NewLecturerDialog
+                                                    onSubmit={async (data) => {
+                                                        await queryClient.invalidateQueries(invalidationKeys)
+                                                        close()
+                                                        setValue("lecturer_id", data)
+                                                    }} defaultName={query}/>
                                         })
                                     }}
                                 >

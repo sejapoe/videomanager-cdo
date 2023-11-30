@@ -42,10 +42,9 @@ type UploadFileValues = {
 
 type UploadFileFormProps = {
     onSubmit: (data: void) => void;
-    close: () => void
 };
 
-export const UploadFileForm = ({onSubmit, close}: UploadFileFormProps) => {
+export const UploadFileForm = ({onSubmit}: UploadFileFormProps) => {
     const queryClient = useQueryClient();
     const {mutate, isLoading} = useCreateInstitutes()
 
@@ -57,7 +56,6 @@ export const UploadFileForm = ({onSubmit, close}: UploadFileFormProps) => {
                     onSuccess: async () => {
                         await queryClient.invalidateQueries(institutesKeys.institutes.root)
                         onSubmit()
-                        close()
                     },
                     onError: (err) => onError(err.error.detail)
                 })

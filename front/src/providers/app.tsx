@@ -5,6 +5,7 @@ import {AppRoutes} from "../routes/AppRoutes";
 import {HelmetProvider} from "react-helmet-async";
 import React from 'react';
 import Spinner from "../ui/spinner";
+import {DialogProvider} from "./DialogProvider.tsx";
 
 const ErrorFallback = () => {
     return (
@@ -31,9 +32,11 @@ export const AppProvider = () => {
             <ErrorBoundary fallbackRender={() => (<ErrorFallback/>)}>
                 <HelmetProvider>
                     <QueryClientProvider>
-                        <BrowserRouter>
-                            <AppRoutes/>
-                        </BrowserRouter>
+                        <DialogProvider>
+                            <BrowserRouter>
+                                <AppRoutes/>
+                            </BrowserRouter>
+                        </DialogProvider>
                     </QueryClientProvider>
                 </HelmetProvider>
             </ErrorBoundary>

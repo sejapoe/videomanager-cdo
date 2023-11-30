@@ -21,10 +21,9 @@ type NewDepartmentValues = {
 type NewDepartmentFormProps = {
     instituteId: number;
     onSubmit: (data: void) => void;
-    close: () => void
 };
 
-export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentFormProps) => {
+export const NewDepartmentForm = ({onSubmit, instituteId}: NewDepartmentFormProps) => {
     const queryClient = useQueryClient();
     const {mutate, isLoading} = useCreateDepartment()
     const {data: institutes} = useInstitutes()
@@ -35,7 +34,6 @@ export const NewDepartmentForm = ({onSubmit, instituteId, close}: NewDepartmentF
                 onSuccess: async () => {
                     await queryClient.invalidateQueries(institutesKeys.institutes.root);
                     onSubmit();
-                    close();
                 },
                 onError: (err) => onError(err.error.detail)
             })

@@ -5,15 +5,15 @@ import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 
 type DialogWrapperProps = {
     isOpen: boolean;
-    setOpen: (value: boolean) => void;
+    close: () => void;
     children: React.ReactNode;
     title: string;
 }
 
-export const DialogWrapper = ({isOpen, setOpen, children, title}: DialogWrapperProps) => {
+export const DialogWrapper = ({isOpen, close, children, title}: DialogWrapperProps) => {
     return <Dialog
         open={isOpen}
-        onClose={() => setOpen(false)}
+        onClose={() => close()}
         className="relative z-50"
     >
         <div className="fixed inset-0 bg-black/30" aria-hidden="true"/>
@@ -23,7 +23,7 @@ export const DialogWrapper = ({isOpen, setOpen, children, title}: DialogWrapperP
                 <Dialog.Title className="text-gray-500 text-xl font-bold mb-4 flex justify-between items-center">
                     {title}
                     <FontAwesomeIcon icon={solid("xmark")} className="ml-4 cursor-pointer"
-                                     onClick={() => setOpen(false)}/>
+                                     onClick={() => close()}/>
                 </Dialog.Title>
                 {children}
             </Dialog.Panel>

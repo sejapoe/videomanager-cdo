@@ -17,10 +17,9 @@ const schema = z.record(
 type DeleteInstituteDialogProps = {
     institute: InstituteWithDepartments;
     onSubmit: (data: void) => void;
-    close: () => void
 };
 
-export const DeleteInstituteForm = ({institute, onSubmit, close}: DeleteInstituteDialogProps) => {
+export const DeleteInstituteForm = ({institute, onSubmit,}: DeleteInstituteDialogProps) => {
     const queryClient = useQueryClient()
     const {mutate, isLoading} = useDeleteInstitute()
     const [departmentIds, setDepartmentIds] = useState<number[] | null>(null)
@@ -41,7 +40,6 @@ export const DeleteInstituteForm = ({institute, onSubmit, close}: DeleteInstitut
                 onSuccess: async () => {
                     await queryClient.invalidateQueries(institutesKeys.institutes.root)
                     onSubmit()
-                    close()
                 },
                 onError: err => {
                     if (err.error.status == 409) {

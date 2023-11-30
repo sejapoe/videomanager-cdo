@@ -19,10 +19,9 @@ type RenameDepartmentValues = {
 type RenameDepartmentFormProps = {
     department: Department;
     onSubmit: (data: void) => void;
-    close: () => void
 };
 
-export const RenameDepartmentForm = ({onSubmit, close, department}: RenameDepartmentFormProps) => {
+export const RenameDepartmentForm = ({onSubmit, department}: RenameDepartmentFormProps) => {
     const queryClient = useQueryClient();
     const {mutate, isLoading} = useRenameDepartment()
 
@@ -35,7 +34,6 @@ export const RenameDepartmentForm = ({onSubmit, close, department}: RenameDepart
                 onSuccess: async () => {
                     await queryClient.invalidateQueries(institutesKeys.institutes.root);
                     onSubmit();
-                    close();
                 },
                 onError: (err) => onError(err.error.detail)
             })

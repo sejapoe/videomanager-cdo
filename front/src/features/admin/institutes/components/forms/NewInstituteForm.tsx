@@ -15,9 +15,11 @@ type NewInstituteValues = {
     name: string;
 }
 
-type NewInstituteFormProps = { onSubmit: (data: void) => void, close: () => void };
+type NewInstituteFormProps = {
+    onSubmit: (data: void) => void;
+};
 
-export const NewInstituteForm = ({onSubmit, close}: NewInstituteFormProps) => {
+export const NewInstituteForm = ({onSubmit}: NewInstituteFormProps) => {
     const queryClient = useQueryClient();
     const {mutate, isLoading} = useCreateInstitute()
 
@@ -27,7 +29,6 @@ export const NewInstituteForm = ({onSubmit, close}: NewInstituteFormProps) => {
                 onSuccess: async () => {
                     await queryClient.invalidateQueries(institutesKeys.institutes.root);
                     onSubmit();
-                    close();
                 },
                 onError: (err) => onError(err.error.detail)
             })
