@@ -4,12 +4,11 @@ import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.user.CreateLecturerReq
 import org.sejapoe.videomanager.dto.user.FilterUserReq
 import org.sejapoe.videomanager.mapper.UserMapper
-import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsAdmin
 import org.sejapoe.videomanager.security.annotations.IsUser
+import org.sejapoe.videomanager.security.currentUser
 import org.sejapoe.videomanager.service.UserService
 import org.springdoc.core.annotations.ParameterObject
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -20,9 +19,7 @@ class UserController(
 ) {
     @IsUser
     @GetMapping("/user")
-    fun getUser(
-        @AuthenticationPrincipal user: User,
-    ) = userMapper.toUserRes(user)
+    fun getUser() = userMapper.toUserRes(currentUser)
 
     @IsAdmin
     @PostMapping("/users")

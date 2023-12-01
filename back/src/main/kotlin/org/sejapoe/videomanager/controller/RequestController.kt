@@ -8,14 +8,13 @@ import org.sejapoe.videomanager.dto.request.FilterRequestReq
 import org.sejapoe.videomanager.dto.request.UpdateRequestStatusReq
 import org.sejapoe.videomanager.mapper.ArchiveEntryMapper
 import org.sejapoe.videomanager.mapper.RequestMapper
-import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsAdmin
 import org.sejapoe.videomanager.security.annotations.IsUser
+import org.sejapoe.videomanager.security.currentUser
 import org.sejapoe.videomanager.service.LastViewService
 import org.sejapoe.videomanager.service.RequestService
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.HttpStatus
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -44,16 +43,15 @@ class RequestController(
     @GetMapping
     fun getRequests(
         @ParameterObject @Schema filterRequestReq: FilterRequestReq,
-        @AuthenticationPrincipal user: User,
     ) = requestService.getAll(
-        user,
+        currentUser,
         filterRequestReq.user ?: emptyList(),
         filterRequestReq.toPredicate(),
         filterRequestReq.toPageable(),
     )
         .map {
             requestMapper.toRequestRes(it).copy(
-                unreadCount = lastViewService.countUnread(user, it),
+                unreadCount = lastViewService.countUnread(currentUser, it),
             )
         }
 
@@ -61,8 +59,7 @@ class RequestController(
     @GetMapping("/{id}")
     fun getRequest(
         @PathVariable("id") @Valid id: Long,
-        @AuthenticationPrincipal user: User,
-    ) = requestService.get(user, id).let(requestMapper::toFullRequestRes).run {
+    ) = requestService.get(currentUser, id).let(requestMapper::toFullRequestRes).run {
         copy(
             corrections =
             corrections.sortedWith(
@@ -75,8 +72,7 @@ class RequestController(
     @PutMapping
     fun updateRequestStatus(
         @RequestBody @Valid updateRequestStatusReq: UpdateRequestStatusReq,
-        @AuthenticationPrincipal user: User,
-    ) = requestService.updateStatus(updateRequestStatusReq.id, updateRequestStatusReq.newStatus, user)
+    ) = requestService.updateStatus(updateRequestStatusReq.id, updateRequestStatusReq.newStatus, currentUser)
         .let(requestMapper::toFullRequestRes).run {
             copy(
                 corrections =
@@ -90,8 +86,7 @@ class RequestController(
     @PostMapping("/{id}/archive")
     fun archiveRequest(
         @PathVariable id: Long,
-        @AuthenticationPrincipal user: User,
-    ) = requestService.archive(id, user).let(archiveEntryMapper::toDto)
+    ) = requestService.archive(id, currentUser).let(archiveEntryMapper::toDto)
 
     @IsAdmin
     @DeleteMapping("/{id}")

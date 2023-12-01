@@ -4,11 +4,10 @@ import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.correction.CreateCorrectionReq
 import org.sejapoe.videomanager.dto.correction.UpdateCorrectionStatusReq
 import org.sejapoe.videomanager.mapper.CorrectionMapper
-import org.sejapoe.videomanager.model.User
 import org.sejapoe.videomanager.security.annotations.IsUser
+import org.sejapoe.videomanager.security.currentUser
 import org.sejapoe.videomanager.service.CorrectionService
 import org.sejapoe.videomanager.service.LastViewService
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -22,10 +21,9 @@ class CorrectionController(
     @GetMapping("/{id}")
     fun getCorrection(
         @PathVariable("id") id: Long,
-        @AuthenticationPrincipal user: User,
-    ) = correctionService.get(id, user).let {
+    ) = correctionService.get(id, currentUser).let {
         correctionMapper.toCorrectionRes(it).copy(
-            isUnread = lastViewService.isUnread(user, it),
+            isUnread = lastViewService.isUnread(currentUser, it),
         )
     }
 
@@ -33,21 +31,21 @@ class CorrectionController(
     @PostMapping("/{id}/view")
     fun viewCorrection(
         @PathVariable("id") id: Long,
-        @AuthenticationPrincipal user: User,
-    ) = lastViewService.view(user, correctionService.get(id, user))
+    ) = lastViewService.view(currentUser, correctionService.get(id, currentUser))
 
     @IsUser
     @PostMapping
     fun createCorrection(
         @RequestBody @Valid createCorrectionReq: CreateCorrectionReq,
-        @AuthenticationPrincipal user: User,
-    ) = correctionService.createCorrection(createCorrectionReq, user).let(correctionMapper::toCorrectionRes)
+    ) = correctionService.createCorrection(createCorrectionReq, currentUser).let(correctionMapper::toCorrectionRes)
 
     @IsUser
     @PatchMapping
     fun updateCorrectionStatus(
         @RequestBody @Valid updateCorrectionStatusReq: UpdateCorrectionStatusReq,
-        @AuthenticationPrincipal user: User,
-    ) = correctionService.updateStatus(updateCorrectionStatusReq.id, updateCorrectionStatusReq.isClosed, user)
-        .let(correctionMapper::toCorrectionRes)
+    ) = correctionService.updateStatus(
+        updateCorrectionStatusReq.id,
+        updateCorrectionStatusReq.isClosed,
+        currentUser
+    ).let(correctionMapper::toCorrectionRes)
 }
