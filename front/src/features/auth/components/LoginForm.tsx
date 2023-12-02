@@ -6,8 +6,8 @@ import {useLoginUser} from "../api/loginUser.ts";
 import {addUser} from "../authModel.ts";
 
 const schema = z.object({
-    email: z.string().min(1, "Required").email("Should be email"),
-    password: z.string().min(1, "Required").min(8, "Must be at least 8 symbols")
+    email: z.string().min(1, "Это поле обязательное").email("Should be email"),
+    password: z.string().min(1, "Это поле обязательное").min(8, "Must be at least 8 symbols")
 });
 
 type LoginValues = {

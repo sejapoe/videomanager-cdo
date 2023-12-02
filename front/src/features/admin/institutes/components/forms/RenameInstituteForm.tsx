@@ -9,7 +9,7 @@ import {Institute} from "../../../../common/institutes/model";
 import {FieldWrapper} from "../../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.object({
-    name: z.string().min(1, "Required")
+    name: z.string().min(1, "Это поле обязательное")
 })
 
 type RenameInstituteValues = {

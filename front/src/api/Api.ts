@@ -214,6 +214,14 @@ export interface CreateArchiveEntryReqDto {
     linkToVideo: string;
 }
 
+export interface UpdateRequestReqDto {
+    /** @format int64 */
+    id: number;
+    name: string;
+    linkToMoodle: string;
+    linkToVideo: string;
+}
+
 export interface RenameInstituteReqDto {
     /** @format int64 */
     id: number;
@@ -238,14 +246,14 @@ export interface PageUserResDto {
     /** @format int64 */
     totalElements?: number;
     pageable?: PageableObjectDto;
+    first?: boolean;
+    last?: boolean;
     /** @format int32 */
     size?: number;
     content?: UserResDto[];
     /** @format int32 */
     number?: number;
     sort?: SortObjectDto;
-    first?: boolean;
-    last?: boolean;
     /** @format int32 */
     numberOfElements?: number;
     empty?: boolean;
@@ -275,14 +283,14 @@ export interface PageRequestResDto {
     /** @format int64 */
     totalElements?: number;
     pageable?: PageableObjectDto;
+    first?: boolean;
+    last?: boolean;
     /** @format int32 */
     size?: number;
     content?: RequestResDto[];
     /** @format int32 */
     number?: number;
     sort?: SortObjectDto;
-    first?: boolean;
-    last?: boolean;
     /** @format int32 */
     numberOfElements?: number;
     empty?: boolean;
@@ -294,14 +302,14 @@ export interface PageArchiveEntryResDto {
     /** @format int64 */
     totalElements?: number;
     pageable?: PageableObjectDto;
+    first?: boolean;
+    last?: boolean;
     /** @format int32 */
     size?: number;
     content?: ArchiveEntryResDto[];
     /** @format int32 */
     number?: number;
     sort?: SortObjectDto;
-    first?: boolean;
-    last?: boolean;
     /** @format int32 */
     numberOfElements?: number;
     empty?: boolean;
@@ -370,7 +378,6 @@ export class HttpClient<SecurityDataType = unknown> {
     private securityData: SecurityDataType | null = null;
     private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
     private abortControllers = new Map<CancelToken, AbortController>();
-
     constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
         Object.assign(this, apiConfig);
     }
@@ -381,6 +388,19 @@ export class HttpClient<SecurityDataType = unknown> {
         redirect: "follow",
         referrerPolicy: "no-referrer",
     };
+
+    protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
+        return {
+            ...this.baseApiParams,
+            ...params1,
+            ...(params2 || {}),
+            headers: {
+                ...(this.baseApiParams.headers || {}),
+                ...(params1.headers || {}),
+                ...((params2 && params2.headers) || {}),
+            },
+        };
+    }
 
     public setSecurityData = (data: SecurityDataType | null) => {
         this.securityData = data;
@@ -413,19 +433,6 @@ export class HttpClient<SecurityDataType = unknown> {
         return queryString ? `?${queryString}` : "";
     }
 
-    protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
-        return {
-            ...this.baseApiParams,
-            ...params1,
-            ...(params2 || {}),
-            headers: {
-                ...(this.baseApiParams.headers || {}),
-                ...(params1.headers || {}),
-                ...((params2 && params2.headers) || {}),
-            },
-        };
-    }
-
     private contentFormatters: Record<ContentType, (input: any) => any> = {
         [ContentType.Json]: (input: any) =>
             input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
@@ -446,6 +453,8 @@ export class HttpClient<SecurityDataType = unknown> {
         [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
     };
 
+    private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
+
     protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
         if (this.abortControllers.has(cancelToken)) {
             const abortController = this.abortControllers.get(cancelToken);
@@ -459,8 +468,6 @@ export class HttpClient<SecurityDataType = unknown> {
         this.abortControllers.set(cancelToken, abortController);
         return abortController.signal;
     };
-
-    private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
     public abortRequest = (cancelToken: CancelToken) => {
         const abortController = this.abortControllers.get(cancelToken);
@@ -600,6 +607,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
             this.request<RequestResDto, any>({
                 path: `/api/requests`,
                 method: "POST",
+                body: data,
+                secure: true,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags request-controller
+         * @name UpdateRequest
+         * @request PATCH:/api/requests
+         * @secure
+         */
+        updateRequest: (data: UpdateRequestReqDto, params: RequestParams = {}) =>
+            this.request<FullRequestResDto, any>({
+                path: `/api/requests`,
+                method: "PATCH",
                 body: data,
                 secure: true,
                 type: ContentType.Json,

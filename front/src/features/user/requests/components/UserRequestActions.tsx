@@ -23,7 +23,7 @@ export const UserRequestActions = ({request}: ActionProps) => {
                 })
             }}
         >
-            {request.status === "COMPLETED" ? "Reopen" : "Resolve"}
+            {request.status === "COMPLETED" ? "Открыть заново" : "Пометить завершенной"}
         </Button>
     </div>;
 }

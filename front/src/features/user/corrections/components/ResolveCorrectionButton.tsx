@@ -28,7 +28,7 @@ export const ResolveCorrectionButton = ({
                 onSuccess
             })}
         >
-            {isClosed ? "Переоткрыть" : "Закрыть"}
+            {isClosed ? "Открыть" : "Закрыть"}
         </Button>
     </div>;
 }

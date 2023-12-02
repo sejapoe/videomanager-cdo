@@ -118,4 +118,9 @@ class RequestService(
 
         requestRepo.delete(request)
     }
+
+    fun update(id: Long, transformer: (Request) -> Request): Request {
+        val request = get(id)
+        return requestRepo.save(transformer(request))
+    }
 }

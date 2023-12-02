@@ -1,7 +1,7 @@
 package org.sejapoe.videomanager.mapper
 
-import org.mapstruct.InjectionStrategy
-import org.mapstruct.Mapper
+import org.mapstruct.*
+import org.sejapoe.videomanager.controller.UpdateRequestReq
 import org.sejapoe.videomanager.dto.request.FullRequestRes
 import org.sejapoe.videomanager.dto.request.RequestRes
 import org.sejapoe.videomanager.dto.request.ShortRequestRes
@@ -18,4 +18,11 @@ interface RequestMapper {
     fun toFullRequestRes(request: Request): FullRequestRes
 
     fun toShortRequestRes(request: Request): ShortRequestRes
+
+    fun toEntity(updateRequestReq: UpdateRequestReq): Request
+
+    fun toDto(request: Request): UpdateRequestReq
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun partialUpdate(updateRequestReq: UpdateRequestReq, @MappingTarget request: Request): Request
 }

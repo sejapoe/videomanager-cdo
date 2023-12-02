@@ -83,6 +83,15 @@ class RequestController(
         }
 
     @IsAdmin
+    @PatchMapping
+    fun updateRequest(
+        @RequestBody @Valid updateRequestReq: UpdateRequestReq
+    ) = requestService.update(updateRequestReq.id) {
+        requestMapper.partialUpdate(updateRequestReq, it)
+    }.let(requestMapper::toFullRequestRes)
+
+
+    @IsAdmin
     @PostMapping("/{id}/archive")
     fun archiveRequest(
         @PathVariable id: Long,

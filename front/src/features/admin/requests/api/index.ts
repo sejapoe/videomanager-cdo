@@ -1,8 +1,8 @@
-import {Request} from "../../../common/requests/model";
-import {CreateRequestReqDto, HttpResponse, RequestResDto} from "../../../../api/Api.ts";
+import {FullRequest, Request} from "../../../common/requests/model";
+import {CreateRequestReqDto, HttpResponse, RequestResDto, UpdateRequestReqDto} from "../../../../api/Api.ts";
 import {useMutation, UseMutationOptions} from "@tanstack/react-query";
 import api, {GenericErrorModel} from "../../../../api";
-import {requestsKeys} from "../../../common/requests/api";
+import {mapFullRequest, requestsKeys} from "../../../common/requests/api";
 import {ArchiveEntry, mapArchiveEntry} from "../../archive/model";
 
 
@@ -14,7 +14,8 @@ export const adminRequestsKeys = {
     mutation: {
         create: () => [...requestsKeys.requests.root, 'create'],
         archive: () => [...requestsKeys.requests.root, 'archive'],
-        delete: () => [...requestsKeys.requests.root, 'delete']
+        delete: () => [...requestsKeys.requests.root, 'delete'],
+        update: () => [...requestsKeys.requests.root, 'update']
     }
 }
 
@@ -67,6 +68,25 @@ export const useDeleteRequest = (options?: UseDeleteRequestOptions) =>
         adminRequestsKeys.mutation.archive(),
         async (id: number) => {
             await api.deleteRequest(id);
+        },
+        options
+    )
+
+type UseUpdateRequestMutation = UseMutationOptions<
+    FullRequest,
+    GenericErrorModel,
+    UpdateRequestReqDto
+>
+
+type UseUpdateRequestOptions = Omit<UseUpdateRequestMutation, 'mutationFn' | 'mutationKey'>
+
+export const useUpdateRequest = (options?: UseUpdateRequestOptions) =>
+    useMutation(
+        adminRequestsKeys.mutation.update(),
+        async (dto) => {
+            const response = await api.updateRequest(dto);
+
+            return mapFullRequest(response.data)
         },
         options
     )
