@@ -10,7 +10,7 @@ export const Archive = () => {
 
     return <ContentLayout title="Архив" titleElement={
         <div className="w-full flex justify-between">
-            <h1 className="text-2xl font-semibold text-gray-900">Запросы</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">Архив</h1>
             <Button
                 variant="primary"
                 size="sm"

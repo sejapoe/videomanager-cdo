@@ -50,13 +50,14 @@ const RequestTableHead = () => {
                        }/>
         <TableHeadItem field={"lecturer"} className="w-[22.5rem]"
                        customTitle={
-                           user?.info.role === "ROLE_ADMIN" &&
-                           <ComboboxFilter<RequestsTableFilter> name="user"
+                           user?.info.role === "ROLE_ADMIN"
+                               ? <ComboboxFilter<RequestsTableFilter> name="user"
                                                                 title="Преподаватель"
                                                                 options={lecturers?.content?.map(value => ({
                                                                     value: value.id,
                                                                     label: value.fullName
                                                                 })) || []}/>
+                               : "Преподаватель"
                        }
         />
         <TableHeadItem field={"institute"} className="w-36"
