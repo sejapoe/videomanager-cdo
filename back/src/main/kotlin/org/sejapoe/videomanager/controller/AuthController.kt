@@ -4,9 +4,10 @@ import jakarta.validation.Valid
 import jakarta.validation.constraints.Pattern
 import org.sejapoe.videomanager.dto.user.ActivateUserReq
 import org.sejapoe.videomanager.dto.user.LoginReq
+import org.sejapoe.videomanager.dto.user.RefreshReq
 import org.sejapoe.videomanager.dto.user.TokenUserRes
 import org.sejapoe.videomanager.mapper.UserMapper
-import org.sejapoe.videomanager.service.UserService
+import org.sejapoe.videomanager.service.AuthService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.security.authentication.BadCredentialsException
@@ -16,15 +17,25 @@ import java.util.*
 @RestController
 @RequestMapping("/api/auth")
 class AuthController(
-    private val userService: UserService,
     private val userMapper: UserMapper,
+    private val authService: AuthService,
 ) {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
     fun login(
         @Valid @RequestBody loginReq: LoginReq,
     ): TokenUserRes {
-        return userService.login(loginReq.email, loginReq.password).let {
+        return authService.login(loginReq.email, loginReq.password).let {
+            userMapper.toTokenUserRes(it.first, it.second)
+        }
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/refresh")
+    fun refresh(
+        @Valid @RequestBody refreshReq: RefreshReq
+    ): TokenUserRes {
+        return authService.refresh(refreshReq.token).let {
             userMapper.toTokenUserRes(it.first, it.second)
         }
     }
@@ -36,14 +47,14 @@ class AuthController(
             flags = [Pattern.Flag.CASE_INSENSITIVE],
             message = "Not a valid UUID",
         ) uuid: UUID,
-    ) = userService.getUserByActivationUuid(uuid).let(userMapper::toUserRes)
+    ) = authService.getUserByActivationUuid(uuid).let(userMapper::toUserRes)
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/activate")
     fun activate(
         @Valid @RequestBody activateUserReq: ActivateUserReq,
     ): TokenUserRes =
-        userService.activateLecturer(activateUserReq.uuid, activateUserReq.password).let {
+        authService.activateLecturer(activateUserReq.uuid, activateUserReq.password).let {
             userMapper.toTokenUserRes(it.first, it.second)
         }
 

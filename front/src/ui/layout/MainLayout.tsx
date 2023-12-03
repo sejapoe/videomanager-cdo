@@ -66,7 +66,7 @@ const UserNavigation = () => {
                             "text-gray-700 text-lg",
                             "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500")}>
                         <FontAwesomeIcon icon={solid("user")}/><span
-                        className="hidden lg:block ml-2">{user.fullName}</span>
+                        className="hidden lg:block ml-2">{user.info.fullName}</span>
                     </Menu.Button>
                 </div>
                 <Transition
@@ -84,7 +84,7 @@ const UserNavigation = () => {
                         <Menu.Item>
                             {() => (
                                 <span className="block lg:hidden px-4 py-2 text-sm text-gray-500 cursor-default ">
-                                    {user.fullName}
+                                    {user.info.fullName}
                                 </span>
                             )}
                         </Menu.Item>

@@ -50,7 +50,7 @@ const RequestTableHead = () => {
                        }/>
         <TableHeadItem field={"lecturer"} className="w-[22.5rem]"
                        customTitle={
-                           user?.role === "ROLE_ADMIN" &&
+                           user?.info.role === "ROLE_ADMIN" &&
                            <ComboboxFilter<RequestsTableFilter> name="user"
                                                                 title="Преподаватель"
                                                                 options={lecturers?.content?.map(value => ({
@@ -92,7 +92,7 @@ const RequestTableHead = () => {
                                title="Статус"
                                options={Object.entries(statuses)
                                    .filter(value => !!value[1])
-                                   .filter(value => user?.role === "ROLE_ADMIN" || value[1] !== "ARCHIVED")
+                                   .filter(value => user?.info.role === "ROLE_ADMIN" || value[1] !== "ARCHIVED")
                                    .map(value => ({
                                        value: parseInt(value[0]),
                                        label: statusL10n[value[1] as RequestStatus]

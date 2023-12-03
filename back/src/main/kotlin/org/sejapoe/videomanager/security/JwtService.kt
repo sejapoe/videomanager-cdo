@@ -30,7 +30,7 @@ class JwtService(
             .setClaims(extraClaims.toMutableMap())
             .setSubject(userDetails.username)
             .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + 10 * 24 * 60 * 60 * 1000)) // 10 days
+            .setExpiration(Date(System.currentTimeMillis() + 3 * 60 * 1000)) // 10 days | 10 * 24 * 60 * 60 * 1000
             .setIssuer(jwtIssuer)
             .signWith(SignatureAlgorithm.HS256, jwtSecret)
             .compact()
@@ -42,7 +42,7 @@ class JwtService(
         userDetails: UserDetails,
     ) = extractUsername(token) == userDetails.username && !isTokenExpired(token)
 
-    private fun isTokenExpired(token: String) = extractExpiration(token).before(Date())
+    fun isTokenExpired(token: String) = extractExpiration(token).before(Date())
 
     private fun extractExpiration(token: String): Date = extractClaim(token) { it.expiration }
 

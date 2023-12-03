@@ -1,9 +1,11 @@
 package org.sejapoe.videomanager.security
 
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.sejapoe.videomanager.exception.ForbiddenException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -30,6 +32,7 @@ class JwtAuthenticationFilter(
         val authHeader = request.getHeader(HttpHeaders.AUTHORIZATION)
 
         if (authHeader == null || !authHeader.startsWith(authHeaderPrefix)) {
+            log.info("No auth header provided for request")
             return filterChain.doFilter(request, response)
         }
 
@@ -37,6 +40,8 @@ class JwtAuthenticationFilter(
         val username =
             try {
                 jwtService.extractUsername(token)
+            } catch (e: ExpiredJwtException) {
+                throw ForbiddenException("Token expired")
             } catch (e: JwtException) {
                 return filterChain.doFilter(request, response)
             }
@@ -47,6 +52,8 @@ class JwtAuthenticationFilter(
                 val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
+            } else if (jwtService.isTokenExpired(token)) {
+                throw ForbiddenException("Token expired")
             }
         }
         filterChain.doFilter(request, response)

@@ -108,7 +108,7 @@ export const CorrectionView = ({correctionId}: CorrectionProps) => {
                 >
                     <div className="w-full select-none p-8 pt-4 pb-4">
                         <Comments correction={correction}/>
-                        {user && user.role === "ROLE_USER" && <ResolveCorrectionButton
+                        {user && user.info.role === "ROLE_USER" && <ResolveCorrectionButton
                             correctionId={correction.id}
                             isClosed={correction.closed}
                             onSuccess={async () => {

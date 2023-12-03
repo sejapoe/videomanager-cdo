@@ -41,7 +41,11 @@ export const ActivateForm = ({uuid, user, onSuccess}: ActivateFormProps) => {
                 uuid,
             }, {
                 onSuccess: (response) => {
-                    addUser(response.data)
+                    addUser({
+                        info: response.data.userInfo,
+                        accessToken: response.data.accessToken,
+                        refreshToken: response.data.refreshToken
+                    })
                     onSuccess()
                 },
                 onError: err => onError(err.error.detail)

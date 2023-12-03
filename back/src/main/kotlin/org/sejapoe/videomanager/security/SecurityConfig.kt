@@ -1,5 +1,6 @@
 package org.sejapoe.videomanager.security
 
+import org.sejapoe.videomanager.exception.handler.ExceptionHandlerFilter
 import org.sejapoe.videomanager.repo.UserRepo
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -22,8 +23,10 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler
-import org.springframework.web.servlet.config.annotation.CorsRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
+
 
 @Configuration
 @EnableWebSecurity
@@ -31,12 +34,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class SecurityConfig(
     @Value("\${spring.security.cors.url}")
     private val corsUrl: String,
+    private val exceptionHandlerFilter: ExceptionHandlerFilter,
 ) {
     @Bean
     fun filterChain(
         http: HttpSecurity,
         jwtAuthenticationFilter: JwtAuthenticationFilter,
         authenticationProvider: AuthenticationProvider,
+        corsFilter: CorsFilter
     ): SecurityFilterChain =
         http
             .csrf { it.disable() }
@@ -48,6 +53,8 @@ class SecurityConfig(
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authenticationProvider)
+            .addFilterBefore(exceptionHandlerFilter, CorsFilter::class.java)
+            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .logout {
                 it
@@ -58,12 +65,20 @@ class SecurityConfig(
             .build()
 
     @Bean
-    fun corsConfigurer(): WebMvcConfigurer {
-        return object : WebMvcConfigurer {
-            override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/api/**").allowedOrigins(corsUrl).allowedMethods("*")
-            }
-        }
+    fun corsFilter(): CorsFilter {
+        val source = UrlBasedCorsConfigurationSource()
+        val config = CorsConfiguration()
+
+        // Allow your frontend origin
+        config.allowedOrigins = listOf(corsUrl)
+
+        // Allow the necessary headers and methods
+        config.allowedHeaders = listOf("*")
+        config.allowedMethods = listOf("*")
+
+        source.registerCorsConfiguration("/api/**", config)
+
+        return CorsFilter(source)
     }
 
     @Bean

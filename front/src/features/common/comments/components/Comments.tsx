@@ -44,7 +44,7 @@ export const Comments = ({correction}: CommentsProps) => {
     return <div className="space-y-2">
         {comments?.map(value => (
             <SingleComment timestamp={value.timestamp} text={value.text} key={`comment-${value.id}`}
-                           side={value.author.role === user.role ? "MINE" : "YOURS"}/>
+                           side={value.author.role === user.info.role ? "MINE" : "YOURS"}/>
         ))}
         <NewCommentForm correction={correction}/>
     </div>;
