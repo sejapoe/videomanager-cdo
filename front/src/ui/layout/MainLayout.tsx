@@ -6,7 +6,6 @@ import {Link, NavLink} from "react-router-dom";
 import {logout} from "../../features/auth/api/logoutUser.ts";
 import {PATH_PAGE} from "../../lib/react-router";
 import {useQueryClient} from "@tanstack/react-query";
-import logo from '../../assets/react.svg';
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
@@ -174,14 +173,11 @@ export const MainLayout = ({children, navigation}: MainLayoutProps) => {
     return <div className="h-screen flex overflow-hidden bg-gray-100">
         <div className="flex flex-col w-screen flex-1 overflow-hidden">
             <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
-                <div className="flex items-center ml-2 lg:ml-4">
+                <div className="flex items-center lg:hidden ml-2 lg:ml-4">
                     <MobileAppNavigation navigation={navigation}/>
                 </div>
-                <Link className="flex ml-4 items-center" to=".">
-                    <img src={logo} alt="logo"/>
-                </Link>
 
-                <div className="flex ml-6 items-center text-gray-900 justify-start w-full">
+                <div className="flex ml-4 items-center text-gray-900 justify-start w-full">
                     <AppNavigation navigation={navigation}/>
                 </div>
 
