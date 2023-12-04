@@ -30,7 +30,7 @@ const App = () => {
 
 // todo: remove
 const Shark = () => {
-    return <ContentLayout title={"Акулка"}>
+    return <ContentLayout title={"Страница не найдена"}>
         <img src={shark} alt="shark"/>
     </ContentLayout>
 }
