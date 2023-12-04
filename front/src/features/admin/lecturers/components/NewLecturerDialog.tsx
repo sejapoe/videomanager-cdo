@@ -6,8 +6,8 @@ import {useCreateLecturer} from "../api";
 import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 
 const schema = z.object({
-    name: z.string().min(1, "Это поле обязательное"),
-    email: z.string().min(1, "Это поле обязательное").email("Must be email")
+    name: z.string().min(1, "Заполните обязательное поле"),
+    email: z.string().min(1, "Заполните обязательное поле").email("Введите корректную электронную почту")
 });
 
 type NewLecturerValues = {

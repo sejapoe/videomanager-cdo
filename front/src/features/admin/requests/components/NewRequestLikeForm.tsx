@@ -14,12 +14,12 @@ import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 import {useDialog} from "../../../../providers/DialogProvider.tsx";
 
 const schema = z.object({
-    name: z.string().min(1, "Это поле обязательное"),
-    lecturer_id: z.number().positive("Required"),
-    institute_id: z.string().min(1, "Это поле обязательное"),
-    department_id: z.string().min(1, "Это поле обязательное"),
-    linkToMoodle: z.string().url("Should be valid url"),
-    linkToVideo: z.string().url("Should be valid url")
+    name: z.string().min(1, "Заполните обязательное поле"),
+    lecturer_id: z.number().positive("Выберите преподавателя"),
+    institute_id: z.string().min(1, "Заполните обязательное поле"),
+    department_id: z.string().min(1, "Заполните обязательное поле"),
+    linkToMoodle: z.string().url("Введите корректную ссылку"),
+    linkToVideo: z.string().url("Введите корректную ссылку")
 })
 
 type NewRequestLikeValues = {

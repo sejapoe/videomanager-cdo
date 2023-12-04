@@ -7,7 +7,7 @@ import {Button} from "../../../ui/button/Button.tsx";
 import {User} from "../../common/users/model";
 
 const schema = z.object({
-    password: z.string().min(8, "Пароль должен содержать как минимум 8 символов"),
+    password: z.string().min(8, "Пароль должен содержать как минимум из 8 символов"),
     confirmPassword: z.string()
 }).superRefine(({password, confirmPassword}, ctx) => {
     if (confirmPassword != password) {

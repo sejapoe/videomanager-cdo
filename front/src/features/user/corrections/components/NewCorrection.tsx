@@ -54,7 +54,7 @@ const parseTimeCode = (str: string) => {
 const schema = z.object({
     startTimeCode: z.string().min(8).max(8),
     endTimeCode: z.string().min(8).max(8),
-    comment: z.string().min(1)
+    comment: z.string().min(1, "Заполните обязательное поле")
 }).refine(arg => (
     parseTimeCode(arg.endTimeCode) > parseTimeCode(arg.startTimeCode)
 ), {

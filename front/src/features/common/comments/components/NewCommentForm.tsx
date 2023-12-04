@@ -12,7 +12,7 @@ import {Correction} from "../../corrections/model";
 type NewCommentFormProps = { correction: Correction };
 
 const schema = z.object({
-    comment: z.string().min(1)
+    comment: z.string().min(1, "Введите сообщение")
 })
 
 type NewCommentValues = {

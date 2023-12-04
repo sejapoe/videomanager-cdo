@@ -7,9 +7,9 @@ import {FieldWrapper} from "../../../../ui/form/FieldWrapper.tsx";
 import {Button} from "../../../../ui/button/Button.tsx";
 
 const schema = z.object({
-    name: z.string().min(1, "Это поле обязательное"),
-    linkToVideo: z.string().min(1, "Это поле обязательное").url(),
-    linkToMoodle: z.string().min(1, "Это поле обязательное").url()
+    name: z.string().min(1, "Заполните обязательное поле"),
+    linkToVideo: z.string().min(1, "Заполните обязательное поле").url(),
+    linkToMoodle: z.string().min(1, "Заполните обязательное поле").url()
 })
 
 type UpdateRequestValues = {

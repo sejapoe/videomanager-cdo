@@ -8,8 +8,8 @@ type HeadProps = {
 export const Head = ({title = '', description = ''}: HeadProps = {}) => {
     return (
         <Helmet
-            title={title ? `${title} | VideoManager React` : undefined}
-            defaultTitle="VideoManager React"
+            title={title ? `${title} | Видеостудия ЦДО` : undefined}
+            defaultTitle="Видеостудия ЦДО"
         >
             <meta name="description" content={description}/>
         </Helmet>
