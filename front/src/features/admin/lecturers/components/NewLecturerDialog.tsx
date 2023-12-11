@@ -46,7 +46,7 @@ export const NewLecturerDialog = ({defaultName, onSubmit}: NewLecturerDialogProp
 
                 <InputField
                     type="email"
-                    label="Эллектронная почта"
+                    label="Электронная почта"
                     error={formState.errors["email"]}
                     registration={register("email")}
                 />
