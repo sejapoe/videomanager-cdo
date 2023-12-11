@@ -24,8 +24,8 @@ class User(
     @Column(name = "is_enabled")
     var enabled: Boolean,
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
-    @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 1)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
+    @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
     var id: Long = -1,
 ) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> =

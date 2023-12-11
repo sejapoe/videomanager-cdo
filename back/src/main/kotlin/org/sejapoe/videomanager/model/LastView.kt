@@ -19,7 +19,7 @@ class LastView(
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "last_view_seq")
-    @SequenceGenerator(name = "last_view_seq", sequenceName = "last_view_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "last_view_id_seq")
+    @SequenceGenerator(name = "last_view_id_seq", sequenceName = "last_view_id_seq", allocationSize = 1)
     var id: Long = -1L,
 )

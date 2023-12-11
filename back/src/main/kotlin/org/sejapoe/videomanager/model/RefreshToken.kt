@@ -12,7 +12,7 @@ class RefreshToken(
     @Column(name = "token", nullable = false)
     var token: String,
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "refresh_tokens_seq")
-    @SequenceGenerator(name = "refresh_tokens_seq", sequenceName = "refresh_tokens_seq", allocationSize = 1)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "refresh_tokens_id_seq")
+    @SequenceGenerator(name = "refresh_tokens_id_seq", sequenceName = "refresh_tokens_id_seq", allocationSize = 1)
     val id: Long = -1,
 )

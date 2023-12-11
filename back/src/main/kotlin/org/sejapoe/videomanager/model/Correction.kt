@@ -26,8 +26,8 @@ class Correction(
     )
     @OrderBy("id asc")
     var comments: List<Comment> = emptyList(),
-    
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "corrections_seq")
-    @SequenceGenerator(name = "corrections_seq", sequenceName = "corrections_seq", allocationSize = 1)
+
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "corrections_id_seq")
+    @SequenceGenerator(name = "corrections_id_seq", sequenceName = "corrections_id_seq", allocationSize = 1)
     var id: Long = -1,
 )

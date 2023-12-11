@@ -30,7 +30,7 @@ class ArchiveEntry(
     @JoinColumn(name = "request_id", nullable = true)
     var request: Request?,
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "archive_entries_seq")
-    @SequenceGenerator(name = "archive_entries_seq", sequenceName = "archive_entries_seq", allocationSize = 1)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "archive_entries_id_seq")
+    @SequenceGenerator(name = "archive_entries_id_seq", sequenceName = "archive_entries_id_seq", allocationSize = 1)
     val id: Long = -1,
 )

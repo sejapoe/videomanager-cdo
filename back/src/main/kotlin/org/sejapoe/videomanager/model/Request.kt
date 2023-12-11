@@ -38,7 +38,7 @@ class Request(
     )
     val corrections: List<Correction>,
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "requests_seq")
-    @SequenceGenerator(name = "requests_seq", sequenceName = "requests_seq", allocationSize = 1)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "requests_id_seq")
+    @SequenceGenerator(name = "requests_id_seq", sequenceName = "requests_id_seq", allocationSize = 1)
     var id: Long = -1,
 )

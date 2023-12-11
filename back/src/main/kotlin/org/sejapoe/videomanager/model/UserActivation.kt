@@ -13,7 +13,7 @@ class UserActivation(
     @JoinColumn(name = "user_id")
     var user: User,
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_activations_seq")
-    @SequenceGenerator(name = "user_activations_seq", sequenceName = "user_activators_seq", allocationSize = 1)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_activations_id_seq")
+    @SequenceGenerator(name = "user_activations_id_seq", sequenceName = "user_activations_id_seq", allocationSize = 1)
     var id: Long = -1,
 )

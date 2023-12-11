@@ -17,7 +17,7 @@ class Institute(
     @OrderBy("id asc")
     var departments: List<Department> = emptyList(),
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institutes_seq")
-    @SequenceGenerator(name = "institutes_seq", sequenceName = "institutes_seq", allocationSize = 1)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "institutes_id_seq")
+    @SequenceGenerator(name = "institutes_id_seq", sequenceName = "institutes_id_seq", allocationSize = 1)
     var id: Long = -1,
 )

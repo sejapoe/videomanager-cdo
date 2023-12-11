@@ -28,8 +28,8 @@ class Comment(
     val lastViews: List<LastView> = emptyList(),
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comments_id_seq")
     @Column(name = "id", nullable = false)
-    @SequenceGenerator(name = "comments_seq", sequenceName = "comments_seq", allocationSize = 1)
+    @SequenceGenerator(name = "comments_id_seq", sequenceName = "comments_id_seq", allocationSize = 1)
     var id: Long = -1L,
 )
