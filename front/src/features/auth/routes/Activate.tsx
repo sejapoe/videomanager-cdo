@@ -5,6 +5,7 @@ import {ActivateForm} from "../components/ActivateForm.tsx";
 import {useActivation} from "../api/getActivation.ts";
 import {PATH_PAGE} from "../../../lib/react-router";
 import {ErrorLoadLayout} from "../../../ui/layout/ErrorLoadLayout.tsx";
+import {CenterSpinner} from "../../../ui/layout/CenterSpinner.tsx";
 
 export const Activate = () => {
     const {uuid} = useParams();
@@ -13,7 +14,11 @@ export const Activate = () => {
     const [searchParams] = useSearchParams()
     const redirectUri = searchParams.get("redirect_uri") || PATH_PAGE.app.root
 
-    return <ErrorLoadLayout error={error} isLoading={isLoading} errorElement={<Page404/>}>
+    return <ErrorLoadLayout error={error} errorElement={<Page404/>} isLoading={isLoading} loadingElement={
+        <Layout title={"Загрузка"}>
+            <CenterSpinner/>
+        </Layout>
+    }>
         <Layout title={"Активация аккаунта"}>
             <ActivateForm uuid={uuid!} user={user!} onSuccess={() => nav(redirectUri)}/>
         </Layout>

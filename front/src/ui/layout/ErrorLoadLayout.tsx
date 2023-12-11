@@ -19,10 +19,11 @@ type ErrorLoadLayoutProps = {
     isLoading: boolean;
     children: React.ReactNode
     errorElement?: React.ReactNode
+    loadingElement?: React.ReactNode
 }
 
-export const ErrorLoadLayout = ({error, isLoading, children, errorElement}: ErrorLoadLayoutProps) => {
-    return isLoading ? <CenterSpinner/> :
+export const ErrorLoadLayout = ({error, isLoading, children, errorElement, loadingElement}: ErrorLoadLayoutProps) => {
+    return isLoading ? loadingElement || <CenterSpinner/> :
         error ? errorElement || <ErrorContentLayout error={error.error}/>
             : children
 }
