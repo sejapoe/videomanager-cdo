@@ -15,6 +15,8 @@ class EmailService(
     @Value("\${spring.security.cors.url}")
     private val frontUrl: String,
     private val userActivationRepo: UserActivationRepo,
+    @Value("\${spring.mail.from}")
+    private val mailFrom: String,
     @Value(
         "#{T(org.sejapoe.videomanager.utils.ResourceReader).readFileToString('mail_template.html')}",
     )
@@ -27,7 +29,7 @@ class EmailService(
     ) {
         val message =
             emailSender.createMimeMessage().apply {
-                setFrom(InternetAddress("sender@example.com"))
+                setFrom(InternetAddress(mailFrom))
                 setRecipients(MimeMessage.RecipientType.TO, to)
                 setSubject(subject)
                 setContent(htmlContent, "text/html; charset=utf-8")
