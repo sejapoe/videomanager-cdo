@@ -5,6 +5,7 @@ import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.correction.CorrectionRes
 import org.sejapoe.videomanager.dto.request.CreateRequestReq
 import org.sejapoe.videomanager.dto.request.FilterRequestReq
+import org.sejapoe.videomanager.dto.request.UpdateRequestReq
 import org.sejapoe.videomanager.dto.request.UpdateRequestStatusReq
 import org.sejapoe.videomanager.mapper.ArchiveEntryMapper
 import org.sejapoe.videomanager.mapper.RequestMapper

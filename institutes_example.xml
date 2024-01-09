@@ -2,29 +2,55 @@
     <institute>
         <name>ИИТ</name>
         <departments>
-            <department>ИППО</department>
-            <department>МОСИТ</department>
-            <department>ИТАЭ</department>
-            <department>ПМ</department>
-            <department>ВТ</department>
+            <department>
+                <name>ИППО</name>
+            </department>
+            <department>
+                <name>МОСИТ</name>
+            </department>
+            <department>
+                <name>ИТАЭ</name>
+            </department>
+            <department>
+                <name>ПМ</name>
+            </department>
+            <department>
+                <name>ВТ</name>
+            </department>
         </departments>
     </institute>
     <institute>
         <name>ИИИ</name>
         <departments>
-            <department>АС</department>
-            <department>ПИ</department>
-            <department>ВМ</department>
-            <department>ОИ</department>
+            <department>
+                <name>АС</name>
+            </department>
+            <department>
+                <name>ПИ</name>
+            </department>
+            <department>
+                <name>ВМ</name>
+            </department>
+            <department>
+                <name>ОИ</name>
+            </department>
         </departments>
     </institute>
     <institute>
         <name>ИРИ</name>
         <departments>
-            <department>ИГ</department>
-            <department>ГС</department>
-            <department>РСК</department>
-            <department>ТК</department>
+            <department>
+                <name>ИГ</name>
+            </department>
+            <department>
+                <name>ГС</name>
+            </department>
+            <department>
+                <name>РСК</name>
+            </department>
+            <department>
+                <name>ТК</name>
+            </department>
         </departments>
     </institute>
 </institutes>

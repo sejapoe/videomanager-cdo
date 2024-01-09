@@ -26,7 +26,9 @@ const Preview = ({file}: PreviewProps) => {
         {data?.institutes.map(institute =>
             <li key={institute.name} className="ml-2">
                 {institute.name}:
-                <p className="ml-2">{institute.departments.join(", ")}</p>
+                <p className="ml-2">{institute.departments
+                    .map(value => `${value.name}${value.shortName ? ` (${value.shortName})` : ''}`)
+                    .join(", ")}</p>
             </li>
         )}
     </ul>

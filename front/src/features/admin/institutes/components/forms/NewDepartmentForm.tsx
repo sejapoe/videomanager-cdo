@@ -7,15 +7,18 @@ import {useQueryClient} from "@tanstack/react-query";
 import {institutesKeys, useInstitutes} from "../../../../common/institutes/api";
 import {ComboboxField} from "../../../../../ui/form/ComboboxField.tsx";
 import {FieldWrapper} from "../../../../../ui/form/FieldWrapper.tsx";
+import {bIu} from "../../../../../utils/undefineds.ts";
 
 const schema = z.object({
     institute_id: z.number().positive(),
-    name: z.string().min(1, "Заполните обязательное поле")
+    name: z.string().min(1, "Заполните обязательное поле"),
+    shortName: z.string().max(10, "Слишком длинное название")
 })
 
 type NewDepartmentValues = {
     institute_id: number;
     name: string;
+    shortName: string;
 }
 
 type NewDepartmentFormProps = {
@@ -30,7 +33,11 @@ export const NewDepartmentForm = ({onSubmit, instituteId}: NewDepartmentFormProp
 
     return <Form<NewDepartmentValues, typeof schema>
         onSubmit={(data, onError) => {
-            mutate(data, {
+            mutate({
+                institute_id: data.institute_id,
+                name: data.name,
+                short_name: bIu(data.shortName)
+            }, {
                 onSuccess: async () => {
                     await queryClient.invalidateQueries(institutesKeys.institutes.root);
                     onSubmit();
@@ -65,6 +72,13 @@ export const NewDepartmentForm = ({onSubmit, instituteId}: NewDepartmentFormProp
                 registration={register("name")}
                 noAutocomplete
                 error={formState.errors["name"]}
+            />
+
+            <InputField
+                label="Сокращенное название кафедры может быть пустым)"
+                registration={register("shortName")}
+                noAutocomplete
+                error={formState.errors["shortName"]}
             />
 
             <FieldWrapper error={formState.errors["root"]}>

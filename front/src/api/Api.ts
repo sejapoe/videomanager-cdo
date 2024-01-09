@@ -42,6 +42,7 @@ export interface DepartmentResDto {
   /** @format int64 */
   id: number;
   name: string;
+    shortName?: string;
 }
 
 export interface FullRequestResDto {
@@ -132,9 +133,14 @@ export interface InstituteWithDepartmentsResDto {
   departments: DepartmentResDto[];
 }
 
+export interface CIWDDepartmentDto {
+    name: string;
+    shortName?: string;
+}
+
 export interface CreateInstituteWithDepartmentsDto {
   name: string;
-  departments: string[];
+    departments: CIWDDepartmentDto[];
 }
 
 export interface CreateInstitutesWithDepartmentsReqDto {
@@ -145,6 +151,7 @@ export interface CreateDepartmentReqDto {
   name: string;
   /** @format int64 */
   institute_id: number;
+    short_name?: string;
 }
 
 export interface CreateCorrectionReqDto {
@@ -233,6 +240,7 @@ export interface RenameDepartmentReqDto {
   /** @format int64 */
   id: number;
   name: string;
+    short_name?: string;
 }
 
 export interface UpdateCorrectionStatusReqDto {
@@ -379,59 +387,51 @@ export class HttpClient<SecurityDataType = unknown> {
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
   private abortControllers = new Map<CancelToken, AbortController>();
-  private baseApiParams: RequestParams = {
-    credentials: "same-origin",
-    headers: {},
-    redirect: "follow",
-    referrerPolicy: "no-referrer",
-  };
   private contentFormatters: Record<ContentType, (input: any) => any> = {
     [ContentType.Json]: (input: any) =>
         input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
     [ContentType.Text]: (input: any) => (input !== null && typeof input !== "string" ? JSON.stringify(input) : input),
     [ContentType.FormData]: (input: any) =>
         Object.keys(input || {}).reduce((formData, key) => {
-          const property = input[key];
-          formData.append(
-              key,
-              property instanceof Blob
-                  ? property
-                  : typeof property === "object" && property !== null
-                      ? JSON.stringify(property)
-                      : `${property}`,
-          );
-          return formData;
+            const property = input[key];
+            formData.append(
+                key,
+                property instanceof Blob
+                    ? property
+                    : typeof property === "object" && property !== null
+                        ? JSON.stringify(property)
+                        : `${property}`,
+            );
+            return formData;
         }, new FormData()),
     [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
   };
 
-  constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
-    Object.assign(this, apiConfig);
-  }
-
-  public setSecurityData = (data: SecurityDataType | null) => {
-    this.securityData = data;
+  private baseApiParams: RequestParams = {
+    credentials: "same-origin",
+    headers: {},
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
   };
 
-  public abortRequest = (cancelToken: CancelToken) => {
-    const abortController = this.abortControllers.get(cancelToken);
-
-    if (abortController) {
-      abortController.abort();
-      this.abortControllers.delete(cancelToken);
+    constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
+        Object.assign(this, apiConfig);
     }
-  };
+
+    public setSecurityData = (data: SecurityDataType | null) => {
+        this.securityData = data;
+    };
 
   public request = async <T = any, E = any>({
-                                              body,
-                                              secure,
-                                              path,
-                                              type,
-                                              query,
-                                              format,
-                                              baseUrl,
-                                              cancelToken,
-                                              ...params
+                                                body,
+                                                secure,
+                                                path,
+                                                type,
+                                                query,
+                                                format,
+                                                baseUrl,
+                                                cancelToken,
+                                                ...params
                                             }: FullRequestParams): Promise<HttpResponse<T, E>> => {
     const secureParams =
         ((typeof secure === "boolean" ? secure : this.baseApiParams.secure) &&
@@ -447,7 +447,7 @@ export class HttpClient<SecurityDataType = unknown> {
       ...requestParams,
       headers: {
         ...(requestParams.headers || {}),
-        ...(type && type !== ContentType.FormData ? {"Content-Type": type} : {}),
+          ...(type && type !== ContentType.FormData ? {"Content-Type": type} : {}),
       },
       signal: (cancelToken ? this.createAbortSignal(cancelToken) : requestParams.signal) || null,
       body: typeof body === "undefined" || body === null ? null : payloadFormatter(body),
@@ -460,16 +460,16 @@ export class HttpClient<SecurityDataType = unknown> {
           ? r
           : await response[responseFormat]()
               .then((data) => {
-                if (r.ok) {
-                  r.data = data;
-                } else {
-                  r.error = data;
-                }
-                return r;
+                  if (r.ok) {
+                      r.data = data;
+                  } else {
+                      r.error = data;
+                  }
+                  return r;
               })
               .catch((e) => {
-                r.error = e;
-                return r;
+                  r.error = e;
+                  return r;
               });
 
       if (cancelToken) {
@@ -481,61 +481,70 @@ export class HttpClient<SecurityDataType = unknown> {
     });
   };
 
-  protected encodeQueryParam(key: string, value: any) {
-    const encodedKey = encodeURIComponent(key);
-    return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
-  }
-
-  protected addQueryParam(query: QueryParamsType, key: string) {
-    return this.encodeQueryParam(key, query[key]);
-  }
-
-  protected addArrayQueryParam(query: QueryParamsType, key: string) {
-    const value = query[key];
-    return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
-  }
-
-  protected toQueryString(rawQuery?: QueryParamsType): string {
-    const query = rawQuery || {};
-    const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
-    return keys
-        .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
-        .join("&");
-  }
-
-  protected addQueryParams(rawQuery?: QueryParamsType): string {
-    const queryString = this.toQueryString(rawQuery);
-    return queryString ? `?${queryString}` : "";
-  }
-
-  protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
-    return {
-      ...this.baseApiParams,
-      ...params1,
-      ...(params2 || {}),
-      headers: {
-        ...(this.baseApiParams.headers || {}),
-        ...(params1.headers || {}),
-        ...((params2 && params2.headers) || {}),
-      },
-    };
-  }
-
-  protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
-    if (this.abortControllers.has(cancelToken)) {
-      const abortController = this.abortControllers.get(cancelToken);
-      if (abortController) {
-        return abortController.signal;
-      }
-      return void 0;
+    protected encodeQueryParam(key: string, value: any) {
+        const encodedKey = encodeURIComponent(key);
+        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
     }
 
-    const abortController = new AbortController();
-    this.abortControllers.set(cancelToken, abortController);
-    return abortController.signal;
+    protected addQueryParam(query: QueryParamsType, key: string) {
+        return this.encodeQueryParam(key, query[key]);
+    }
+
+    protected addArrayQueryParam(query: QueryParamsType, key: string) {
+        const value = query[key];
+        return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
+    }
+
+    protected toQueryString(rawQuery?: QueryParamsType): string {
+        const query = rawQuery || {};
+        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+        return keys
+            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+            .join("&");
+    }
+
+    protected addQueryParams(rawQuery?: QueryParamsType): string {
+        const queryString = this.toQueryString(rawQuery);
+        return queryString ? `?${queryString}` : "";
+    }
+
+    protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
+        return {
+            ...this.baseApiParams,
+            ...params1,
+            ...(params2 || {}),
+            headers: {
+                ...(this.baseApiParams.headers || {}),
+                ...(params1.headers || {}),
+                ...((params2 && params2.headers) || {}),
+            },
+        };
+  }
+
+    protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
+        if (this.abortControllers.has(cancelToken)) {
+            const abortController = this.abortControllers.get(cancelToken);
+            if (abortController) {
+                return abortController.signal;
+            }
+            return void 0;
+        }
+
+        const abortController = new AbortController();
+        this.abortControllers.set(cancelToken, abortController);
+        return abortController.signal;
   };
 
-  private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
+  public abortRequest = (cancelToken: CancelToken) => {
+    const abortController = this.abortControllers.get(cancelToken);
+
+    if (abortController) {
+      abortController.abort();
+      this.abortControllers.delete(cancelToken);
+    }
+  };
+
+    private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 }
 
 /**
@@ -555,26 +564,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getRequests: (
         query?: {
-          /** @format int32 */
-          page?: number;
-          /** @format int32 */
-          size?: number;
-          name?: string;
-          user?: number[];
-          institute?: number[];
-          department?: number[];
-          status?: ("CREATED" | "WIP" | "COMPLETED" | "ARCHIVED")[];
-          sorting?: string;
-          direction?: "ASC" | "DESC";
+            /** @format int32 */
+            page?: number;
+            /** @format int32 */
+            size?: number;
+            name?: string;
+            user?: number[];
+            institute?: number[];
+            department?: number[];
+            status?: ("CREATED" | "WIP" | "COMPLETED" | "ARCHIVED")[];
+            sorting?: string;
+            direction?: "ASC" | "DESC";
         },
         params: RequestParams = {},
     ) =>
         this.request<PageRequestResDto, any>({
-          path: `/api/requests`,
-          method: "GET",
-          query: query,
-          secure: true,
-          ...params,
+            path: `/api/requests`,
+            method: "GET",
+            query: query,
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -587,12 +596,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     updateRequestStatus: (data: UpdateRequestStatusReqDto, params: RequestParams = {}) =>
         this.request<FullRequestResDto, any>({
-          path: `/api/requests`,
-          method: "PUT",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/requests`,
+            method: "PUT",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -605,12 +614,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createRequest: (data: CreateRequestReqDto, params: RequestParams = {}) =>
         this.request<RequestResDto, any>({
-          path: `/api/requests`,
-          method: "POST",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/requests`,
+            method: "POST",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -623,12 +632,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     updateRequest: (data: UpdateRequestReqDto, params: RequestParams = {}) =>
         this.request<FullRequestResDto, any>({
-          path: `/api/requests`,
-          method: "PATCH",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/requests`,
+            method: "PATCH",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -641,24 +650,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getLecturers: (
         query?: {
-          /** @format int32 */
-          page?: number;
-          /** @format int32 */
-          size?: number;
-          name?: string;
-          email?: string;
-          enabled?: boolean[];
-          sorting?: string;
-          direction?: "ASC" | "DESC";
+            /** @format int32 */
+            page?: number;
+            /** @format int32 */
+            size?: number;
+            name?: string;
+            email?: string;
+            enabled?: boolean[];
+            sorting?: string;
+            direction?: "ASC" | "DESC";
         },
         params: RequestParams = {},
     ) =>
         this.request<PageUserResDto, any>({
-          path: `/api/users`,
-          method: "GET",
-          query: query,
-          secure: true,
-          ...params,
+            path: `/api/users`,
+            method: "GET",
+            query: query,
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -671,13 +680,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createLecturer: (data: CreateLecturerReqDto, params: RequestParams = {}) =>
         this.request<UserResDto, any>({
-          path: `/api/users`,
-          method: "POST",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/users`,
+            method: "POST",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
+
+      /**
+       * No description
+       *
+       * @tags test-controller
+       * @name Test
+       * @request POST:/api/test
+       * @secure
+       */
+      test: (params: RequestParams = {}) =>
+          this.request<void, any>({
+              path: `/api/test`,
+              method: "POST",
+              secure: true,
+              ...params,
+          }),
 
     /**
      * No description
@@ -689,10 +714,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     archiveRequest: (id: number, params: RequestParams = {}) =>
         this.request<ArchiveEntryResDto, any>({
-          path: `/api/requests/${id}/archive`,
-          method: "POST",
-          secure: true,
-          ...params,
+            path: `/api/requests/${id}/archive`,
+            method: "POST",
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -705,10 +730,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getAllInstitutes: (params: RequestParams = {}) =>
         this.request<InstituteWithDepartmentsResDto[], any>({
-          path: `/api/institutes`,
-          method: "GET",
-          secure: true,
-          ...params,
+            path: `/api/institutes`,
+            method: "GET",
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -721,12 +746,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createInstitute: (data: CreateInstituteReqDto, params: RequestParams = {}) =>
         this.request<InstituteWithDepartmentsResDto, any>({
-          path: `/api/institutes`,
-          method: "POST",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/institutes`,
+            method: "POST",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -739,12 +764,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     deleteInstitute: (data: DeleteInstituteReqDto, params: RequestParams = {}) =>
         this.request<void, any>({
-          path: `/api/institutes`,
-          method: "DELETE",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/institutes`,
+            method: "DELETE",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -757,12 +782,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     renameInstitute: (data: RenameInstituteReqDto, params: RequestParams = {}) =>
         this.request<InstituteResDto, any>({
-          path: `/api/institutes`,
-          method: "PATCH",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/institutes`,
+            method: "PATCH",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -775,12 +800,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createInstitutes: (data: CreateInstitutesWithDepartmentsReqDto, params: RequestParams = {}) =>
         this.request<InstituteWithDepartmentsResDto[], any>({
-          path: `/api/institutes/with_departments`,
-          method: "POST",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/institutes/with_departments`,
+            method: "POST",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -793,10 +818,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getAllDepartments: (params: RequestParams = {}) =>
         this.request<DepartmentResDto[], any>({
-          path: `/api/departments`,
-          method: "GET",
-          secure: true,
-          ...params,
+            path: `/api/departments`,
+            method: "GET",
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -809,12 +834,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createDepartment: (data: CreateDepartmentReqDto, params: RequestParams = {}) =>
         this.request<DepartmentResDto, any>({
-          path: `/api/departments`,
-          method: "POST",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/departments`,
+            method: "POST",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -827,12 +852,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     deleteDepartment: (data: DeleteDepartmentReqDto, params: RequestParams = {}) =>
         this.request<void, any>({
-          path: `/api/departments`,
-          method: "DELETE",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/departments`,
+            method: "DELETE",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -845,12 +870,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     renameDepartment: (data: RenameDepartmentReqDto, params: RequestParams = {}) =>
         this.request<DepartmentResDto, any>({
-          path: `/api/departments`,
-          method: "PATCH",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/departments`,
+            method: "PATCH",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -863,12 +888,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createCorrection: (data: CreateCorrectionReqDto, params: RequestParams = {}) =>
         this.request<CorrectionResDto, any>({
-          path: `/api/corrections`,
-          method: "POST",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/corrections`,
+            method: "POST",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -881,12 +906,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     updateCorrectionStatus: (data: UpdateCorrectionStatusReqDto, params: RequestParams = {}) =>
         this.request<CorrectionResDto, any>({
-          path: `/api/corrections`,
-          method: "PATCH",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/corrections`,
+            method: "PATCH",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -899,10 +924,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     viewCorrection: (id: number, params: RequestParams = {}) =>
         this.request<void, any>({
-          path: `/api/corrections/${id}/view`,
-          method: "POST",
-          secure: true,
-          ...params,
+            path: `/api/corrections/${id}/view`,
+            method: "POST",
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -915,17 +940,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getComments: (
         query: {
-          /** @format int64 */
-          correctionId: number;
+            /** @format int64 */
+            correctionId: number;
         },
         params: RequestParams = {},
     ) =>
         this.request<CommentResDto[], any>({
-          path: `/api/comments`,
-          method: "GET",
-          query: query,
-          secure: true,
-          ...params,
+            path: `/api/comments`,
+            method: "GET",
+            query: query,
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -938,12 +963,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createComment: (data: CreateCommentReqDto, params: RequestParams = {}) =>
         this.request<CommentResDto, any>({
-          path: `/api/comments`,
-          method: "POST",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/comments`,
+            method: "POST",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -955,11 +980,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     refresh: (data: RefreshReqDto, params: RequestParams = {}) =>
         this.request<TokenUserResDto, ProblemDetailDto>({
-          path: `/api/auth/refresh`,
-          method: "POST",
-          body: data,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/auth/refresh`,
+            method: "POST",
+            body: data,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -971,11 +996,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     login: (data: LoginReqDto, params: RequestParams = {}) =>
         this.request<TokenUserResDto, ProblemDetailDto>({
-          path: `/api/auth/login`,
-          method: "POST",
-          body: data,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/auth/login`,
+            method: "POST",
+            body: data,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -987,11 +1012,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     activate: (data: ActivateUserReqDto, params: RequestParams = {}) =>
         this.request<TokenUserResDto, ProblemDetailDto>({
-          path: `/api/auth/activate`,
-          method: "POST",
-          body: data,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/auth/activate`,
+            method: "POST",
+            body: data,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -1004,25 +1029,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getAllArchiveEntries: (
         query?: {
-          /** @format int32 */
-          page?: number;
-          /** @format int32 */
-          size?: number;
-          name?: string;
-          user?: number[];
-          institute?: number[];
-          department?: number[];
-          sorting?: string;
-          direction?: "ASC" | "DESC";
+            /** @format int32 */
+            page?: number;
+            /** @format int32 */
+            size?: number;
+            name?: string;
+            user?: number[];
+            institute?: number[];
+            department?: number[];
+            sorting?: string;
+            direction?: "ASC" | "DESC";
         },
         params: RequestParams = {},
     ) =>
         this.request<PageArchiveEntryResDto, any>({
-          path: `/api/archive`,
-          method: "GET",
-          query: query,
-          secure: true,
-          ...params,
+            path: `/api/archive`,
+            method: "GET",
+            query: query,
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -1035,12 +1060,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     createArchive: (data: CreateArchiveEntryReqDto, params: RequestParams = {}) =>
         this.request<ArchiveEntryResDto, any>({
-          path: `/api/archive`,
-          method: "POST",
-          body: data,
-          secure: true,
-          type: ContentType.Json,
-          ...params,
+            path: `/api/archive`,
+            method: "POST",
+            body: data,
+            secure: true,
+            type: ContentType.Json,
+            ...params,
         }),
 
     /**
@@ -1053,10 +1078,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getUser: (params: RequestParams = {}) =>
         this.request<UserResDto, any>({
-          path: `/api/user`,
-          method: "GET",
-          secure: true,
-          ...params,
+            path: `/api/user`,
+            method: "GET",
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -1069,10 +1094,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getRequest: (id: number, params: RequestParams = {}) =>
         this.request<FullRequestResDto, any>({
-          path: `/api/requests/${id}`,
-          method: "GET",
-          secure: true,
-          ...params,
+            path: `/api/requests/${id}`,
+            method: "GET",
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -1085,10 +1110,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     deleteRequest: (id: number, params: RequestParams = {}) =>
         this.request<void, any>({
-          path: `/api/requests/${id}`,
-          method: "DELETE",
-          secure: true,
-          ...params,
+            path: `/api/requests/${id}`,
+            method: "DELETE",
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -1101,10 +1126,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getCorrection: (id: number, params: RequestParams = {}) =>
         this.request<CorrectionResDto, any>({
-          path: `/api/corrections/${id}`,
-          method: "GET",
-          secure: true,
-          ...params,
+            path: `/api/corrections/${id}`,
+            method: "GET",
+            secure: true,
+            ...params,
         }),
 
     /**
@@ -1116,9 +1141,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getActivation: (uuid: string, params: RequestParams = {}) =>
         this.request<UserResDto, ProblemDetailDto>({
-          path: `/api/auth/activation/${uuid}`,
-          method: "GET",
-          ...params,
+            path: `/api/auth/activation/${uuid}`,
+            method: "GET",
+            ...params,
         }),
 
     /**
@@ -1131,10 +1156,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     getArchive: (id: number, params: RequestParams = {}) =>
         this.request<ArchiveEntryResDto, any>({
-          path: `/api/archive/${id}`,
-          method: "GET",
-          secure: true,
-          ...params,
+            path: `/api/archive/${id}`,
+            method: "GET",
+            secure: true,
+            ...params,
         }),
   };
 }

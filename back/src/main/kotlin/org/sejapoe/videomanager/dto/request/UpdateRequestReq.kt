@@ -1,4 +1,4 @@
-package org.sejapoe.videomanager.controller
+package org.sejapoe.videomanager.dto.request
 
 import jakarta.validation.constraints.NotBlank
 import java.io.Serializable

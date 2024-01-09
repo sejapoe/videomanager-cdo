@@ -74,6 +74,15 @@ kapt {
     }
 }
 
+sourceSets {
+    main {
+        resources {
+//            srcDirs("src/main/resources")
+            exclude("application.yaml")
+        }
+    }
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs += "-Xjsr305=strict"

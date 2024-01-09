@@ -10,6 +10,7 @@ import {statusL10n} from "./RequestsTableContent.tsx";
 import clsx, {ClassValue} from "clsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
+import {DepartmentName} from "../../institutes/components/DepartmentName.tsx";
 
 
 const statusColor: Record<RequestStatus, ClassValue> = {
@@ -34,7 +35,8 @@ const RequestContent = ({request, correctionsSection, actionsSection}: RequestCo
                                   <div className="space-x-4">
                                       <span
                                           className="bg-gray-200 text-lg px-2 py-1 rounded border border-gray-800 text-gray-800">
-                                          {request.institute.name} / {request.department.name}
+                                          {request.institute.name} / <DepartmentName size="lg"
+                                                                                     departmentName={request.department}/>
                                       </span>
                                       <span className={clsx(
                                           statusColor[request.status],

@@ -24,7 +24,11 @@ class DepartmentController(
     @PostMapping
     fun createDepartment(
         @RequestBody @Valid createDepartmentReq: CreateDepartmentReq,
-    ) = departmentService.create(createDepartmentReq.name, createDepartmentReq.instituteId)
+    ) = departmentService.create(
+        createDepartmentReq.name,
+        createDepartmentReq.shortName,
+        createDepartmentReq.instituteId
+    )
         .let(departmentMapper::toDepartmentRes)
 
     @IsAdmin
@@ -37,6 +41,6 @@ class DepartmentController(
     @PatchMapping
     fun renameDepartment(
         @RequestBody @Valid renameDepartmentReq: RenameDepartmentReq,
-    ) = departmentService.rename(renameDepartmentReq.id, renameDepartmentReq.name)
+    ) = departmentService.rename(renameDepartmentReq.id, renameDepartmentReq.name, renameDepartmentReq.shortName)
         .let(departmentMapper::toDepartmentRes)
 }

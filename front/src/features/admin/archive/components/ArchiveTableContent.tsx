@@ -14,6 +14,7 @@ import {Department} from "../../../common/institutes/model";
 import {Page} from "../../../common/model";
 import {ArchiveEntry} from "../model";
 import {SearchFilter} from "../../../../ui/table/SearchFilter.tsx";
+import {DepartmentName} from "../../../common/institutes/components/DepartmentName.tsx";
 
 
 const ArchiveTableHead = () => {
@@ -104,7 +105,9 @@ export const ArchiveTableContent = ({entries}: ArchiveTableContentProps) => {
                     <td className="px-4 py-2 border-2 border-transparent">{value.name}</td>
                     <td className="px-4 py-2 border-2 border-transparent">{value.lecturer.fullName}</td>
                     <td className="px-4 py-2 border-2 border-transparent">{value.institute.name}</td>
-                    <td className="px-4 py-2 border-2 border-transparent">{value.department.name}</td>
+                    <td className="px-4 py-2 border-2 border-transparent"><DepartmentName size="sm"
+                                                                                          departmentName={value.department}/>
+                    </td>
                 </tr>
             ))}
             </tbody>

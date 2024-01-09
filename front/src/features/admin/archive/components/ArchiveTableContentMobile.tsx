@@ -4,6 +4,7 @@ import clsx from "clsx";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
 import {PATH_PAGE} from "../../../../lib/react-router";
 import {Page} from "../../../common/model";
+import {DepartmentName} from "../../../common/institutes/components/DepartmentName.tsx";
 
 type RequestTableContentMobileProps = {
     entries: Page<ArchiveEntry>;
@@ -28,7 +29,8 @@ export const ArchiveTableContentMobile = ({
                         <span className="text-gray-500 text-sm">{value.lecturer.fullName}</span>
                     </div>
                     <div className="hidden min-[480px]:flex flex-col items-end">
-                        <span>{value.institute.name} / {value.department.name}</span>
+                        <span>{value.institute.name} / <DepartmentName size="md"
+                                                                       departmentName={value.department}/></span>
                     </div>
                 </div>
             ))}

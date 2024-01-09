@@ -21,9 +21,10 @@ class DepartmentService(
 
     fun create(
         name: String,
+        shortName: String?,
         instituteId: Long,
     ): Department {
-        val department = Department(name, instituteService.get(instituteId))
+        val department = Department(name, instituteService.get(instituteId), shortName)
 
         checkDuplicate(department, name)
 
@@ -65,12 +66,14 @@ class DepartmentService(
     fun rename(
         id: Long,
         name: String,
+        shortName: String?
     ): Department {
         val department = get(id)
 
         checkDuplicate(department, name)
 
         department.name = name
+        department.shortName = shortName
         return departmentRepo.save(department)
     }
 

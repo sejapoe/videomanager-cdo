@@ -7,6 +7,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {PATH_PAGE} from "../../../../lib/react-router";
 import {useArchiveEntry} from "../api";
+import {DepartmentName} from "../../../common/institutes/components/DepartmentName.tsx";
 
 
 type ArchiveEntryContentProps = {
@@ -22,7 +23,8 @@ const ArchiveEntryContent = ({entry}: ArchiveEntryContentProps) => {
                                   </h1>
                                   <span
                                       className="bg-gray-200 text-lg px-2 py-1 rounded border border-gray-800 text-gray-800">
-                                          {entry.institute.name} / {entry.department.name}
+                                          {entry.institute.name} / <DepartmentName size="lg"
+                                                                                   departmentName={entry.department}/>
                                       </span>
                               </div>
                           }>

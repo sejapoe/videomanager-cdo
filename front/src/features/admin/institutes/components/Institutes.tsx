@@ -14,6 +14,7 @@ import {RenameInstituteForm} from "./forms/RenameInstituteForm.tsx";
 import {useDialog} from "../../../../providers/DialogProvider.tsx";
 import {NewInstituteForm} from "./forms/NewInstituteForm.tsx";
 import clsx from "clsx";
+import {DepartmentName} from "../../../common/institutes/components/DepartmentName.tsx";
 
 type SingleDepartmentProps = {
     department: Department
@@ -31,7 +32,7 @@ const SingleDepartment = ({department}: SingleDepartmentProps) => {
     })
 
     return <div className="relative w-full text-gray-900 group hover:bg-gray-300 rounded py-1 transition-colors">
-        {department.name}
+        <DepartmentName size={"xl"} departmentName={department}/>
         <div className="absolute top-1 right-2 space-x-2 hidden group-hover:block">
             <FontAwesomeIcon icon={solid("pen")}
                              className="text-gray-400 transition-colors hover:text-blue-600 cursor-pointer"

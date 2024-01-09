@@ -15,6 +15,7 @@ import {PaginationController} from "../../../../ui/table/PaginationController.ts
 import {TableHeadItem} from "../../../../ui/table/TableHeadItem.tsx";
 import {ComboboxFilter} from "../../../../ui/table/ComboboxFilter.tsx";
 import {SearchFilter} from "../../../../ui/table/SearchFilter.tsx";
+import {DepartmentName} from "../../institutes/components/DepartmentName.tsx";
 
 export const statusL10n: Record<RequestStatus, string> = {
     "CREATED": "Создана",
@@ -137,7 +138,9 @@ export const RequestsTableContent = ({
                     <td className="px-4 py-2 border-2 border-transparent">{value.name}</td>
                     <td className="px-4 py-2 border-2 border-transparent">{value.lecturer.fullName}</td>
                     <td className="px-4 py-2 border-2 border-transparent">{value.institute.name}</td>
-                    <td className="px-4 py-2 border-2 border-transparent">{value.department.name}</td>
+                    <td className="px-4 py-2 border-2 border-transparent"><DepartmentName size="sm"
+                                                                                          departmentName={value.department}/>
+                    </td>
                     <td className={clsx(
                         "px-4 py-2 border-2 border-transparent",
                         statusColor[value.status][index % 2],

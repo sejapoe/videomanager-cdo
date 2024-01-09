@@ -5,6 +5,7 @@ import clsx, {ClassValue} from "clsx";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
 import {statusL10n} from "./RequestsTableContent.tsx";
 import {PATH_PAGE} from "../../../../lib/react-router";
+import {DepartmentName} from "../../institutes/components/DepartmentName.tsx";
 
 type RequestTableContentMobileProps = {
     requests: Page<Request>;
@@ -36,7 +37,8 @@ export const RequestsTableContentMobile = ({
                         <span className="text-gray-500 text-sm">{value.lecturer.fullName}</span>
                     </div>
                     <div className="hidden min-[480px]:flex flex-col items-end">
-                        <span>{value.institute.name} / {value.department.name}</span>
+                        <span>{value.institute.name} / <DepartmentName size="md"
+                                                                       departmentName={value.department}/></span>
                         <span
                             className={clsx("text-sm", `${statusColor[value.status].text}`)}>{statusL10n[value.status]}</span>
                     </div>

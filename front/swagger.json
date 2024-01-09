@@ -361,6 +361,24 @@
         ]
       }
     },
+    "/api/test": {
+      "post": {
+        "tags": [
+          "test-controller"
+        ],
+        "operationId": "test",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ]
+      }
+    },
     "/api/requests/{id}/archive": {
       "post": {
         "tags": [
@@ -1405,6 +1423,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "shortName": {
+            "type": "string"
           }
         }
       },
@@ -1698,6 +1719,20 @@
           }
         }
       },
+      "CIWDDepartment": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "shortName": {
+            "type": "string"
+          }
+        }
+      },
       "CreateInstituteWithDepartments": {
         "required": [
           "departments",
@@ -1711,7 +1746,7 @@
           "departments": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/CIWDDepartment"
             }
           }
         }
@@ -1743,6 +1778,9 @@
           "institute_id": {
             "type": "integer",
             "format": "int64"
+          },
+          "short_name": {
+            "type": "string"
           }
         }
       },
@@ -1969,6 +2007,9 @@
             "format": "int64"
           },
           "name": {
+            "type": "string"
+          },
+          "short_name": {
             "type": "string"
           }
         }

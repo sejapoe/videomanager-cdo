@@ -12,6 +12,9 @@ class Department(
     @JoinColumn(name = "institute_id")
     var institute: Institute,
 
+    @Column(name = "short_name", nullable = true)
+    var shortName: String? = null,
+
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "departments_id_seq")
     @SequenceGenerator(name = "departments_id_seq", sequenceName = "departments_id_seq", allocationSize = 1)
     var id: Long = -1,

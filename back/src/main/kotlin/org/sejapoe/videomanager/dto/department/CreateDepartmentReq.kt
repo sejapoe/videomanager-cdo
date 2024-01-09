@@ -6,4 +6,6 @@ data class CreateDepartmentReq(
     val name: String,
     @JsonProperty("institute_id")
     val instituteId: Long,
+    @JsonProperty("short_name")
+    val shortName: String?,
 )

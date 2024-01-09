@@ -29,6 +29,8 @@ class AuthService(
     private val userActivationRepo: UserActivationRepo,
     private val passwordEncoder: PasswordEncoder
 ) {
+
+    @Transactional
     fun login(
         email: String,
         password: String,
@@ -39,7 +41,10 @@ class AuthService(
 
         val user = userRepo.findByEmail(email) ?: throw EmailDoesntExistsLoginException()
 
-        return user to generateTokenPair(user)
+        val tokenPair = generateTokenPair(user)
+        refreshTokenRepo.save(RefreshToken(user = user, token = tokenPair.refresh))
+
+        return user to tokenPair
     }
 
     @Transactional
@@ -50,16 +55,22 @@ class AuthService(
 
         val user = currentRefreshToken.user
 
-        refreshTokenRepo.delete(currentRefreshToken)
 
-        return user to generateTokenPair(user)
+        val tokenPair = generateTokenPair(user)
+        currentRefreshToken.token = tokenPair.refresh
+        refreshTokenRepo.save(currentRefreshToken)
+
+        return user to tokenPair
     }
 
+    @Transactional
     fun getUserActivation(uuid: UUID) =
         userActivationRepo.findByUuid(uuid) ?: throw NotFoundException("Неизвестный код активации")
 
+    @Transactional
     fun getUserByActivationUuid(uuid: UUID) = getUserActivation(uuid).user
 
+    @Transactional
     fun activateLecturer(
         uuid: UUID,
         password: String,
@@ -69,23 +80,16 @@ class AuthService(
         activator.user.enabled = true
         val user = userRepo.save(activator.user)
         userActivationRepo.delete(activator)
-        return user to generateTokenPair(user)
+        val tokenPair = generateTokenPair(user)
+        refreshTokenRepo.save(RefreshToken(user = user, token = tokenPair.refresh))
+        return user to tokenPair
     }
 
     private fun generateTokenPair(user: User): Tokens {
         return Tokens(
             access = jwtService.generateToken(user),
-            refresh = generateRefreshToken(user)
+            refresh = randomRefreshToken()
         )
-    }
-
-    private fun generateRefreshToken(user: User): String {
-        val refreshToken = RefreshToken(
-            user,
-            randomRefreshToken()
-        )
-
-        return refreshTokenRepo.save(refreshToken).token
     }
 
     private fun randomRefreshToken(): String {

@@ -44,8 +44,8 @@ class InstituteService(
                     it.name,
                 ).apply {
                     this.departments =
-                        it.departments.map { name ->
-                            Department(name, this)
+                        it.departments.map { (name, shortName) ->
+                            Department(name, this, shortName)
                         }
                 }
             }

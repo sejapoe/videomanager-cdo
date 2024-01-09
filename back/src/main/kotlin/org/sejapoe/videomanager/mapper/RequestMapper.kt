@@ -1,10 +1,10 @@
 package org.sejapoe.videomanager.mapper
 
 import org.mapstruct.*
-import org.sejapoe.videomanager.controller.UpdateRequestReq
 import org.sejapoe.videomanager.dto.request.FullRequestRes
 import org.sejapoe.videomanager.dto.request.RequestRes
 import org.sejapoe.videomanager.dto.request.ShortRequestRes
+import org.sejapoe.videomanager.dto.request.UpdateRequestReq
 import org.sejapoe.videomanager.model.Request
 
 @Mapper(

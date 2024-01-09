@@ -7,6 +7,7 @@ import org.sejapoe.videomanager.model.Request
 import org.sejapoe.videomanager.repo.UserActivationRepo
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,20 +21,26 @@ class EmailService(
     @Value(
         "#{T(org.sejapoe.videomanager.utils.ResourceReader).readFileToString('mail_template.html')}",
     )
-    private val html: String,
+    private val htmlTemplate: String,
+    @Value(
+        "#{T(org.sejapoe.videomanager.utils.ResourceReader).readFileToString('mail_template.txt')}",
+    )
+    private val plainTextTemplate: String,
 ) {
     fun sendSimpleMessage(
         to: String,
         subject: String,
         htmlContent: String,
+        plainTextContent: String,
     ) {
-        val message =
-            emailSender.createMimeMessage().apply {
+        val message = emailSender.createMimeMessage().apply {
+            MimeMessageHelper(this, true).run {
                 setFrom(InternetAddress(mailFrom))
                 setRecipients(MimeMessage.RecipientType.TO, to)
                 setSubject(subject)
-                setContent(htmlContent, "text/html; charset=utf-8")
+                setText(plainTextContent, htmlContent)
             }
+        }
 
         emailSender.send(message)
     }
@@ -55,11 +62,19 @@ class EmailService(
             }
 
         val html =
-            this.html.format(
+            this.htmlTemplate.format(
                 request.lecturer.fullName,
                 request.name,
                 url,
             )
-        sendSimpleMessage(request.lecturer.email, "Новый запрос: ${request.name}", html)
+
+        val plainText =
+            this.plainTextTemplate.format(
+                request.lecturer.fullName,
+                request.name,
+                url,
+            )
+
+        sendSimpleMessage(request.lecturer.email, "Новый запрос: ${request.name}", html, plainText)
     }
 }
