@@ -45,7 +45,7 @@ export const NewCommentForm = ({correction}: NewCommentFormProps) => {
                     error={formState.errors["comment"] || formState.errors["root"]}
                     disabled={correction.closed || isLoading}
                     onKeyDown={event => {
-                        if (event.key === "Enter" && event.ctrlKey) {
+                        if (event.key === "Enter" && !event.shiftKey) {
                             event.preventDefault()
                             hiddenSubmitButton.current?.click()
                         }
