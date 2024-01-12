@@ -30,7 +30,7 @@ class JwtService(
             .setClaims(extraClaims.toMutableMap())
             .setSubject(userDetails.username)
             .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + 3 * 60 * 1000)) // 10 days | 10 * 24 * 60 * 60 * 1000
+            .setExpiration(Date(System.currentTimeMillis() + 3 * 60 * 1000)) // 3 minutes TODO: move to properties
             .setIssuer(jwtIssuer)
             .signWith(SignatureAlgorithm.HS256, jwtSecret)
             .compact()

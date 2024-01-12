@@ -51,7 +51,7 @@ class RequestService(
                 requestRepo::save,
             )
 
-        emailService.notify(request)
+        emailService.notifyNewRequest(request)
 
         return request
     }

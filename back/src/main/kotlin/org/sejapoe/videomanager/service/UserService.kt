@@ -18,6 +18,7 @@ import java.util.*
 class UserService(
     private val userRepo: UserRepo,
     private val userActivationRepo: UserActivationRepo,
+    private val emailService: EmailService,
 ) {
     fun createLecturer(
         name: String,
@@ -52,4 +53,26 @@ class UserService(
     }
 
     fun get(id: Long): User = userRepo.findById(id).orElseThrow { NotFoundException("Пользователь с ID $id не найден") }
+
+    fun renameLecturer(id: Long, name: String): User {
+        val user = get(id)
+        user.fullName = name
+        return userRepo.save(user)
+    }
+
+    fun resetPassword(id: Long) {
+        val user = get(id)
+
+        if (!user.enabled) {
+            throw ConflictException("Пользователь \"${user.fullName}\" неактивен")
+        }
+
+        user.enabled = false
+        user.password = ""
+
+        val activator = UserActivation(UUID.randomUUID(), user)
+        userActivationRepo.save(activator)
+
+        emailService.notifyPasswordReset(user)
+    }
 }

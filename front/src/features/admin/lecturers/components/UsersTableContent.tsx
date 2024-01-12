@@ -9,6 +9,7 @@ import {TableHeadItem} from "../../../../ui/table/TableHeadItem.tsx";
 import {ComboboxFilter} from "../../../../ui/table/ComboboxFilter.tsx";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
 import {SearchFilter} from "../../../../ui/table/SearchFilter.tsx";
+import {useNavigate} from "react-router-dom";
 
 const statusL10n: Record<"false" | "true", string> = {
     "false": "Неактивен",
@@ -69,6 +70,8 @@ type UsersTableProps = {
 }
 
 export const UsersTableContent = ({users}: UsersTableProps) => {
+    const nav = useNavigate()
+
     return <div className="mt-2">
         <table className="text-gray-900 table-fixed w-full">
             <UsersTableHead/>
@@ -77,7 +80,7 @@ export const UsersTableContent = ({users}: UsersTableProps) => {
                 users.content.map((value, index) => <tr className={clsx(
                         index % 2 == 0 ? "bg-gray-200" : "bg-gray-300",
                         "space-x-2 cursor-pointer relative"
-                    )} key={index}>
+                    )} key={index} onClick={() => nav(`./${value.id}`)}>
                         <td className="px-4 py-2 border-2 border-gray-100">{value.id}</td>
                         <td className="px-4 py-2 border-2 border-gray-100">{value.fullName}</td>
                         <td className="px-4 py-2 border-2 border-gray-100">{value.email}</td>

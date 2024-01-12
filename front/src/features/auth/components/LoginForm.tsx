@@ -35,7 +35,10 @@ export const LoginForm = ({onSuccess}: LoginFormProps) => {
                             })
                             onSuccess()
                         },
-                        onError: err => onError(err.error.detail)
+                        onError: err =>
+                            err.status === 403
+                                ? onError("Неверный логин или пароль")
+                                : onError(err.error.detail)
                     })
                 }}
                 schema={schema}

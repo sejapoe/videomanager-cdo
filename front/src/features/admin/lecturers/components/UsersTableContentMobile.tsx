@@ -1,7 +1,6 @@
 import {Page} from "../../../common/model";
 import clsx, {ClassValue} from "clsx";
 import {useNavigate} from "react-router-dom";
-import {PATH_PAGE} from "../../../../lib/react-router";
 import {PaginationController} from "../../../../ui/table/PaginationController.tsx";
 import {Lecturer} from "../model";
 
@@ -34,7 +33,7 @@ export const UsersTableContentMobile = ({
                     `px-2 border-l-4 min-[480px]:border-l-0`, statusColor[booleanToString(value.enabled)].border
                 )}
                      key={value.id}
-                     onClick={() => nav(`${PATH_PAGE.app.requests}/${value.id}`)}>
+                     onClick={() => nav(`./${value.id}`)}>
                     <div className="flex flex-col">
                         <span>{value.fullName}</span>
                         <span className="text-gray-500 text-sm">{value.email}</span>

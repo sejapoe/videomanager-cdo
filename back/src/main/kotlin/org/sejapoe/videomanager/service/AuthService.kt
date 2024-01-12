@@ -55,6 +55,9 @@ class AuthService(
 
         val user = currentRefreshToken.user
 
+        if (!user.enabled) {
+            throw ForbiddenException("Your account is disabled")
+        }
 
         val tokenPair = generateTokenPair(user)
         currentRefreshToken.token = tokenPair.refresh
