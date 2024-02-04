@@ -12,6 +12,7 @@ export type ArchiveEntry = {
     linkToMoodle: string;
     linkToVideo: string;
     request?: ShortRequest
+    description?: string;
 }
 
 export const mapArchiveEntry = (dto: ArchiveEntryResDto): ArchiveEntry => dto;

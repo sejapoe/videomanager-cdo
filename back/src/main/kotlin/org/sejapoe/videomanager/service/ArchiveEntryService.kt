@@ -54,4 +54,15 @@ class ArchiveEntryService(
             archiveEntryRepo.save(it)
         }
     }
+
+    fun delete(id: Long) {
+        val archiveEntry = get(id)
+        archiveEntryRepo.delete(archiveEntry)
+    }
+
+    fun update(id: Long, transformer: (ArchiveEntry) -> ArchiveEntry): ArchiveEntry {
+        val request = get(id)
+        return archiveEntryRepo.save(transformer(request))
+    }
+
 }

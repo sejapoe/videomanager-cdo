@@ -14,4 +14,5 @@ data class ArchiveEntryRes(
     val linkToVideo: String,
     val linkToMoodle: String,
     val request: ShortRequestRes?,
+    val description: String?
 )

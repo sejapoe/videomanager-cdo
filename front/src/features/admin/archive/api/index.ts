@@ -2,7 +2,7 @@ import {useMutation, UseMutationOptions, useQuery} from "@tanstack/react-query";
 import {mapPage, Page} from "../../../common/model";
 import {ArchiveEntry, mapArchiveEntry} from "../model";
 import api, {GenericErrorModel, HttpResponse} from "../../../../api";
-import {ArchiveEntryResDto, CreateArchiveEntryReqDto} from "../../../../api/Api.ts";
+import {ArchiveEntryResDto, CreateArchiveEntryReqDto, UpdateArchiveEntryReqDto} from "../../../../api/Api.ts";
 
 export const archiveKeys = {
     archive: {
@@ -12,19 +12,21 @@ export const archiveKeys = {
     },
 
     mutation: {
-        create: () => [...archiveKeys.archive.root, 'create']
+        create: () => [...archiveKeys.archive.root, 'create'],
+        edit: () => [...archiveKeys.archive.root, 'edit'],
+        delete: () => [...archiveKeys.archive.root, 'delete'],
     }
 }
 
-type UseCreateRequestMutation = UseMutationOptions<
+type UseCreateArchiveEntryMutation = UseMutationOptions<
     HttpResponse<ArchiveEntryResDto, unknown>,
     GenericErrorModel,
     CreateArchiveEntryReqDto
 >
 
-type UseCreateRequestOptions = Omit<UseCreateRequestMutation, 'mutationFn' | 'mutationKey'>
+type UseCreateArchiveEntryOptions = Omit<UseCreateArchiveEntryMutation, 'mutationFn' | 'mutationKey'>
 
-export const useCreateArchiveEntry = (options?: UseCreateRequestOptions) =>
+export const useCreateArchiveEntry = (options?: UseCreateArchiveEntryOptions) =>
     useMutation(
         archiveKeys.mutation.create(),
         (dto: CreateArchiveEntryReqDto) => {
@@ -32,6 +34,41 @@ export const useCreateArchiveEntry = (options?: UseCreateRequestOptions) =>
         },
         options
     )
+
+type UseEditArchiveEntryMutation = UseMutationOptions<
+    HttpResponse<ArchiveEntryResDto, unknown>,
+    GenericErrorModel,
+    UpdateArchiveEntryReqDto
+>
+
+type UseEditArchiveEntryOptions = Omit<UseEditArchiveEntryMutation, 'mutationFn' | 'mutationKey'>
+
+export const useUpdateArchiveEntry = (options?: UseEditArchiveEntryOptions) =>
+    useMutation(
+        archiveKeys.mutation.create(),
+        (dto: UpdateArchiveEntryReqDto) => {
+            return api.updateArchiveEntry(dto)
+        },
+        options
+    )
+
+type UseDeleteArchiveEntryMutation = UseMutationOptions<
+    HttpResponse<void>,
+    GenericErrorModel,
+    number
+>
+
+type UseDeleteArchiveEntryOptions = Omit<UseDeleteArchiveEntryMutation, 'mutationFn' | 'mutationKey'>
+
+export const useDeleteArchiveEntry = (options?: UseDeleteArchiveEntryOptions) =>
+    useMutation(
+        archiveKeys.mutation.create(),
+        (id: number) => {
+            return api.deleteArchiveEntry(id)
+        },
+        options
+    )
+
 
 export type ArchiveFilter = {
     page?: number;

@@ -1,8 +1,10 @@
 package org.sejapoe.videomanager.controller
 
+import jakarta.validation.Valid
 import org.sejapoe.videomanager.dto.archive.ArchiveEntryRes
 import org.sejapoe.videomanager.dto.archive.CreateArchiveEntryReq
 import org.sejapoe.videomanager.dto.archive.FilterArchiveReq
+import org.sejapoe.videomanager.dto.archive.UpdateArchiveEntryReq
 import org.sejapoe.videomanager.mapper.ArchiveEntryMapper
 import org.sejapoe.videomanager.security.annotations.IsAdmin
 import org.sejapoe.videomanager.service.ArchiveEntryService
@@ -36,4 +38,17 @@ class ArchiveController(
         archiveEntryService
             .getAll(filterArchiveReq.toPredicate(), filterArchiveReq.toPageable())
             .map(archiveEntryMapper::toDto)
+
+    @IsAdmin
+    @DeleteMapping("/{id}")
+    fun deleteArchiveEntry(@PathVariable id: Long) =
+        archiveEntryService.delete(id)
+
+    @IsAdmin
+    @PatchMapping
+    fun updateArchiveEntry(
+        @RequestBody @Valid updateArchiveEntryReq: UpdateArchiveEntryReq
+    ) = archiveEntryService.update(updateArchiveEntryReq.id) {
+        archiveEntryMapper.partialUpdate(updateArchiveEntryReq, it)
+    }.let(archiveEntryMapper::toDto)
 }

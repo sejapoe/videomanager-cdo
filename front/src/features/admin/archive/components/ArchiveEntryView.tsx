@@ -8,6 +8,7 @@ import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import {PATH_PAGE} from "../../../../lib/react-router";
 import {useArchiveEntry} from "../api";
 import {DepartmentName} from "../../../common/institutes/components/DepartmentName.tsx";
+import {ArchiveEntryActions} from "./ArchiveEntryActions.tsx";
 
 
 type ArchiveEntryContentProps = {
@@ -37,6 +38,16 @@ const ArchiveEntryContent = ({entry}: ArchiveEntryContentProps) => {
                 {entry.request && <p>
                     <Link to={`${PATH_PAGE.app.requests}/${entry.request.id}`}>Ссылка на запрос</Link>
                 </p>}
+                {entry.description &&
+                    <p>
+                        Описание:
+                        <p className="whitespace-pre">
+                            {entry.description}
+                        </p>
+                    </p>}
+                <div className="flex">
+                    <ArchiveEntryActions entry={entry}/>
+                </div>
             </div>
             <div className="flex justify-end">
                 <a className={clsx(

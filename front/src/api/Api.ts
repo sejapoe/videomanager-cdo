@@ -121,6 +121,7 @@ export interface ArchiveEntryResDto {
     linkToVideo: string;
     linkToMoodle: string;
     request?: ShortRequestResDto;
+    description?: string;
 }
 
 export interface ShortRequestResDto {
@@ -256,40 +257,49 @@ export interface UpdateCorrectionStatusReqDto {
     isClosed: boolean;
 }
 
+export interface UpdateArchiveEntryReqDto {
+    /** @format int64 */
+    id: number;
+    name: string;
+    linkToMoodle: string;
+    linkToVideo: string;
+    description?: string;
+}
+
 export interface PageUserResDto {
     /** @format int32 */
     totalPages?: number;
     /** @format int64 */
     totalElements?: number;
-    pageable?: PageableObjectDto;
-    first?: boolean;
-    last?: boolean;
     /** @format int32 */
     size?: number;
     content?: UserResDto[];
     /** @format int32 */
     number?: number;
     sort?: SortObjectDto;
+    pageable?: PageableObjectDto;
+    first?: boolean;
+    last?: boolean;
     /** @format int32 */
     numberOfElements?: number;
     empty?: boolean;
 }
 
 export interface PageableObjectDto {
+    /** @format int64 */
+    offset?: number;
+    sort?: SortObjectDto;
     /** @format int32 */
     pageNumber?: number;
     /** @format int32 */
     pageSize?: number;
-    /** @format int64 */
-    offset?: number;
-    sort?: SortObjectDto;
-    unpaged?: boolean;
     paged?: boolean;
+    unpaged?: boolean;
 }
 
 export interface SortObjectDto {
-    sorted?: boolean;
     empty?: boolean;
+    sorted?: boolean;
     unsorted?: boolean;
 }
 
@@ -298,15 +308,15 @@ export interface PageRequestResDto {
     totalPages?: number;
     /** @format int64 */
     totalElements?: number;
-    pageable?: PageableObjectDto;
-    first?: boolean;
-    last?: boolean;
     /** @format int32 */
     size?: number;
     content?: RequestResDto[];
     /** @format int32 */
     number?: number;
     sort?: SortObjectDto;
+    pageable?: PageableObjectDto;
+    first?: boolean;
+    last?: boolean;
     /** @format int32 */
     numberOfElements?: number;
     empty?: boolean;
@@ -317,15 +327,15 @@ export interface PageArchiveEntryResDto {
     totalPages?: number;
     /** @format int64 */
     totalElements?: number;
-    pageable?: PageableObjectDto;
-    first?: boolean;
-    last?: boolean;
     /** @format int32 */
     size?: number;
     content?: ArchiveEntryResDto[];
     /** @format int32 */
     number?: number;
     sort?: SortObjectDto;
+    pageable?: PageableObjectDto;
+    first?: boolean;
+    last?: boolean;
     /** @format int32 */
     numberOfElements?: number;
     empty?: boolean;
@@ -394,12 +404,61 @@ export class HttpClient<SecurityDataType = unknown> {
     private securityData: SecurityDataType | null = null;
     private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
     private abortControllers = new Map<CancelToken, AbortController>();
+    constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
+        Object.assign(this, apiConfig);
+    }
+
     private baseApiParams: RequestParams = {
         credentials: "same-origin",
         headers: {},
         redirect: "follow",
         referrerPolicy: "no-referrer",
     };
+
+    public setSecurityData = (data: SecurityDataType | null) => {
+        this.securityData = data;
+    };
+
+    protected encodeQueryParam(key: string, value: any) {
+        const encodedKey = encodeURIComponent(key);
+        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
+    }
+
+    protected addQueryParam(query: QueryParamsType, key: string) {
+        return this.encodeQueryParam(key, query[key]);
+    }
+
+    protected addArrayQueryParam(query: QueryParamsType, key: string) {
+        const value = query[key];
+        return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
+    }
+
+    protected toQueryString(rawQuery?: QueryParamsType): string {
+        const query = rawQuery || {};
+        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
+        return keys
+            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
+            .join("&");
+    }
+
+    protected addQueryParams(rawQuery?: QueryParamsType): string {
+        const queryString = this.toQueryString(rawQuery);
+        return queryString ? `?${queryString}` : "";
+    }
+
+    protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
+        return {
+            ...this.baseApiParams,
+            ...params1,
+            ...(params2 || {}),
+            headers: {
+                ...(this.baseApiParams.headers || {}),
+                ...(params1.headers || {}),
+                ...((params2 && params2.headers) || {}),
+            },
+        };
+    }
+
     private contentFormatters: Record<ContentType, (input: any) => any> = {
         [ContentType.Json]: (input: any) =>
             input !== null && (typeof input === "object" || typeof input === "string") ? JSON.stringify(input) : input,
@@ -420,13 +479,21 @@ export class HttpClient<SecurityDataType = unknown> {
         [ContentType.UrlEncoded]: (input: any) => this.toQueryString(input),
     };
 
-    constructor(apiConfig: ApiConfig<SecurityDataType> = {}) {
-        Object.assign(this, apiConfig);
-    }
+    protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
+        if (this.abortControllers.has(cancelToken)) {
+            const abortController = this.abortControllers.get(cancelToken);
+            if (abortController) {
+                return abortController.signal;
+            }
+            return void 0;
+        }
 
-    public setSecurityData = (data: SecurityDataType | null) => {
-        this.securityData = data;
+        const abortController = new AbortController();
+        this.abortControllers.set(cancelToken, abortController);
+        return abortController.signal;
     };
+
+    private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
     public abortRequest = (cancelToken: CancelToken) => {
         const abortController = this.abortControllers.get(cancelToken);
@@ -495,62 +562,6 @@ export class HttpClient<SecurityDataType = unknown> {
             return data;
         });
     };
-
-    protected encodeQueryParam(key: string, value: any) {
-        const encodedKey = encodeURIComponent(key);
-        return `${encodedKey}=${encodeURIComponent(typeof value === "number" ? value : `${value}`)}`;
-    }
-
-    protected addQueryParam(query: QueryParamsType, key: string) {
-        return this.encodeQueryParam(key, query[key]);
-    }
-
-    protected addArrayQueryParam(query: QueryParamsType, key: string) {
-        const value = query[key];
-        return value.map((v: any) => this.encodeQueryParam(key, v)).join("&");
-    }
-
-    protected toQueryString(rawQuery?: QueryParamsType): string {
-        const query = rawQuery || {};
-        const keys = Object.keys(query).filter((key) => "undefined" !== typeof query[key]);
-        return keys
-            .map((key) => (Array.isArray(query[key]) ? this.addArrayQueryParam(query, key) : this.addQueryParam(query, key)))
-            .join("&");
-    }
-
-    protected addQueryParams(rawQuery?: QueryParamsType): string {
-        const queryString = this.toQueryString(rawQuery);
-        return queryString ? `?${queryString}` : "";
-    }
-
-    protected mergeRequestParams(params1: RequestParams, params2?: RequestParams): RequestParams {
-        return {
-            ...this.baseApiParams,
-            ...params1,
-            ...(params2 || {}),
-            headers: {
-                ...(this.baseApiParams.headers || {}),
-                ...(params1.headers || {}),
-                ...((params2 && params2.headers) || {}),
-            },
-        };
-    }
-
-    protected createAbortSignal = (cancelToken: CancelToken): AbortSignal | undefined => {
-        if (this.abortControllers.has(cancelToken)) {
-            const abortController = this.abortControllers.get(cancelToken);
-            if (abortController) {
-                return abortController.signal;
-            }
-            return void 0;
-        }
-
-        const abortController = new AbortController();
-        this.abortControllers.set(cancelToken, abortController);
-        return abortController.signal;
-    };
-
-    private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 }
 
 /**
@@ -1127,6 +1138,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /**
          * No description
          *
+         * @tags archive-controller
+         * @name UpdateArchiveEntry
+         * @request PATCH:/api/archive
+         * @secure
+         */
+        updateArchiveEntry: (data: UpdateArchiveEntryReqDto, params: RequestParams = {}) =>
+            this.request<ArchiveEntryResDto, any>({
+                path: `/api/archive`,
+                method: "PATCH",
+                body: data,
+                secure: true,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags user-controller
          * @name GetUserById
          * @request GET:/api/user/{id}
@@ -1214,6 +1243,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
             this.request<ArchiveEntryResDto, any>({
                 path: `/api/archive/${id}`,
                 method: "GET",
+                secure: true,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags archive-controller
+         * @name DeleteArchiveEntry
+         * @request DELETE:/api/archive/{id}
+         * @secure
+         */
+        deleteArchiveEntry: (id: number, params: RequestParams = {}) =>
+            this.request<void, any>({
+                path: `/api/archive/${id}`,
+                method: "DELETE",
                 secure: true,
                 ...params,
             }),

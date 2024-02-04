@@ -78,7 +78,7 @@ sourceSets {
     main {
         resources {
 //            srcDirs("src/main/resources")
-            exclude("application.yaml")
+//            exclude("application.yaml")
         }
     }
 }

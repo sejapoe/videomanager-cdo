@@ -1,8 +1,8 @@
 package org.sejapoe.videomanager.mapper
 
-import org.mapstruct.Mapper
-import org.mapstruct.MappingConstants
+import org.mapstruct.*
 import org.sejapoe.videomanager.dto.archive.ArchiveEntryRes
+import org.sejapoe.videomanager.dto.archive.UpdateArchiveEntryReq
 import org.sejapoe.videomanager.model.ArchiveEntry
 
 @Mapper(
@@ -11,4 +11,10 @@ import org.sejapoe.videomanager.model.ArchiveEntry
 )
 interface ArchiveEntryMapper {
     fun toDto(archiveEntry: ArchiveEntry): ArchiveEntryRes
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    fun partialUpdate(
+        updateArchiveEntryReq: UpdateArchiveEntryReq,
+        @MappingTarget archiveEntry: ArchiveEntry
+    ): ArchiveEntry
 }
